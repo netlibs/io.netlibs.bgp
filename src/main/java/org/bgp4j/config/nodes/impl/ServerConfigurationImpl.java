@@ -12,86 +12,114 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4.config.nodes.impl.ServerConfigurationImpl.java 
+ *
+ * File: org.bgp4.config.nodes.impl.ServerConfigurationImpl.java
  */
 package org.bgp4j.config.nodes.impl;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
-import org.apache.commons.configuration.ConfigurationException;
+import javax.naming.ConfigurationException;
+
 import org.bgp4j.config.nodes.ServerConfiguration;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class ServerConfigurationImpl implements ServerConfiguration {
+public class ServerConfigurationImpl implements ServerConfiguration
+{
 
-	private InetSocketAddress listenAddress;
-	
+  private InetSocketAddress listenAddress;
 
-	public ServerConfigurationImpl() {
-		this.listenAddress = new InetSocketAddress(0);
-	}
+  public ServerConfigurationImpl()
+  {
+    this.listenAddress = new InetSocketAddress(0);
+  }
 
-	public ServerConfigurationImpl(InetAddress addr) {
-		this.listenAddress = new InetSocketAddress(addr, 0);
-	}
-	
-	public ServerConfigurationImpl(InetAddress addr, int port) throws ConfigurationException {
-		if(port < 0 || port > 65535)
-			throw new ConfigurationException("port " + port + " not allowed");
-		
-		this.listenAddress = new InetSocketAddress(addr, port);
-	}
-	
-	public ServerConfigurationImpl(InetSocketAddress listenAddress) {
-		this.listenAddress = listenAddress;
-	}
-	
-	@Override
-	public InetSocketAddress getListenAddress() {
-		return listenAddress;
-	}
+  public ServerConfigurationImpl(final InetAddress addr)
+  {
+    this.listenAddress = new InetSocketAddress(addr, 0);
+  }
 
-	/**
-	 * @param listenAddress the listenAddress to set
-	 */
-	void setListenAddress(InetSocketAddress listenAddress) {
-		this.listenAddress = listenAddress;
-	}
+  public ServerConfigurationImpl(final InetAddress addr, final int port) throws ConfigurationException
+  {
+    if ((port < 0) || (port > 65535))
+    {
+      throw new ConfigurationException("port " + port + " not allowed");
+    }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((listenAddress == null) ? 0 : listenAddress.hashCode());
-		return result;
-	}
+    this.listenAddress = new InetSocketAddress(addr, port);
+  }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ServerConfigurationImpl other = (ServerConfigurationImpl) obj;
-		if (listenAddress == null) {
-			if (other.listenAddress != null)
-				return false;
-		} else if (!listenAddress.equals(other.listenAddress))
-			return false;
-		return true;
-	}
+  public ServerConfigurationImpl(final InetSocketAddress listenAddress)
+  {
+    this.listenAddress = listenAddress;
+  }
+
+  @Override
+  public InetSocketAddress getListenAddress()
+  {
+    return this.listenAddress;
+  }
+
+  /**
+   * @param listenAddress
+   *          the listenAddress to set
+   */
+  void setListenAddress(final InetSocketAddress listenAddress)
+  {
+    this.listenAddress = listenAddress;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode()
+  {
+    final int prime = 31;
+    int result = 1;
+    result = (prime * result)
+        + ((this.listenAddress == null) ? 0 : this.listenAddress.hashCode());
+    return result;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(final Object obj)
+  {
+    if (this == obj)
+    {
+      return true;
+    }
+    if (obj == null)
+    {
+      return false;
+    }
+    if (this.getClass() != obj.getClass())
+    {
+      return false;
+    }
+    final ServerConfigurationImpl other = (ServerConfigurationImpl) obj;
+    if (this.listenAddress == null)
+    {
+      if (other.listenAddress != null)
+      {
+        return false;
+      }
+    }
+    else if (!this.listenAddress.equals(other.listenAddress))
+    {
+      return false;
+    }
+    return true;
+  }
 }

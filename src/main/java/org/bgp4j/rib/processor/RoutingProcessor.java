@@ -11,14 +11,21 @@ import org.bgp4j.config.nodes.RoutingInstanceConfiguration;
 import org.bgp4j.config.nodes.RoutingProcessorConfiguration;
 import org.slf4j.Logger;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author rainer
  *
  */
+
+@Slf4j
+@RequiredArgsConstructor
 public class RoutingProcessor
 {
-  private @Inject Instance<RoutingInstance> instanceProvider;
-  private @Inject Logger log;
+  
+  private  RoutingInstance instance;
 
   private List<RoutingInstance> instances = new LinkedList<RoutingInstance>();
 
@@ -26,8 +33,6 @@ public class RoutingProcessor
   {
     for (final RoutingInstanceConfiguration instConfig : configuration.getRoutingInstances())
     {
-      final RoutingInstance instance = this.instanceProvider.get();
-
       instance.configure(instConfig);
       this.instances.add(instance);
     }

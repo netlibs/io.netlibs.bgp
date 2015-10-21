@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bgp4j.config.nodes.PeerConfiguration;
+import org.bgp4j.config.nodes.RoutingProcessorConfiguration;
 
 public class ApplicationConfiguration
 {
@@ -32,6 +33,12 @@ public class ApplicationConfiguration
   public SocketAddress getServerPort()
   {
     return new InetSocketAddress(1179);
+  }
+
+  public RoutingProcessorConfiguration getRoutingProcessorConfiguration()
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

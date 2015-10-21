@@ -17,18 +17,23 @@ import org.bgp4j.net.AddressFamilyKey;
 import org.bgp4j.rib.PeerRoutingInformationBaseManager;
 import org.slf4j.Logger;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author rainer
  *
  */
+
+@Slf4j
+@RequiredArgsConstructor
 public class RoutingInstance
 {
 
-  private @Inject Logger log;
-  private @Inject Instance<AddressFamilyRoutingInstance> familyInstanceProvider;
+  private final AddressFamilyRoutingInstance familyInstanceProvider;
+  private final PeerRoutingInformationBaseManager pribManager;
   private String firstPeerName;
   private String secondPeerName;
-  private @Inject PeerRoutingInformationBaseManager pribManager;
   private RoutingInstanceState state = RoutingInstanceState.STOPPED;
 
   private List<AddressFamilyRoutingInstance> familyInstances = new LinkedList<AddressFamilyRoutingInstance>();
@@ -55,8 +60,7 @@ public class RoutingInstance
 
     for (final AddressFamilyKey afk : wantedFamilies)
     {
-      final AddressFamilyRoutingInstance instance = this.familyInstanceProvider.get();
-
+      final AddressFamilyRoutingInstance instance = this.familyInstanceProvider;
       instance.configure(afk, firstFamilyRouting.get(afk), secondFamilyRouting.get(afk));
       this.familyInstances.add(instance);
     }
