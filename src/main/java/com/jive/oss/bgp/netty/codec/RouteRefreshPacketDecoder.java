@@ -47,15 +47,18 @@ public class RouteRefreshPacketDecoder
 {
 
   /**
-   * decode the UPDATE network packet. The passed channel buffer MUST point to the first packet octet AFTER the type octet.
+   * decode the REFRESH network packet. The passed channel buffer MUST point to the first packet octet AFTER the type octet.
    * 
    * @param buffer
    *          the buffer containing the data.
+   * 
    * @return the decoded packet or null on decoding problems. Neither RFC2918 nor RFC5291 nor RFC4271 describe an error handling procedure,
    *         so best advise is to ignore invalid packets for now.
    */
+
   public BGPv4Packet decodeRouteRefreshPacket(ByteBuf buffer)
   {
+
     RouteRefreshPacket packet = null;
 
     try
@@ -72,6 +75,7 @@ public class RouteRefreshPacketDecoder
 
       if (buffer.isReadable())
       {
+
         // we have outbound router filter rules here
         OutboundRouteFilter orf = new OutboundRouteFilter(af, saf);
 
@@ -87,12 +91,13 @@ public class RouteRefreshPacketDecoder
         }
 
         packet.setOutboundRouteFilter(orf);
+
       }
+
     }
     catch (Exception e)
     {
       log.error("cannot decode ROUTE_REFRESH packet, suppressing it from further processing", e);
-
       packet = null;
     }
 
@@ -105,7 +110,9 @@ public class RouteRefreshPacketDecoder
 
     while (buffer.isReadable())
     {
+
       int actionMatch = buffer.readUnsignedByte();
+
       ORFAction action = ORFAction.fromCode((actionMatch >> 6) & 0x03);
       ORFMatch match = ORFMatch.fromCode((actionMatch >> 5) & 0x01);
 
@@ -125,6 +132,7 @@ public class RouteRefreshPacketDecoder
 
   private ORFEntry decodeAddressPrefixBasedORFEntry(ByteBuf buffer, ORFAction action, ORFMatch match)
   {
+
     AddressPrefixBasedORFEntry entry = new AddressPrefixBasedORFEntry(action, match);
 
     if (action != ORFAction.REMOVE_ALL)
@@ -136,5 +144,7 @@ public class RouteRefreshPacketDecoder
     }
 
     return entry;
+
   }
+
 }

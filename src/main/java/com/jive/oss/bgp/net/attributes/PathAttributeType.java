@@ -12,29 +12,31 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.net.attributes.PathAttributeType.java 
+ *
+ * File: org.bgp4j.net.attributes.PathAttributeType.java
  */
 package com.jive.oss.bgp.net.attributes;
 
 /**
  * Path attribute type used internally for sorting, ocmparing and hash-code building.
- * 
+ *
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public enum PathAttributeType {
-	AGGREGATOR,
-	AS_PATH,
-	ATOMIC_AGGREGATE,
-	CLUSTER_LIST,
-	COMMUNITY,
-	LOCAL_PREF,
-	MULTI_EXIT_DISC,
-	MULTI_PROTOCOL_REACHABLE,
-	MULTI_PROTOCOL_UNREACHABLE,
-	NEXT_HOP,
-	ORIGINATOR_ID,
-	ORIGIN,
-	UNKNOWN
+
+public enum PathAttributeType
+{
+  AGGREGATOR,
+  AS_PATH,
+  ATOMIC_AGGREGATE,
+  CLUSTER_LIST,
+  COMMUNITY,
+  LOCAL_PREF,
+  MULTI_EXIT_DISC,
+  MULTI_PROTOCOL_REACHABLE,
+  MULTI_PROTOCOL_UNREACHABLE,
+  NEXT_HOP,
+  ORIGINATOR_ID,
+  ORIGIN,
+  UNKNOWN
 }

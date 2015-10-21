@@ -98,13 +98,12 @@ public class BinaryNextHop implements NextHop
   public String toString()
   {
     final StringBuilder builder = new StringBuilder();
-
     for (final byte addres : this.address)
     {
       builder.append(chars[(addres / 16) & 0x0f]);
       builder.append(chars[(addres % 16) & 0x0f]);
     }
-
     return builder.toString();
   }
+
 }

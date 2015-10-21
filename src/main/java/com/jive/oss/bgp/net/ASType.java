@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.ASType.java 
+ *
+ * File: org.bgp4j.netty.protocol.ASType.java
  */
 package com.jive.oss.bgp.net;
 
@@ -21,7 +21,8 @@ package com.jive.oss.bgp.net;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public enum ASType {
-	AS_NUMBER_2OCTETS,
-	AS_NUMBER_4OCTETS,
+public enum ASType
+{
+  AS_NUMBER_2OCTETS,
+  AS_NUMBER_4OCTETS,
 }

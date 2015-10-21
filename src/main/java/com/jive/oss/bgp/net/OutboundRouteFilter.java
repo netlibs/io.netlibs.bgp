@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.refresh.OutboundRouteFilter.java 
+ *
+ * File: org.bgp4j.netty.protocol.refresh.OutboundRouteFilter.java
  */
 package com.jive.oss.bgp.net;
 
@@ -25,122 +25,149 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class OutboundRouteFilter {
-	private AddressFamily addressFamily;
-	private SubsequentAddressFamily subsequentAddressFamily;
-	private ORFRefreshType refreshType;
+public class OutboundRouteFilter
+{
 
-	private Map<ORFType, List<ORFEntry>> entries = new HashMap<ORFType, List<ORFEntry>>();
-	
-	public OutboundRouteFilter(AddressFamily addressFamily, SubsequentAddressFamily subsequentAddressFamily) {
-		setAddressFamily(addressFamily);
-		setSubsequentAddressFamily(subsequentAddressFamily);
-	}
+  private AddressFamily addressFamily;
+  private SubsequentAddressFamily subsequentAddressFamily;
+  private ORFRefreshType refreshType;
 
-	public OutboundRouteFilter(AddressFamily addressFamily, SubsequentAddressFamily subsequentAddressFamily, ORFRefreshType refreshType) {
-		this(addressFamily, subsequentAddressFamily);
-		
-		setRefreshType(refreshType);
-	}
+  private Map<ORFType, List<ORFEntry>> entries = new HashMap<ORFType, List<ORFEntry>>();
 
-	public OutboundRouteFilter(AddressFamily addressFamily, SubsequentAddressFamily subsequentAddressFamily, ORFRefreshType refreshType, ORFEntry[] entries) {
-		this(addressFamily, subsequentAddressFamily, refreshType);
-		
-		if(entries != null) {
-			for (ORFEntry entry : entries) {
-				addORFEntry(entry);
-			}
-		}
-	}
+  public OutboundRouteFilter(final AddressFamily addressFamily, final SubsequentAddressFamily subsequentAddressFamily)
+  {
+    this.setAddressFamily(addressFamily);
+    this.setSubsequentAddressFamily(subsequentAddressFamily);
+  }
 
-	/**
-	 * add an ORF entry to the 
-	 * @param entry
-	 */
-	public void addORFEntry(ORFEntry entry) {
-		if(!this.entries.containsKey(entry.getORFType()))
-			this.entries.put(entry.getORFType(), new LinkedList<ORFEntry>());
-		
-		this.entries.get(entry.getORFType()).add(entry);		
-	}
+  public OutboundRouteFilter(final AddressFamily addressFamily, final SubsequentAddressFamily subsequentAddressFamily, final ORFRefreshType refreshType)
+  {
+    this(addressFamily, subsequentAddressFamily);
 
-	/**
-	 * add all ORF entries to the 
-	 * @param entry
-	 */
-	public void addAllORFEntries(Collection<ORFEntry> entries) {
-		for(ORFEntry entry : entries)
-			addORFEntry(entry);
-	}
-	
-	/**
-	 * @return the addressFamily
-	 */
-	public AddressFamily getAddressFamily() {
-		return addressFamily;
-	}
+    this.setRefreshType(refreshType);
+  }
 
-	/**
-	 * @param addressFamily the addressFamily to set
-	 */
-	public void setAddressFamily(AddressFamily addressFamily) {
-		this.addressFamily = addressFamily;
-	}
+  public OutboundRouteFilter(final AddressFamily addressFamily, final SubsequentAddressFamily subsequentAddressFamily, final ORFRefreshType refreshType, final ORFEntry[] entries)
+  {
+    this(addressFamily, subsequentAddressFamily, refreshType);
 
-	/**
-	 * @return the subsequentAddressFamily
-	 */
-	public SubsequentAddressFamily getSubsequentAddressFamily() {
-		return subsequentAddressFamily;
-	}
+    if (entries != null)
+    {
+      for (final ORFEntry entry : entries)
+      {
+        this.addORFEntry(entry);
+      }
+    }
+  }
 
-	/**
-	 * @param subsequentAddressFamily the subsequentAddressFamily to set
-	 */
-	public void setSubsequentAddressFamily(
-			SubsequentAddressFamily subsequentAddressFamily) {
-		this.subsequentAddressFamily = subsequentAddressFamily;
-	}
+  /**
+   * add an ORF entry to the
+   *
+   * @param entry
+   */
+  public void addORFEntry(final ORFEntry entry)
+  {
+    if (!this.entries.containsKey(entry.getORFType()))
+    {
+      this.entries.put(entry.getORFType(), new LinkedList<ORFEntry>());
+    }
 
-	/**
-	 * @return the refreshType
-	 */
-	public ORFRefreshType getRefreshType() {
-		return refreshType;
-	}
+    this.entries.get(entry.getORFType()).add(entry);
+  }
 
-	/**
-	 * @param refreshType the refreshType to set
-	 */
-	public void setRefreshType(ORFRefreshType refreshType) {
-		this.refreshType = refreshType;
-	}
+  /**
+   * add all ORF entries to the
+   *
+   * @param entry
+   */
+  public void addAllORFEntries(final Collection<ORFEntry> entries)
+  {
+    for (final ORFEntry entry : entries)
+    {
+      this.addORFEntry(entry);
+    }
+  }
 
-	/**
-	 * @return the entries
-	 */
-	public Map<ORFType, List<ORFEntry>> getEntries() {
-		return entries;
-	}
+  /**
+   * @return the addressFamily
+   */
+  public AddressFamily getAddressFamily()
+  {
+    return this.addressFamily;
+  }
 
-	/**
-	 * @param entries the entries to set
-	 */
-	public void setEntries(Map<ORFType, List<ORFEntry>> entries) {
-		this.entries = entries;
-	}
-	
-	@Override
-	public String toString() {
-		return (new ToStringBuilder(this))
-				.append("addressFamily", addressFamily)
-				.append("subsequentAddressFamily", subsequentAddressFamily)
-				.append("refreshType", refreshType)
-				.toString();
-	}
+  /**
+   * @param addressFamily
+   *          the addressFamily to set
+   */
+  public void setAddressFamily(final AddressFamily addressFamily)
+  {
+    this.addressFamily = addressFamily;
+  }
+
+  /**
+   * @return the subsequentAddressFamily
+   */
+  public SubsequentAddressFamily getSubsequentAddressFamily()
+  {
+    return this.subsequentAddressFamily;
+  }
+
+  /**
+   * @param subsequentAddressFamily
+   *          the subsequentAddressFamily to set
+   */
+  public void setSubsequentAddressFamily(
+      final SubsequentAddressFamily subsequentAddressFamily)
+  {
+    this.subsequentAddressFamily = subsequentAddressFamily;
+  }
+
+  /**
+   * @return the refreshType
+   */
+  public ORFRefreshType getRefreshType()
+  {
+    return this.refreshType;
+  }
+
+  /**
+   * @param refreshType
+   *          the refreshType to set
+   */
+  public void setRefreshType(final ORFRefreshType refreshType)
+  {
+    this.refreshType = refreshType;
+  }
+
+  /**
+   * @return the entries
+   */
+  public Map<ORFType, List<ORFEntry>> getEntries()
+  {
+    return this.entries;
+  }
+
+  /**
+   * @param entries
+   *          the entries to set
+   */
+  public void setEntries(final Map<ORFType, List<ORFEntry>> entries)
+  {
+    this.entries = entries;
+  }
+
+  @Override
+  public String toString()
+  {
+    return (new ToStringBuilder(this))
+        .append("addressFamily", this.addressFamily)
+        .append("subsequentAddressFamily", this.subsequentAddressFamily)
+        .append("refreshType", this.refreshType)
+        .toString();
+  }
 }

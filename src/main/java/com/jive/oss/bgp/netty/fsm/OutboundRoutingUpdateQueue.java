@@ -337,7 +337,6 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
             if (!afk.equals(AddressFamilyKey.IPV4_UNICAST_FORWARDING))
             {
               mpUnreachable = new MultiProtocolUnreachableNLRI(afk.getAddressFamily(), afk.getSubsequentAddressFamily());
-
               current.getPathAttributes().add(mpUnreachable);
             }
             updates.add(current);

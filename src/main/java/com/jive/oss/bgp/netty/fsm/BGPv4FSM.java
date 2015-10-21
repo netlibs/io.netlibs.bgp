@@ -638,7 +638,9 @@ public class BGPv4FSM
   {
 
     final Set<MultiProtocolReachableNLRI> mpReachables = message.lookupPathAttributes(MultiProtocolReachableNLRI.class);
+    
     final Set<MultiProtocolUnreachableNLRI> mpUnreachables = message.lookupPathAttributes(MultiProtocolUnreachableNLRI.class);
+    
     final Set<PathAttribute> otherAttributes = message.filterPathAttributes(MultiProtocolReachableNLRI.class,
         MultiProtocolUnreachableNLRI.class, NextHopPathAttribute.class);
 

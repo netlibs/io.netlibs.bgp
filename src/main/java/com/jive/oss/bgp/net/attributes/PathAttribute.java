@@ -37,7 +37,10 @@ public abstract class PathAttribute implements Comparable<PathAttribute>
    */
   public enum Category
   {
-    WELL_KNOWN_MANDATORY, WELL_KNOWN_DISCRETIONARY, OPTIONAL_TRANSITIVE, OPTIONAL_NON_TRANSITIVE,
+    WELL_KNOWN_MANDATORY,
+    WELL_KNOWN_DISCRETIONARY,
+    OPTIONAL_TRANSITIVE,
+    OPTIONAL_NON_TRANSITIVE,
   }
 
   private boolean optional;

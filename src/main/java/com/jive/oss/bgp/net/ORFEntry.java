@@ -1,6 +1,6 @@
 /**
 
-*  Copyright 2012 Rainer Bieniek (Rainer.Bieniek@web.de)
+ *  Copyright 2012 Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,42 +13,34 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.refresh.ORFEntry.java 
+ *
+ * File: org.bgp4j.netty.protocol.refresh.ORFEntry.java
  */
 package com.jive.oss.bgp.net;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public abstract class ORFEntry {
-	private ORFAction action;
-	private ORFMatch match;
 
-	protected ORFEntry(ORFAction action, ORFMatch match) {
-		this.action = action;
-		this.match = match;
-	}
-	
-	/**
-	 * get the ORF type code
-	 * 
-	 * @return
-	 */
-	public abstract ORFType getORFType();
-	
-	/**
-	 * @return the action
-	 */
-	public ORFAction getAction() {
-		return action;
-	}
+@RequiredArgsConstructor
+public abstract class ORFEntry
+{
 
-	/**
-	 * @return the match
-	 */
-	public ORFMatch getMatch() {
-		return match;
-	}
+  @Getter
+  private final ORFAction action;
+  @Getter
+  private final ORFMatch match;
+
+  /**
+   * get the ORF type code
+   *
+   * @return
+   */
+
+  public abstract ORFType getORFType();
+
 }

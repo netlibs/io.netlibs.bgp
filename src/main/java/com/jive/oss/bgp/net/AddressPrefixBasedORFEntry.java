@@ -12,95 +12,62 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.refresh.AddressPrefixORFEntry.java 
+ *
+ * File: org.bgp4j.netty.protocol.refresh.AddressPrefixORFEntry.java
  */
 package com.jive.oss.bgp.net;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class AddressPrefixBasedORFEntry extends ORFEntry {
 
-	private int sequence;
-	private int minLength;
-	private int maxLength;
-	private NetworkLayerReachabilityInformation prefix;
+public class AddressPrefixBasedORFEntry extends ORFEntry
+{
 
-	public AddressPrefixBasedORFEntry(ORFAction action, ORFMatch match) {
-		super(action, match);
-	}
+  @Getter
+  @Setter
+  private int sequence;
 
-	public AddressPrefixBasedORFEntry(ORFAction action, ORFMatch match, int sequence, int minLength, int maxLength, NetworkLayerReachabilityInformation prefix) {
-		super(action, match);
-		
-		this.sequence = sequence;
-		this.minLength = minLength;
-		this.maxLength = maxLength;
-		this.prefix = prefix;
-	}
+  @Getter
+  @Setter
+  private int minLength;
 
-	@Override
-	public ORFType getORFType() {
-		return ORFType.ADDRESS_PREFIX_BASED;
-	}
+  @Getter
+  @Setter
+  private int maxLength;
 
-	/**
-	 * @return the sequence
-	 */
-	public int getSequence() {
-		return sequence;
-	}
+  @Getter
+  @Setter
+  private NetworkLayerReachabilityInformation prefix;
 
-	/**
-	 * @param sequence the sequence to set
-	 */
-	public void setSequence(int sequence) {
-		this.sequence = sequence;
-	}
+  public AddressPrefixBasedORFEntry(final ORFAction action, final ORFMatch match)
+  {
+    super(action, match);
+  }
 
-	/**
-	 * @return the minLength
-	 */
-	public int getMinLength() {
-		return minLength;
-	}
+  public AddressPrefixBasedORFEntry(
+      final ORFAction action,
+      final ORFMatch match,
+      final int sequence,
+      final int minLength,
+      final int maxLength,
+      final NetworkLayerReachabilityInformation prefix)
+  {
+    super(action, match);
+    this.sequence = sequence;
+    this.minLength = minLength;
+    this.maxLength = maxLength;
+    this.prefix = prefix;
+  }
 
-	/**
-	 * @param minLength the minLength to set
-	 */
-	public void setMinLength(int minLength) {
-		this.minLength = minLength;
-	}
-
-	/**
-	 * @return the maxLength
-	 */
-	public int getMaxLength() {
-		return maxLength;
-	}
-
-	/**
-	 * @param maxLength the maxLength to set
-	 */
-	public void setMaxLength(int maxLength) {
-		this.maxLength = maxLength;
-	}
-
-	/**
-	 * @return the prefix
-	 */
-	public NetworkLayerReachabilityInformation getPrefix() {
-		return prefix;
-	}
-
-	/**
-	 * @param prefix the prefix to set
-	 */
-	public void setPrefix(NetworkLayerReachabilityInformation prefix) {
-		this.prefix = prefix;
-	}
-
+  @Override
+  public ORFType getORFType()
+  {
+    return ORFType.ADDRESS_PREFIX_BASED;
+  }
 
 }

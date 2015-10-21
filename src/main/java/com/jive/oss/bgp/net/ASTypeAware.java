@@ -1,10 +1,12 @@
 package com.jive.oss.bgp.net;
 
-public interface ASTypeAware {
+public interface ASTypeAware
+{
 
-	/**
-	 * @return the asType
-	 */
-	public abstract ASType getAsType();
+  /**
+   * @return the asType
+   */
+
+  public abstract ASType getAsType();
 
 }

@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.refresh.ORFMatch.java 
+ *
+ * File: org.bgp4j.netty.protocol.refresh.ORFMatch.java
  */
 package com.jive.oss.bgp.net;
 
@@ -21,29 +21,36 @@ package com.jive.oss.bgp.net;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public enum ORFMatch {
-	PERMIT,
-	DENY;
-	
-	public int toCode() {
-		switch(this) {
-		case PERMIT:
-			return 0;
-		case DENY:
-			return 1;
-		default:
-			throw new IllegalArgumentException("unknown ORF action code: " + this);			
-		}
-	}
-	
-	public static ORFMatch fromCode(int code) {
-		switch(code) {
-		case 0:
-			return PERMIT;
-		case 1:
-			return DENY;
-		default:
-			throw new IllegalArgumentException("unknown ORF action code: " + code);			
-		}
-	}
+public enum ORFMatch
+{
+
+  PERMIT,
+  DENY;
+
+  public int toCode()
+  {
+    switch (this)
+    {
+      case PERMIT:
+        return 0;
+      case DENY:
+        return 1;
+      default:
+        throw new IllegalArgumentException("unknown ORF action code: " + this);
+    }
+  }
+
+  public static ORFMatch fromCode(final int code)
+  {
+    switch (code)
+    {
+      case 0:
+        return PERMIT;
+      case 1:
+        return DENY;
+      default:
+        throw new IllegalArgumentException("unknown ORF action code: " + code);
+    }
+  }
+
 }

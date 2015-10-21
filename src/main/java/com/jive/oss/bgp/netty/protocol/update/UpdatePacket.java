@@ -238,6 +238,7 @@ public class UpdatePacket extends BGPv4Packet
   @SuppressWarnings("unchecked")
   public <T extends PathAttribute> Set<T> lookupPathAttributes(final Class<T> paClass)
   {
+    
     final Set<T> result = new HashSet<T>();
 
     for (final PathAttribute pa : this.pathAttributes)
@@ -249,6 +250,7 @@ public class UpdatePacket extends BGPv4Packet
     }
 
     return result;
+    
   }
 
   /**

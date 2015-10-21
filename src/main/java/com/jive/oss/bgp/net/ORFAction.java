@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.refresh.ORFAction.java 
+ *
+ * File: org.bgp4j.netty.protocol.refresh.ORFAction.java
  */
 package com.jive.oss.bgp.net;
 
@@ -21,34 +21,42 @@ package com.jive.oss.bgp.net;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public enum ORFAction {
-	ADD,
-	REMOVE,
-	REMOVE_ALL;
-	
-	public int toCode() {
-		switch(this) {
-			case ADD:
-				return 0;
-			case REMOVE:
-				return 1;
-			case REMOVE_ALL:
-				return 2;
-			default:
-				throw new IllegalArgumentException("unknown ORF action: " + this);
-		}
-	}
-	
-	public static ORFAction fromCode(int code) {
-		switch(code) {
-		case 0:
-			return ADD;
-		case 1:
-			return REMOVE;
-		case 2:
-			return REMOVE_ALL;
-		default:
-			throw new IllegalArgumentException("unknown ORF action code: " + code);
-		}
-	}
+public enum ORFAction
+{
+
+  ADD,
+  REMOVE,
+  REMOVE_ALL;
+
+  public int toCode()
+  {
+    switch (this)
+    {
+      case ADD:
+        return 0;
+      case REMOVE:
+        return 1;
+      case REMOVE_ALL:
+        return 2;
+      default:
+        throw new IllegalArgumentException("unknown ORF action: " + this);
+    }
+  }
+
+  public static ORFAction fromCode(final int code)
+  {
+    switch (code)
+    {
+      case 0:
+        return ADD;
+      case 1:
+        return REMOVE;
+      case 2:
+        return REMOVE_ALL;
+      default:
+        throw new IllegalArgumentException("unknown ORF action code: " + code);
+    }
+
+  }
+
 }

@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.update.AggregatorPathAttribute.java 
+ *
+ * File: org.bgp4j.netty.protocol.update.AggregatorPathAttribute.java
  */
 package com.jive.oss.bgp.net.attributes;
 
@@ -32,109 +32,126 @@ import com.jive.oss.bgp.net.InetAddressComparator;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class AggregatorPathAttribute extends PathAttribute implements ASTypeAware {
 
-	private ASType asType;
-	private int asNumber;
-	private Inet4Address aggregator;
+public class AggregatorPathAttribute extends PathAttribute implements ASTypeAware
+{
 
-	public AggregatorPathAttribute(ASType asType) {
-		super(Category.OPTIONAL_TRANSITIVE);
+  private final ASType asType;
+  private int asNumber;
+  private Inet4Address aggregator;
 
-		this.asType = asType;
-	}
+  public AggregatorPathAttribute(final ASType asType)
+  {
+    super(Category.OPTIONAL_TRANSITIVE);
 
-	public AggregatorPathAttribute(ASType asType, int asNumber, Inet4Address aggregator) {
-		this(asType);
-		
-		this.asNumber = asNumber;
-		this.aggregator = aggregator;
-	}
+    this.asType = asType;
+  }
 
-	/**
-	 * @return the fourByteASNumber
-	 */
-	public boolean isFourByteASNumber() {
-		return (this.asType == ASType.AS_NUMBER_4OCTETS);
-	}
+  public AggregatorPathAttribute(final ASType asType, final int asNumber, final Inet4Address aggregator)
+  {
+    this(asType);
 
-	/**
-	 * @return the asType
-	 */
-	public ASType getAsType() {
-		return asType;
-	}
+    this.asNumber = asNumber;
+    this.aggregator = aggregator;
+  }
 
-	/**
-	 * @return the asNumber
-	 */
-	public int getAsNumber() {
-		return asNumber;
-	}
+  /**
+   * @return the fourByteASNumber
+   */
+  public boolean isFourByteASNumber()
+  {
+    return (this.asType == ASType.AS_NUMBER_4OCTETS);
+  }
 
-	/**
-	 * @param asNumber the asNumber to set
-	 */
-	public void setAsNumber(int asNumber) {
-		this.asNumber = asNumber;
-	}
+  /**
+   * @return the asType
+   */
+  @Override
+  public ASType getAsType()
+  {
+    return this.asType;
+  }
 
-	/**
-	 * @return the aggregator
-	 */
-	public Inet4Address getAggregator() {
-		return aggregator;
-	}
+  /**
+   * @return the asNumber
+   */
+  public int getAsNumber()
+  {
+    return this.asNumber;
+  }
 
-	/**
-	 * @param aggregator the aggregator to set
-	 */
-	public void setAggregator(Inet4Address aggregator) {
-		this.aggregator = aggregator;
-	}
+  /**
+   * @param asNumber
+   *          the asNumber to set
+   */
+  public void setAsNumber(final int asNumber)
+  {
+    this.asNumber = asNumber;
+  }
 
-	@Override
-	protected PathAttributeType internalType() {
-		return PathAttributeType.AGGREGATOR;
-	}
+  /**
+   * @return the aggregator
+   */
+  public Inet4Address getAggregator()
+  {
+    return this.aggregator;
+  }
 
-	@Override
-	protected boolean subclassEquals(PathAttribute obj) {
-		AggregatorPathAttribute o = (AggregatorPathAttribute)obj;
-		
-		return (new EqualsBuilder())
-			.append(getAsNumber(), o.getAsNumber())
-			.append(getAggregator(), o.getAggregator())
-			.append(getAsType(), o.getAsType())
-			.isEquals();
-	}
+  /**
+   * @param aggregator
+   *          the aggregator to set
+   */
+  public void setAggregator(final Inet4Address aggregator)
+  {
+    this.aggregator = aggregator;
+  }
 
-	@Override
-	protected int subclassHashCode() {
-		return (new HashCodeBuilder())
-			.append(getAsNumber())
-			.append(getAggregator())
-			.append(getAsType())
-			.toHashCode();
-	}
+  @Override
+  protected PathAttributeType internalType()
+  {
+    return PathAttributeType.AGGREGATOR;
+  }
 
-	@Override
-	protected int subclassCompareTo(PathAttribute obj) {
-		AggregatorPathAttribute o = (AggregatorPathAttribute)obj;
-		
-		return (new CompareToBuilder())
-			.append(getAsNumber(), o.getAsNumber())
-			.append(getAggregator(), o.getAggregator(), new InetAddressComparator())
-			.append(getAsType(), o.getAsType())
-			.toComparison();
-	}
+  @Override
+  protected boolean subclassEquals(final PathAttribute obj)
+  {
+    final AggregatorPathAttribute o = (AggregatorPathAttribute) obj;
 
-	@Override
-	protected ToStringBuilder subclassToString() {
-		return (new ToStringBuilder(this))
-				.append("asNumber", this.asNumber)
-				.append("aggregator", this.aggregator)
-				.append("asType", this.asType);
-	}
+    return (new EqualsBuilder())
+        .append(this.getAsNumber(), o.getAsNumber())
+        .append(this.getAggregator(), o.getAggregator())
+        .append(this.getAsType(), o.getAsType())
+        .isEquals();
+  }
+
+  @Override
+  protected int subclassHashCode()
+  {
+    return (new HashCodeBuilder())
+        .append(this.getAsNumber())
+        .append(this.getAggregator())
+        .append(this.getAsType())
+        .toHashCode();
+  }
+
+  @Override
+  protected int subclassCompareTo(final PathAttribute obj)
+  {
+    final AggregatorPathAttribute o = (AggregatorPathAttribute) obj;
+    return (new CompareToBuilder())
+        .append(this.getAsNumber(), o.getAsNumber())
+        .append(this.getAggregator(), o.getAggregator(), new InetAddressComparator())
+        .append(this.getAsType(), o.getAsType())
+        .toComparison();
+  }
+
+  @Override
+  protected ToStringBuilder subclassToString()
+  {
+    return (new ToStringBuilder(this))
+        .append("asNumber", this.asNumber)
+        .append("aggregator", this.aggregator)
+        .append("asType", this.asType);
+  }
 
 }

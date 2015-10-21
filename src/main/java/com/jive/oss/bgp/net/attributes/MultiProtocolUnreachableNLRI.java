@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.update.MultiProtocolReachableNLRI.java 
+ *
+ * File: org.bgp4j.netty.protocol.update.MultiProtocolReachableNLRI.java
  */
 package com.jive.oss.bgp.net.attributes;
 
@@ -35,164 +35,199 @@ import com.jive.oss.bgp.net.SubsequentAddressFamily;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class MultiProtocolUnreachableNLRI extends PathAttribute {
+public class MultiProtocolUnreachableNLRI extends PathAttribute
+{
 
-	private AddressFamily addressFamily;
-	private SubsequentAddressFamily subsequentAddressFamily;
-	private List<NetworkLayerReachabilityInformation> nlris = new LinkedList<NetworkLayerReachabilityInformation>();
-	
-	/**
-	 * @param category
-	 */
-	public MultiProtocolUnreachableNLRI() {
-		super(Category.OPTIONAL_NON_TRANSITIVE);
-	}
+  private AddressFamily addressFamily;
+  private SubsequentAddressFamily subsequentAddressFamily;
+  private List<NetworkLayerReachabilityInformation> nlris = new LinkedList<NetworkLayerReachabilityInformation>();
 
-	/**
-	 * @param category
-	 */
-	public MultiProtocolUnreachableNLRI(AddressFamily addressFamily, SubsequentAddressFamily subsequentAddressFamily) {
-		this();
-		
-		this.addressFamily = addressFamily;
-		this.subsequentAddressFamily = subsequentAddressFamily;
-	}
-	
-	/**
-	 * @param category
-	 */
-	public MultiProtocolUnreachableNLRI(AddressFamily addressFamily, SubsequentAddressFamily subsequentAddressFamily, NetworkLayerReachabilityInformation[] nlris) {
-		this(addressFamily, subsequentAddressFamily);
-		
-		for(NetworkLayerReachabilityInformation nlri : nlris)
-			this.nlris.add(nlri);
-	}
-	
-	/**
-	 * @param category
-	 */
-	public MultiProtocolUnreachableNLRI(AddressFamily addressFamily, SubsequentAddressFamily subsequentAddressFamily, List<NetworkLayerReachabilityInformation> nlris) {
-		this(addressFamily, subsequentAddressFamily);
+  /**
+   * @param category
+   */
 
-		if(nlris != null)
-			this.nlris = new LinkedList<NetworkLayerReachabilityInformation>(nlris);
-	}
-	
-	/**
-	 * @return the addressFamily
-	 */
-	public AddressFamily getAddressFamily() {
-		return addressFamily;
-	}
+  public MultiProtocolUnreachableNLRI()
+  {
+    super(Category.OPTIONAL_NON_TRANSITIVE);
+  }
 
-	/**
-	 * @param addressFamily the addressFamily to set
-	 */
-	public void setAddressFamily(AddressFamily addressFamily) {
-		this.addressFamily = addressFamily;
-	}
+  /**
+   * @param category
+   */
 
-	/**
-	 * @return the subsequentAddressFamily
-	 */
-	public SubsequentAddressFamily getSubsequentAddressFamily() {
-		return subsequentAddressFamily;
-	}
+  public MultiProtocolUnreachableNLRI(final AddressFamily addressFamily, final SubsequentAddressFamily subsequentAddressFamily)
+  {
+    this();
 
-	/**
-	 * @param subsequentAddressFamily the subsequentAddressFamily to set
-	 */
-	public void setSubsequentAddressFamily(
-			SubsequentAddressFamily subsequentAddressFamily) {
-		this.subsequentAddressFamily = subsequentAddressFamily;
-	}
+    this.addressFamily = addressFamily;
+    this.subsequentAddressFamily = subsequentAddressFamily;
+  }
 
-	/**
-	 * @return the nlris
-	 */
-	public List<NetworkLayerReachabilityInformation> getNlris() {
-		return nlris;
-	}
+  /**
+   * @param category
+   */
+  public MultiProtocolUnreachableNLRI(final AddressFamily addressFamily, final SubsequentAddressFamily subsequentAddressFamily, final NetworkLayerReachabilityInformation[] nlris)
+  {
+    this(addressFamily, subsequentAddressFamily);
 
-	/**
-	 * @param nlris the nlris to set
-	 */
-	public void setNlris(List<NetworkLayerReachabilityInformation> nlris) {
-		this.nlris = nlris;
-	}
+    for (final NetworkLayerReachabilityInformation nlri : nlris)
+    {
+      this.nlris.add(nlri);
+    }
+  }
 
-	public AddressFamilyKey addressFamilyKey() {
-		return new AddressFamilyKey(getAddressFamily(), getSubsequentAddressFamily());
-	}
-	
+  /**
+   * @param category
+   */
+  public MultiProtocolUnreachableNLRI(final AddressFamily addressFamily, final SubsequentAddressFamily subsequentAddressFamily,
+      final List<NetworkLayerReachabilityInformation> nlris)
+  {
+    this(addressFamily, subsequentAddressFamily);
 
-	@Override
-	protected PathAttributeType internalType() {
-		return PathAttributeType.MULTI_PROTOCOL_UNREACHABLE;
-	}
+    if (nlris != null)
+    {
+      this.nlris = new LinkedList<NetworkLayerReachabilityInformation>(nlris);
+    }
+  }
 
-	@Override
-	protected boolean subclassEquals(PathAttribute obj) {
-		MultiProtocolUnreachableNLRI o = (MultiProtocolUnreachableNLRI)obj;
-		
-		EqualsBuilder builer = (new EqualsBuilder())
-				.append(getAddressFamily(), o.getAddressFamily())
-				.append(getSubsequentAddressFamily(), o.getSubsequentAddressFamily())
-				.append(getNlris().size(), o.getNlris().size());
-		
-		if(builer.isEquals()) {
-			Iterator<NetworkLayerReachabilityInformation> lit = getNlris().iterator();
-			Iterator<NetworkLayerReachabilityInformation> rit = o.getNlris().iterator();
-			
-			while(lit.hasNext())
-				builer.append(lit.next(), rit.next());
-		}
-		
-		return builer.isEquals();
-	}
+  /**
+   * @return the addressFamily
+   */
+  public AddressFamily getAddressFamily()
+  {
+    return this.addressFamily;
+  }
 
-	@Override
-	protected int subclassHashCode() {
-		HashCodeBuilder builder = (new HashCodeBuilder())
-				.append(getAddressFamily())
-				.append(getSubsequentAddressFamily());
-		Iterator<NetworkLayerReachabilityInformation> it = getNlris().iterator();
-		
-		while(it.hasNext())
-			builder.append(it.next());
-		
-		return builder.toHashCode();
-	}
+  /**
+   * @param addressFamily
+   *          the addressFamily to set
+   */
+  public void setAddressFamily(final AddressFamily addressFamily)
+  {
+    this.addressFamily = addressFamily;
+  }
 
-	@Override
-	protected int subclassCompareTo(PathAttribute obj) {
-		MultiProtocolUnreachableNLRI o = (MultiProtocolUnreachableNLRI)obj;
-		
-		CompareToBuilder builer = (new CompareToBuilder())
-				.append(getAddressFamily(), o.getAddressFamily())
-				.append(getSubsequentAddressFamily(), o.getSubsequentAddressFamily())
-				.append(getNlris().size(), o.getNlris().size());
-		
-		if(builer.toComparison() == 0) {
-			Iterator<NetworkLayerReachabilityInformation> lit = getNlris().iterator();
-			Iterator<NetworkLayerReachabilityInformation> rit = o.getNlris().iterator();
-			
-			while(lit.hasNext())
-				builer.append(lit.next(), rit.next());
-		}
-		
-		return builer.toComparison();
-	}
+  /**
+   * @return the subsequentAddressFamily
+   */
+  public SubsequentAddressFamily getSubsequentAddressFamily()
+  {
+    return this.subsequentAddressFamily;
+  }
 
-	@Override
-	protected ToStringBuilder subclassToString() {
-		ToStringBuilder builder = new ToStringBuilder(this)
-			.append(addressFamily)
-			.append(subsequentAddressFamily);
+  /**
+   * @param subsequentAddressFamily
+   *          the subsequentAddressFamily to set
+   */
+  public void setSubsequentAddressFamily(final SubsequentAddressFamily subsequentAddressFamily)
+  {
+    this.subsequentAddressFamily = subsequentAddressFamily;
+  }
 
-		for(NetworkLayerReachabilityInformation n : nlris)
-			builder.append("nlri", n);
+  /**
+   * @return the nlris
+   */
+  public List<NetworkLayerReachabilityInformation> getNlris()
+  {
+    return this.nlris;
+  }
 
-		return builder;
-	}
+  /**
+   * @param nlris
+   *          the nlris to set
+   */
+  public void setNlris(final List<NetworkLayerReachabilityInformation> nlris)
+  {
+    this.nlris = nlris;
+  }
+
+  public AddressFamilyKey addressFamilyKey()
+  {
+    return new AddressFamilyKey(this.getAddressFamily(), this.getSubsequentAddressFamily());
+  }
+
+  @Override
+  protected PathAttributeType internalType()
+  {
+    return PathAttributeType.MULTI_PROTOCOL_UNREACHABLE;
+  }
+
+  @Override
+  protected boolean subclassEquals(final PathAttribute obj)
+  {
+    final MultiProtocolUnreachableNLRI o = (MultiProtocolUnreachableNLRI) obj;
+
+    final EqualsBuilder builer = (new EqualsBuilder())
+        .append(this.getAddressFamily(), o.getAddressFamily())
+        .append(this.getSubsequentAddressFamily(), o.getSubsequentAddressFamily())
+        .append(this.getNlris().size(), o.getNlris().size());
+
+    if (builer.isEquals())
+    {
+      final Iterator<NetworkLayerReachabilityInformation> lit = this.getNlris().iterator();
+      final Iterator<NetworkLayerReachabilityInformation> rit = o.getNlris().iterator();
+
+      while (lit.hasNext())
+      {
+        builer.append(lit.next(), rit.next());
+      }
+    }
+
+    return builer.isEquals();
+  }
+
+  @Override
+  protected int subclassHashCode()
+  {
+    final HashCodeBuilder builder = (new HashCodeBuilder())
+        .append(this.getAddressFamily())
+        .append(this.getSubsequentAddressFamily());
+    final Iterator<NetworkLayerReachabilityInformation> it = this.getNlris().iterator();
+
+    while (it.hasNext())
+    {
+      builder.append(it.next());
+    }
+
+    return builder.toHashCode();
+  }
+
+  @Override
+  protected int subclassCompareTo(final PathAttribute obj)
+  {
+    final MultiProtocolUnreachableNLRI o = (MultiProtocolUnreachableNLRI) obj;
+
+    final CompareToBuilder builer = (new CompareToBuilder())
+        .append(this.getAddressFamily(), o.getAddressFamily())
+        .append(this.getSubsequentAddressFamily(), o.getSubsequentAddressFamily())
+        .append(this.getNlris().size(), o.getNlris().size());
+
+    if (builer.toComparison() == 0)
+    {
+      final Iterator<NetworkLayerReachabilityInformation> lit = this.getNlris().iterator();
+      final Iterator<NetworkLayerReachabilityInformation> rit = o.getNlris().iterator();
+
+      while (lit.hasNext())
+      {
+        builer.append(lit.next(), rit.next());
+      }
+    }
+
+    return builer.toComparison();
+  }
+
+  @Override
+  protected ToStringBuilder subclassToString()
+  {
+    final ToStringBuilder builder = new ToStringBuilder(this)
+        .append(this.addressFamily)
+        .append(this.subsequentAddressFamily);
+
+    for (final NetworkLayerReachabilityInformation n : this.nlris)
+    {
+      builder.append("nlri", n);
+    }
+
+    return builder;
+  }
 }
