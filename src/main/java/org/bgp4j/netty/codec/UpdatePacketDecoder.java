@@ -15,7 +15,7 @@
  *
  * File: org.bgp4j.netty.protocol.update.UpdatePacketDecoder.java
  */
-package org.bgp4j.netty.protocol.update;
+package org.bgp4j.netty.codec;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -47,7 +47,29 @@ import org.bgp4j.netty.BGPv4Constants;
 import org.bgp4j.netty.NLRICodec;
 import org.bgp4j.netty.protocol.BGPv4Packet;
 import org.bgp4j.netty.protocol.NotificationPacket;
-import org.bgp4j.netty.protocol.ProtocolPacketUtils;
+import org.bgp4j.netty.protocol.update.AttributeException;
+import org.bgp4j.netty.protocol.update.AttributeFlagsNotificationPacket;
+import org.bgp4j.netty.protocol.update.AttributeLengthException;
+import org.bgp4j.netty.protocol.update.AttributeLengthNotificationPacket;
+import org.bgp4j.netty.protocol.update.InvalidNetworkFieldException;
+import org.bgp4j.netty.protocol.update.InvalidNetworkFieldNotificationPacket;
+import org.bgp4j.netty.protocol.update.InvalidNextHopException;
+import org.bgp4j.netty.protocol.update.InvalidNextHopNotificationPacket;
+import org.bgp4j.netty.protocol.update.InvalidOriginException;
+import org.bgp4j.netty.protocol.update.InvalidOriginNotificationPacket;
+import org.bgp4j.netty.protocol.update.MalformedASPathAttributeException;
+import org.bgp4j.netty.protocol.update.MalformedASPathAttributeNotificationPacket;
+import org.bgp4j.netty.protocol.update.MalformedAttributeListException;
+import org.bgp4j.netty.protocol.update.MalformedAttributeListNotificationPacket;
+import org.bgp4j.netty.protocol.update.MissingWellKnownAttributeNotificationPacket;
+import org.bgp4j.netty.protocol.update.OptionalAttributeErrorException;
+import org.bgp4j.netty.protocol.update.OptionalAttributeErrorNotificationPacket;
+import org.bgp4j.netty.protocol.update.OriginCodec;
+import org.bgp4j.netty.protocol.update.PathAttributeCodec;
+import org.bgp4j.netty.protocol.update.PathSegmentTypeCodec;
+import org.bgp4j.netty.protocol.update.UnrecognizedWellKnownAttributeNotificationPacket;
+import org.bgp4j.netty.protocol.update.UpdateNotificationPacket;
+import org.bgp4j.netty.protocol.update.UpdatePacket;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -67,8 +89,10 @@ public class UpdatePacketDecoder
    *          the buffer containing the data.
    * @return
    */
+
   public BGPv4Packet decodeUpdatePacket(final ByteBuf buffer)
   {
+
     final UpdatePacket packet = new UpdatePacket();
 
     ProtocolPacketUtils.verifyPacketSize(buffer, BGPv4Constants.BGP_PACKET_MIN_SIZE_UPDATE, -1);

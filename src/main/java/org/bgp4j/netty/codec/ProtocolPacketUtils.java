@@ -15,9 +15,10 @@
  *
  * File: org.bgp4j.netty.protocol.ProtocolPacketUtils.java
  */
-package org.bgp4j.netty.protocol;
+package org.bgp4j.netty.codec;
 
 import org.bgp4j.netty.BGPv4Constants;
+import org.bgp4j.netty.protocol.ConnectionNotSynchronizedException;
 
 import io.netty.buffer.ByteBuf;
 

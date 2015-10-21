@@ -12,91 +12,100 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  */
 package org.bgp4j.netty.service;
 
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
-
-import javax.inject.Inject;
-
 import org.bgp4j.config.global.ApplicationConfiguration;
+import org.bgp4j.netty.codec.BGPv4PacketDecoder;
+import org.bgp4j.netty.fsm.FSMRegistry;
 import org.bgp4j.netty.handlers.BGPv4Codec;
 import org.bgp4j.netty.handlers.BGPv4Reframer;
 import org.bgp4j.netty.handlers.BGPv4ServerEndpoint;
 import org.bgp4j.netty.handlers.InboundOpenCapabilitiesProcessor;
 import org.bgp4j.netty.handlers.ValidateServerIdentifier;
-import org.jboss.netty.bootstrap.ServerBootstrap;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-import org.slf4j.Logger;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFactory;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class BGPv4Server {
 
-	private @Inject Logger log;
-	private @Inject ApplicationConfiguration applicationConfiguration;
-	private @Inject BGPv4ServerEndpoint serverEndpoint;
-	private @Inject BGPv4Codec codec;
-	private @Inject InboundOpenCapabilitiesProcessor inboundOpenCapProcessor;
-	private @Inject ValidateServerIdentifier validateServer;
-	private @Inject BGPv4Reframer reframer;
-	private Channel serverChannel;
-	private ChannelFactory serverChannelFactory;
+@Slf4j
+public class BGPv4Server
+{
 
-	public void startServer() {
-		serverChannelFactory = new NioServerSocketChannelFactory(
-				Executors.newCachedThreadPool(),
-				Executors.newCachedThreadPool());
-				    
-		ServerBootstrap bootstrap = new ServerBootstrap(serverChannelFactory);
-				    
-		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
-			
-			@Override
-			public ChannelPipeline getPipeline() throws Exception {
-				ChannelPipeline pipeline = Channels.pipeline();
-				
-				pipeline.addLast(BGPv4Reframer.HANDLER_NAME, reframer);
-				pipeline.addLast(BGPv4Codec.HANDLER_NAME, codec);
-				pipeline.addLast(InboundOpenCapabilitiesProcessor.HANDLER_NAME, inboundOpenCapProcessor);
-				pipeline.addLast(ValidateServerIdentifier.HANDLER_NAME, validateServer);
-				pipeline.addLast(BGPv4ServerEndpoint.HANDLER_NAME, serverEndpoint);
-				
-				return pipeline;
-			}
-		});
-		
-		bootstrap.setOption("child.tcpNoDelay", true);
-		bootstrap.setOption("child.keepAlive", true);
-		
-		InetSocketAddress serverSocketAddress = applicationConfiguration.getBgpServerConfiguration().getServerConfiguration().getListenAddress();
-		
-		log.info("starting locall server on " + serverSocketAddress);
-		serverChannel = bootstrap.bind(serverSocketAddress);
-	}
-	
-	public void stopServer() {
-		log.info("closing all child connections");
-		serverEndpoint.getTrackedChannels().close().awaitUninterruptibly();
+  private final ApplicationConfiguration applicationConfiguration;
+  private final BGPv4ServerEndpoint serverEndpoint;
+  private BGPv4Codec codec = new BGPv4Codec(BGPv4PacketDecoder.getInstance());
+  private InboundOpenCapabilitiesProcessor inboundOpenCapProcessor = new InboundOpenCapabilitiesProcessor();
+  private ValidateServerIdentifier validateServer = new ValidateServerIdentifier();
+  private BGPv4Reframer reframer = new BGPv4Reframer();
+  private Channel serverChannel;
 
-		if(serverChannel != null) {
-			log.info("stopping local server");
-			
-			serverChannel.close();
-			serverChannel.getCloseFuture().awaitUninterruptibly();
-		}
+  public BGPv4Server(ApplicationConfiguration config, FSMRegistry registry)
+  {
+    this.serverEndpoint = new BGPv4ServerEndpoint(registry);
+    this.applicationConfiguration = config;
+  }
 
-		log.info("cleaning up server resources");
-		serverChannelFactory.releaseExternalResources();
-	}
+  public void startServer()
+  {
+
+    ServerBootstrap bootstrap = new ServerBootstrap();
+
+    bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup());
+
+    bootstrap
+        .channel(NioServerSocketChannel.class)
+        .childHandler(new ChannelInitializer<SocketChannel>() {
+          @Override
+          public void initChannel(SocketChannel ch) throws Exception
+          {
+            ChannelPipeline pipeline = ch.pipeline();
+            pipeline.addLast(BGPv4Reframer.HANDLER_NAME, BGPv4Server.this.reframer);
+            pipeline.addLast(BGPv4Codec.HANDLER_NAME, BGPv4Server.this.codec);
+            pipeline.addLast(InboundOpenCapabilitiesProcessor.HANDLER_NAME, BGPv4Server.this.inboundOpenCapProcessor);
+            pipeline.addLast(ValidateServerIdentifier.HANDLER_NAME, BGPv4Server.this.validateServer);
+            pipeline.addLast(BGPv4ServerEndpoint.HANDLER_NAME, BGPv4Server.this.serverEndpoint);
+          }
+        });
+
+    bootstrap.option(ChannelOption.SO_BACKLOG, 128);
+
+    bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+    bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+
+    log.info("Starting local server");
+    
+    this.serverChannel = bootstrap.bind(applicationConfiguration.getServerPort()).syncUninterruptibly().channel();
+
+  }
+
+  public void stopServer()
+  {
+
+    log.info("closing all child connections");
+
+    this.serverEndpoint.getTrackedChannels().close().awaitUninterruptibly();
+
+    if (this.serverChannel != null)
+    {
+      log.info("stopping local server");
+      this.serverChannel.close();
+      this.serverChannel.closeFuture().awaitUninterruptibly();
+    }
+
+  }
 
 }

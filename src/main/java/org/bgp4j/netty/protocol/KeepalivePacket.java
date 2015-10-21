@@ -24,7 +24,8 @@ import io.netty.buffer.ByteBuf;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class KeepalivePacket extends BGPv4Packet {
+public class KeepalivePacket extends BGPv4Packet
+{
 
   @Override
   protected ByteBuf encodePayload()
@@ -33,7 +34,15 @@ public class KeepalivePacket extends BGPv4Packet {
   }
 
   @Override
-  public int getType() {
+  public int getType()
+  {
     return BGPv4Constants.BGP_PACKET_TYPE_KEEPALIVE;
   }
+
+  @Override
+  public <T> T apply(final BGPv4PacketVisitor<T> visitor)
+  {
+    return visitor.visit(this);
+  }
+
 }

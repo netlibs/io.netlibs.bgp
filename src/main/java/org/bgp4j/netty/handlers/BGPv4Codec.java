@@ -18,8 +18,9 @@ package org.bgp4j.netty.handlers;
 
 import java.util.List;
 
+import org.bgp4j.netty.codec.BGPv4PacketDecoder;
+import org.bgp4j.netty.codec.BGPv4PacketEncoder;
 import org.bgp4j.netty.protocol.BGPv4Packet;
-import org.bgp4j.netty.protocol.BGPv4PacketDecoder;
 import org.bgp4j.netty.protocol.ProtocolPacketException;
 
 import io.netty.buffer.ByteBuf;
@@ -40,24 +41,9 @@ import lombok.extern.slf4j.Slf4j;
 public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
 {
 
-  public static final String HANDLER_NAME = "BGP4-Codec";
+  public static final String HANDLER_NAME = "BGPv4-Codec";
 
   private final BGPv4PacketDecoder packetDecoder;
-
-  @Override
-  protected void encode(final ChannelHandlerContext ctx, final BGPv4Packet msg, final ByteBuf out) throws Exception
-  {
-
-    final ByteBuf buffer = msg.encodePacket();
-
-    log.info("writing packet " + msg);
-
-    if (buffer != null)
-    {
-      ctx.writeAndFlush(buffer);
-    }
-
-  }
 
   @Override
   protected void decode(final ChannelHandlerContext ctx, final ByteBuf buffer, final List<Object> out) throws Exception
@@ -73,7 +59,7 @@ public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
 
       final BGPv4Packet packet = this.packetDecoder.decodePacket(buffer);
 
-      log.info("received packet " + packet);
+      log.debug("Received: {}", packet);
 
       if (packet != null)
       {
@@ -92,6 +78,18 @@ public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
       ctx.channel().close();
     }
 
+  }
+
+  /**
+   * Upstream requested transmission of the given BGPv4 packet. Encode and transmit.
+   */
+
+  @Override
+  protected void encode(final ChannelHandlerContext ctx, final BGPv4Packet msg, final ByteBuf out) throws Exception
+  {
+    final ByteBuf buffer = msg.apply(new BGPv4PacketEncoder());
+    log.debug("Sending: {}", msg);
+    ctx.writeAndFlush(buffer);
   }
 
 }

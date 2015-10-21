@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  */
 package org.bgp4j.netty.protocol;
 
@@ -22,24 +22,26 @@ import org.bgp4j.netty.BGPv4Constants;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class CeaseNotificationPacket extends NotificationPacket {
+public class CeaseNotificationPacket extends NotificationPacket
+{
 
-	protected static final int SUBCODE_UNSPECIFIC = 0;
-	protected static final int SUBCODE_MAXIMUM_NUMBER_OF_PREFIXES_REACHED = 1;
-	protected static final int SUBCODE_ADMINSTRATIVE_SHUTDOWN = 2;
-	protected static final int SUBCODE_PEER_DECONFIGURED = 3;
-	protected static final int SUBCODE_ADMINSTRATIVE_RESET = 4;
-	protected static final int SUBCODE_CONNECTION_REJECTED = 5;
-	protected static final int SUBCODE_OTHER_CONFIGURATION_CHANGE = 6;
-	protected static final int SUBCODE_CONNECTION_COLLISION_RESOLUTION = 7;
-	protected static final int SUBCODE_OUT_OF_RESOURCES = 8;
+  public static final int SUBCODE_UNSPECIFIC = 0;
+  public static final int SUBCODE_MAXIMUM_NUMBER_OF_PREFIXES_REACHED = 1;
+  public static final int SUBCODE_ADMINSTRATIVE_SHUTDOWN = 2;
+  public static final int SUBCODE_PEER_DECONFIGURED = 3;
+  public static final int SUBCODE_ADMINSTRATIVE_RESET = 4;
+  public static final int SUBCODE_CONNECTION_REJECTED = 5;
+  public static final int SUBCODE_OTHER_CONFIGURATION_CHANGE = 6;
+  public static final int SUBCODE_CONNECTION_COLLISION_RESOLUTION = 7;
+  public static final int SUBCODE_OUT_OF_RESOURCES = 8;
 
-	/**
-	 * @param errorCode
-	 * @param errorSubcode
-	 */
-	protected CeaseNotificationPacket(int subcode) {
-		super(BGPv4Constants.BGP_ERROR_CODE_CEASE, subcode);
-	}
+  /**
+   * @param errorCode
+   * @param errorSubcode
+   */
+  protected CeaseNotificationPacket(final int subcode)
+  {
+    super(BGPv4Constants.BGP_ERROR_CODE_CEASE, subcode);
+  }
 
 }

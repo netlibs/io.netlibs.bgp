@@ -25,6 +25,7 @@ import org.bgp4j.net.OutboundRouteFilter;
 import org.bgp4j.net.SubsequentAddressFamily;
 import org.bgp4j.netty.BGPv4Constants;
 import org.bgp4j.netty.protocol.BGPv4Packet;
+import org.bgp4j.netty.protocol.BGPv4PacketVisitor;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -157,6 +158,12 @@ public class RouteRefreshPacket extends BGPv4Packet {
    */
   public void setOutboundRouteFilter(final OutboundRouteFilter outboundRouteFilter) {
     this.outboundRouteFilter = outboundRouteFilter;
+  }
+
+  @Override
+  public <T> T apply(final BGPv4PacketVisitor<T> visitor)
+  {
+    return visitor.visit(this);
   }
 
   @Override

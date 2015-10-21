@@ -136,7 +136,7 @@ public class PathAttributeCodec
    * @return
    */
   @SuppressWarnings("unchecked")
-  static int valueLength(final PathAttribute attr)
+  public static int valueLength(final PathAttribute attr)
   {
     if (codecs.containsKey(attr.getClass()))
     {
@@ -154,7 +154,7 @@ public class PathAttributeCodec
    * @return
    */
   @SuppressWarnings("unchecked")
-  static int typeCode(final PathAttribute attr)
+  public static int typeCode(final PathAttribute attr)
   {
     if (codecs.containsKey(attr.getClass()))
     {
@@ -170,7 +170,7 @@ public class PathAttributeCodec
    * get the encoded attribute value
    */
   @SuppressWarnings("unchecked")
-  static ByteBuf encodeValue(final PathAttribute attr)
+  public static ByteBuf encodeValue(final PathAttribute attr)
   {
     if (codecs.containsKey(attr.getClass()))
     {

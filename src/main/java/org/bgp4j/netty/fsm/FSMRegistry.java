@@ -25,8 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bgp4j.config.global.ApplicationConfiguration;
 import org.bgp4j.config.global.PeerConfigurationEvent;
 import org.bgp4j.config.nodes.PeerConfiguration;
+import org.bgp4j.netty.service.BGPv4Client;
+import org.bgp4j.rib.PeerRoutingInformationBaseManager;
+import org.quartz.Scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,23 +43,25 @@ import lombok.extern.slf4j.Slf4j;
 public class FSMRegistry
 {
 
+  private final ApplicationConfiguration applicationConfiguration;
+
+  public FSMRegistry(ApplicationConfiguration config)
+  {
+    this.applicationConfiguration = config;
+  }
+
   private final Map<InetSocketAddress, BGPv4FSM> fsmMap = new HashMap<InetSocketAddress, BGPv4FSM>();
 
   // private @Inject ApplicationConfiguration applicationConfiguration;
   private boolean haveRunningMachines = false;
 
-  public FSMRegistry()
-  {
-
-  }
-
-  public void createRegistry()
+  public void createRegistry(Scheduler scheduler)
   {
     for (final PeerConfiguration peerConfig : this.applicationConfiguration.listPeerConfigurations())
     {
       try
       {
-        final BGPv4FSM fsm = this.fsmProvider.get();
+        final BGPv4FSM fsm = new BGPv4FSM(scheduler, new BGPv4Client(this), new CapabilitesNegotiator(), new PeerRoutingInformationBaseManager(), new OutboundRoutingUpdateQueue(scheduler));
         fsm.configure(peerConfig);
         this.fsmMap.put(fsm.getRemotePeerAddress(), fsm);
       }
@@ -131,7 +137,7 @@ public class FSMRegistry
       case CONFIGURATION_ADDED:
         try
         {
-          
+
           fsm = this.fsmProvider.get();
 
           fsm.configure(event.getCurrent());

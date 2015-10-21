@@ -16,58 +16,117 @@
  */
 package org.bgp4j.netty.service;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 import org.bgp4j.config.global.ApplicationConfiguration;
+import org.bgp4j.config.nodes.ClientConfiguration;
+import org.bgp4j.config.nodes.PeerConfiguration;
+import org.bgp4j.config.nodes.impl.ClientConfigurationImpl;
+import org.bgp4j.config.nodes.impl.PeerConfigurationImpl;
 import org.bgp4j.netty.fsm.FSMRegistry;
-import org.slf4j.Logger;
+import org.bgp4j.netty.fsm.OutboundRoutingUpdateQueue;
+import org.bgp4j.rib.PeerRoutingInformationBaseManager;
+import org.quartz.Scheduler;
+import org.quartz.impl.StdSchedulerFactory;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class BGPv4Service {
-		
-	private @Inject Logger log;
 
-	private @Inject Instance<BGPv4Server> serverProvider;
-	private @Inject FSMRegistry fsmRegistry;
-	private @Inject ApplicationConfiguration applicationConfiguration;
-	
-	private BGPv4Server serverInstance;
+@Slf4j
+@RequiredArgsConstructor
+public class BGPv4Service
+{
 
-	/**
-	 * start the service
-	 * 
-	 * @param configuration the initial service configuration
-	 */
-	public void startService() {
-		fsmRegistry.createRegistry();
-				
-		if(applicationConfiguration.getBgpServerConfiguration()!= null) {
-			log.info("starting local BGPv4 server");
-			
-			this.serverInstance = serverProvider.get();
-			
-			serverInstance.startServer();
-		}
-		
-		fsmRegistry.startFiniteStateMachines();
-	}
+  private final FSMRegistry fsmRegistry;
+  private final BGPv4Server serverInstance;
+  private final Scheduler scheduler;
 
-	/**
-	 * stop the running service
-	 * 
-	 */
-	public void stopService() {
-		fsmRegistry.stopFiniteStateMachines();
+  /**
+   * start the service
+   * 
+   * @param configuration
+   *          the initial service configuration
+   */
+  public void startService()
+  {
 
-		if(serverInstance != null)
-			serverInstance.stopServer();
+    this.fsmRegistry.createRegistry(scheduler);
 
-		fsmRegistry.destroyRegistry();
-	}
-	
+    if (this.serverInstance != null)
+    {
+      log.info("starting local BGPv4 server");
+      this.serverInstance.startServer();
+    }
+
+    this.fsmRegistry.startFiniteStateMachines();
+  }
+
+  /**
+   * stop the running service
+   * 
+   */
+  public void stopService()
+  {
+    this.fsmRegistry.stopFiniteStateMachines();
+
+    if (this.serverInstance != null)
+    {
+      this.serverInstance.stopServer();
+    }
+
+    this.fsmRegistry.destroyRegistry();
+  }
+
+  public static void main(final String[] args) throws Exception
+  {
+
+    final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+
+    scheduler.start();
+
+    final PeerRoutingInformationBaseManager pribm = new PeerRoutingInformationBaseManager();
+
+    final OutboundRoutingUpdateQueue out = new OutboundRoutingUpdateQueue(scheduler);
+
+    final ClientConfiguration clientConfig = new ClientConfigurationImpl(new InetSocketAddress("192.168.13.129", 179));
+    final PeerConfiguration config = new PeerConfigurationImpl("test", clientConfig, 1234, 5678, 1, get(InetAddress.getByName("192.168.13.129")));
+
+    ApplicationConfiguration app = new ApplicationConfiguration();
+    app.addPeer(config);
+
+    final FSMRegistry reg = new FSMRegistry(app);
+
+    BGPv4Service service = new BGPv4Service(reg, new BGPv4Server(app, reg), scheduler);
+
+    service.startService();
+
+    // final BGPv4FSM fsm = new BGPv4FSM(scheduler, client, new CapabilitesNegotiator(), pribm, out);
+    // fsm.configure(config);
+    //
+    // reg.registerFSM(fsm);
+    //
+    // reg.startFiniteStateMachines();
+    // client.startClient(config).sync();
+
+    while (true)
+    {
+      Thread.sleep(1000);
+    }
+
+  }
+
+  private static long get(final InetAddress a)
+  {
+    final byte[] b = a.getAddress();
+    final long i = 16843266L;
+    return i;
+  }
+
 }

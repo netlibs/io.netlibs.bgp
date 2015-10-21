@@ -27,6 +27,7 @@ import org.bgp4j.net.attributes.PathAttribute;
 import org.bgp4j.netty.BGPv4Constants;
 import org.bgp4j.netty.NLRICodec;
 import org.bgp4j.netty.protocol.BGPv4Packet;
+import org.bgp4j.netty.protocol.BGPv4PacketVisitor;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -273,5 +274,13 @@ public class UpdatePacket extends BGPv4Packet
 
     return attrs;
   }
+  
+  @Override
+  public <T> T apply(BGPv4PacketVisitor<T> visitor)
+  {
+    return visitor.visit(this);
+  }
+  
+
 
 }

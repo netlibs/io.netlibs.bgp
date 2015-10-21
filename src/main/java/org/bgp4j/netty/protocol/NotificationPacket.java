@@ -83,6 +83,12 @@ public class NotificationPacket extends BGPv4Packet
   }
 
   @Override
+  public <T> T apply(final BGPv4PacketVisitor<T> visitor)
+  {
+    return visitor.visit(this);
+  }
+
+  @Override
   public String toString()
   {
     return (new ToStringBuilder(this))

@@ -39,23 +39,22 @@ public class PeerConfigurationImpl implements PeerConfiguration
   private String peerName;
   private long localBgpIdentifier;
   private long remoteBgpIdentifier;
-  private int holdTime;
+  private int holdTime = 30;
   private boolean holdTimerDisabled;
-  private int idleHoldTime;
+  private int idleHoldTime = 30;
   private boolean allowAutomaticStart;
   private boolean allowAutomaticStop;
   private boolean collisionDetectEstablishedState;
   private boolean dampPeerOscillation;
   private boolean delayOpen;
   private boolean passiveTcpEstablishment;
-  private int delayOpenTime;
+  private int delayOpenTime = 5;
   private int connectRetryTime = 5;
-  private int automaticStartInterval;
+  private int automaticStartInterval = 5;
   private Capabilities capabilities = new CapabilitiesImpl();
 
   public PeerConfigurationImpl()
   {
-
   }
 
   public PeerConfigurationImpl(final String peerName, final ClientConfiguration clientConfig) throws ConfigurationException

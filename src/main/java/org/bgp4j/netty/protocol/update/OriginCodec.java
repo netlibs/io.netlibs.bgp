@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.netty.protocol.update.OriginCodec.java 
+ *
+ * File: org.bgp4j.netty.protocol.update.OriginCodec.java
  */
 package org.bgp4j.netty.protocol.update;
 
@@ -23,32 +23,37 @@ import org.bgp4j.net.Origin;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class OriginCodec {
+public class OriginCodec
+{
 
-	static Origin fromCode(int code) {
-		switch(code) {
-		case 0:
-			return Origin.IGP;
-		case 1:
-			return Origin.EGP;
-		case 2:
-			return Origin.INCOMPLETE;
-		default:
-			throw new IllegalArgumentException("unknown origin code: " + code);
-		}
-	}
+  public static Origin fromCode(final int code)
+  {
+    switch (code)
+    {
+      case 0:
+        return Origin.IGP;
+      case 1:
+        return Origin.EGP;
+      case 2:
+        return Origin.INCOMPLETE;
+      default:
+        throw new IllegalArgumentException("unknown origin code: " + code);
+    }
+  }
 
-	static int toCode(Origin origin) {
-		switch(origin) {
-			case IGP:
-				return 0;
-			case EGP:
-				return 1;
-			case INCOMPLETE:
-				return 2;
-			default:
-				throw new IllegalArgumentException("unknown origin code: " +origin);
-		}
-	}
+  public static int toCode(final Origin origin)
+  {
+    switch (origin)
+    {
+      case IGP:
+        return 0;
+      case EGP:
+        return 1;
+      case INCOMPLETE:
+        return 2;
+      default:
+        throw new IllegalArgumentException("unknown origin code: " + origin);
+    }
+  }
 
 }

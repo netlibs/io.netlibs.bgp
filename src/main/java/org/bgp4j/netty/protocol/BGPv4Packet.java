@@ -30,11 +30,22 @@ import io.netty.buffer.Unpooled;
  */
 public abstract class BGPv4Packet
 {
+
+  /**
+   * Dispatch to the visitor based on the packet type.
+   *
+   * Returns the value returned by the visitor.
+   *
+   */
+
+  public abstract <T> T apply(BGPv4PacketVisitor<T> visitor);
+
   /**
    * build a binary representation of the protocol packet
    *
    * @return the encoded packet
    */
+
   public ByteBuf encodePacket()
   {
     return this.wrapBufferHeader(this.encodePayload(), this.getType());
@@ -63,8 +74,10 @@ public abstract class BGPv4Packet
    *          the packet type code
    * @return the completely assembled BGPv4 packet
    */
+
   private ByteBuf wrapBufferHeader(final ByteBuf wrapped, final int type)
   {
+
     final int wrappedSize = (wrapped != null) ? wrapped.readableBytes() : 0;
     final ByteBuf buffer = Unpooled.buffer(wrappedSize + BGPv4Constants.BGP_PACKET_HEADER_LENGTH);
 

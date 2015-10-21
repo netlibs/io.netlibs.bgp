@@ -24,14 +24,21 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bgp4j.net.capabilities.Capability;
 import org.bgp4j.netty.BGPv4Constants;
 import org.bgp4j.netty.protocol.BGPv4Packet;
+import org.bgp4j.netty.protocol.BGPv4PacketVisitor;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Singular;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
+
+@AllArgsConstructor
+@Builder
 public class OpenPacket extends BGPv4Packet
 {
 
@@ -39,6 +46,8 @@ public class OpenPacket extends BGPv4Packet
   private int autonomousSystem;
   private int holdTime;
   private long bgpIdentifier;
+  
+  @Singular
   private List<Capability> capabilities = new LinkedList<Capability>();
 
   public OpenPacket()
@@ -61,19 +70,18 @@ public class OpenPacket extends BGPv4Packet
   public OpenPacket(final int protocolVersion, final int autonomousSysten, final long bgpIdentifier, final int holdTime)
   {
     this(protocolVersion, autonomousSysten, bgpIdentifier);
-
     this.holdTime = holdTime;
   }
 
   public OpenPacket(final int protocolVersion, final int autonomousSysten, final long bgpIdentifier, final int holdTime, final Collection<Capability> capabilities)
   {
     this(protocolVersion, autonomousSysten, bgpIdentifier, holdTime);
-
     this.capabilities.addAll(capabilities);
   }
 
   public OpenPacket(final int protocolVersion, final int autonomousSysten, final long bgpIdentifier, final int holdTime, final Capability[] capabilities)
   {
+
     this(protocolVersion, autonomousSysten, bgpIdentifier, holdTime);
 
     for (final Capability cap : capabilities)
@@ -223,6 +231,12 @@ public class OpenPacket extends BGPv4Packet
       }
     }
     return cap;
+  }
+
+  @Override
+  public <T> T apply(final BGPv4PacketVisitor<T> visitor)
+  {
+    return visitor.visit(this);
   }
 
   @Override

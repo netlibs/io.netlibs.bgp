@@ -653,8 +653,11 @@ public class BGPv4FSM
       this.processRemoteUp(mpUnreachables, otherAttributes);
     }
 
-    // withdraw IPv4 prefixes
-    this.prib.routingBase(RIBSide.Remote, ipv4Unicast).withdrawRoutes(message.getWithdrawnRoutes());
+    if (!message.getWithdrawnRoutes().isEmpty())
+    {
+      // withdraw IPv4 prefixes
+      this.prib.routingBase(RIBSide.Remote, ipv4Unicast).withdrawRoutes(message.getWithdrawnRoutes());
+    }
 
     final Set<NextHopPathAttribute> nextHops = message.lookupPathAttributes(NextHopPathAttribute.class);
 

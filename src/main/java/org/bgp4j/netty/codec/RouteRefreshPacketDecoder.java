@@ -15,7 +15,7 @@
  * 
  * File: org.bgp4j.netty.protocol.refresh.RouteRefreshPacketDecoder.java 
  */
-package org.bgp4j.netty.protocol.refresh;
+package org.bgp4j.netty.codec;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +31,7 @@ import org.bgp4j.net.OutboundRouteFilter;
 import org.bgp4j.net.SubsequentAddressFamily;
 import org.bgp4j.netty.NLRICodec;
 import org.bgp4j.netty.protocol.BGPv4Packet;
+import org.bgp4j.netty.protocol.refresh.RouteRefreshPacket;
 import org.slf4j.Logger;
 
 import io.netty.buffer.ByteBuf;
