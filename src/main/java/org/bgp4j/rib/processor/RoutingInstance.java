@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.bgp4j.rib.processor;
 
@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-
 import org.bgp4j.config.nodes.AddressFamilyRoutingPeerConfiguration;
 import org.bgp4j.config.nodes.RoutingInstanceConfiguration;
 import org.bgp4j.net.AddressFamilyKey;
@@ -24,128 +21,160 @@ import org.slf4j.Logger;
  * @author rainer
  *
  */
-public class RoutingInstance {
+public class RoutingInstance
+{
 
-	private @Inject Logger log;
-	private @Inject Instance<AddressFamilyRoutingInstance> familyInstanceProvider;
-	private String firstPeerName;
-	private String secondPeerName;
-	private @Inject PeerRoutingInformationBaseManager pribManager;
-	private RoutingInstanceState state = RoutingInstanceState.STOPPED;
-	
-	private List<AddressFamilyRoutingInstance> familyInstances = new LinkedList<AddressFamilyRoutingInstance>();
+  private @Inject Logger log;
+  private @Inject Instance<AddressFamilyRoutingInstance> familyInstanceProvider;
+  private String firstPeerName;
+  private String secondPeerName;
+  private @Inject PeerRoutingInformationBaseManager pribManager;
+  private RoutingInstanceState state = RoutingInstanceState.STOPPED;
 
-	void configure(RoutingInstanceConfiguration instConfig) {
-		setFirstPeerName(instConfig.getFirstPeer().getPeerName());
-		setSecondPeerName(instConfig.getSecondPeer().getPeerName());
-		
-		Map<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration> firstFamilyRouting = new HashMap<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration>();
-		Map<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration> secondFamilyRouting = new HashMap<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration>();
-		Set<AddressFamilyKey> wantedFamilies = new HashSet<AddressFamilyKey>();
-		
-		for(AddressFamilyRoutingPeerConfiguration afrfc : instConfig.getFirstPeer().getAddressFamilyConfigrations()) {
-			firstFamilyRouting.put(afrfc.getAddressFamilyKey(), afrfc);
-			wantedFamilies.add(afrfc.getAddressFamilyKey());
-		}
-		for(AddressFamilyRoutingPeerConfiguration afrfc : instConfig.getSecondPeer().getAddressFamilyConfigrations()) {
-			secondFamilyRouting.put(afrfc.getAddressFamilyKey(), afrfc);
-			wantedFamilies.add(afrfc.getAddressFamilyKey());
-		}
-		
-		for(AddressFamilyKey afk : wantedFamilies) {
-			AddressFamilyRoutingInstance instance = familyInstanceProvider.get();
-			
-			instance.configure(afk, firstFamilyRouting.get(afk), secondFamilyRouting.get(afk));
-			familyInstances.add(instance);
-		}
-		
-		familyInstances = Collections.unmodifiableList(familyInstances);
-	}
+  private List<AddressFamilyRoutingInstance> familyInstances = new LinkedList<AddressFamilyRoutingInstance>();
 
-	void startInstance() {
-		if(pribManager.isPeerRoutingInformationBaseAvailable(getFirstPeerName())) {
-			if(pribManager.isPeerRoutingInformationBaseAvailable(getSecondPeerName())) {
-				state = RoutingInstanceState.STARTING;
-				
-				for(AddressFamilyRoutingInstance instance : getFamilyInstances()) {
-					log.info("Starting routing instance for " + instance.getAddressFamilyKey());
-					
-					try {
-						instance.startInstance(pribManager.peerRoutingInformationBase(getFirstPeerName()), 
-								pribManager.peerRoutingInformationBase(getSecondPeerName()));
-						
-						if(instance.getState() != RoutingInstanceState.RUNNING) {
-							log.error("failed to routing instance for " + instance.getAddressFamilyKey() + " with state " + instance.getState());
-							state = RoutingInstanceState.PARTLY_RUNNING;
-						}
-					} catch(Throwable t) {
-						log.error("failed to routing instance for " + instance.getAddressFamilyKey(), t);
-						
-						state = RoutingInstanceState.PARTLY_RUNNING;
-					}
-				}
-				
-				if(state == RoutingInstanceState.STARTING)
-					state = RoutingInstanceState.RUNNING;
-			} else {
-				state = RoutingInstanceState.PEER_ROUTING_BASE_UNAVAILABLE;
-			}			
-		} else {
-			state = RoutingInstanceState.PEER_ROUTING_BASE_UNAVAILABLE;	
-		}		
-	}
-	
-	void stopInstance() {
-		for(AddressFamilyRoutingInstance instance : getFamilyInstances()) {
-			log.info("Stopping routing instance for " + instance.getAddressFamilyKey());
-			
-			try {
-				instance.stopInstance();
-			} catch(Throwable t) {
-				log.error("failed to routing instance for " + instance.getAddressFamilyKey(), t);
-			}
-		}		
-	}
+  void configure(final RoutingInstanceConfiguration instConfig)
+  {
+    this.setFirstPeerName(instConfig.getFirstPeer().getPeerName());
+    this.setSecondPeerName(instConfig.getSecondPeer().getPeerName());
 
-	/**
-	 * @return the firstPeerName
-	 */
-	public String getFirstPeerName() {
-		return firstPeerName;
-	}
+    final Map<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration> firstFamilyRouting = new HashMap<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration>();
+    final Map<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration> secondFamilyRouting = new HashMap<AddressFamilyKey, AddressFamilyRoutingPeerConfiguration>();
+    final Set<AddressFamilyKey> wantedFamilies = new HashSet<AddressFamilyKey>();
 
-	/**
-	 * @param firstPeerName the firstPeerName to set
-	 */
-	private void setFirstPeerName(String firstPeerName) {
-		this.firstPeerName = firstPeerName;
-	}
+    for (final AddressFamilyRoutingPeerConfiguration afrfc : instConfig.getFirstPeer().getAddressFamilyConfigrations())
+    {
+      firstFamilyRouting.put(afrfc.getAddressFamilyKey(), afrfc);
+      wantedFamilies.add(afrfc.getAddressFamilyKey());
+    }
+    for (final AddressFamilyRoutingPeerConfiguration afrfc : instConfig.getSecondPeer().getAddressFamilyConfigrations())
+    {
+      secondFamilyRouting.put(afrfc.getAddressFamilyKey(), afrfc);
+      wantedFamilies.add(afrfc.getAddressFamilyKey());
+    }
 
-	/**
-	 * @return the secondPeerName
-	 */
-	public String getSecondPeerName() {
-		return secondPeerName;
-	}
+    for (final AddressFamilyKey afk : wantedFamilies)
+    {
+      final AddressFamilyRoutingInstance instance = this.familyInstanceProvider.get();
 
-	/**
-	 * @param secondPeerName the secondPeerName to set
-	 */
-	private void setSecondPeerName(String secondPeerName) {
-		this.secondPeerName = secondPeerName;
-	}
+      instance.configure(afk, firstFamilyRouting.get(afk), secondFamilyRouting.get(afk));
+      this.familyInstances.add(instance);
+    }
 
-	/**
-	 * @return the familyInstances
-	 */
-	public List<AddressFamilyRoutingInstance> getFamilyInstances() {
-		return familyInstances;
-	}
+    this.familyInstances = Collections.unmodifiableList(this.familyInstances);
+  }
 
-	/**
-	 * @return the state
-	 */
-	public RoutingInstanceState getState() {
-		return state;
-	}
+  void startInstance()
+  {
+    if (this.pribManager.isPeerRoutingInformationBaseAvailable(this.getFirstPeerName()))
+    {
+      if (this.pribManager.isPeerRoutingInformationBaseAvailable(this.getSecondPeerName()))
+      {
+        this.state = RoutingInstanceState.STARTING;
+
+        for (final AddressFamilyRoutingInstance instance : this.getFamilyInstances())
+        {
+          this.log.info("Starting routing instance for " + instance.getAddressFamilyKey());
+
+          try
+          {
+            instance.startInstance(this.pribManager.peerRoutingInformationBase(this.getFirstPeerName()),
+                this.pribManager.peerRoutingInformationBase(this.getSecondPeerName()));
+
+            if (instance.getState() != RoutingInstanceState.RUNNING)
+            {
+              this.log.error("failed to routing instance for " + instance.getAddressFamilyKey() + " with state " + instance.getState());
+              this.state = RoutingInstanceState.PARTLY_RUNNING;
+            }
+          }
+          catch (final Throwable t)
+          {
+            this.log.error("failed to routing instance for " + instance.getAddressFamilyKey(), t);
+
+            this.state = RoutingInstanceState.PARTLY_RUNNING;
+          }
+        }
+
+        if (this.state == RoutingInstanceState.STARTING)
+        {
+          this.state = RoutingInstanceState.RUNNING;
+        }
+      }
+      else
+      {
+        this.state = RoutingInstanceState.PEER_ROUTING_BASE_UNAVAILABLE;
+      }
+    }
+    else
+    {
+      this.state = RoutingInstanceState.PEER_ROUTING_BASE_UNAVAILABLE;
+    }
+  }
+
+  void stopInstance()
+  {
+    for (final AddressFamilyRoutingInstance instance : this.getFamilyInstances())
+    {
+      this.log.info("Stopping routing instance for " + instance.getAddressFamilyKey());
+
+      try
+      {
+        instance.stopInstance();
+      }
+      catch (final Throwable t)
+      {
+        this.log.error("failed to routing instance for " + instance.getAddressFamilyKey(), t);
+      }
+    }
+  }
+
+  /**
+   * @return the firstPeerName
+   */
+  public String getFirstPeerName()
+  {
+    return this.firstPeerName;
+  }
+
+  /**
+   * @param firstPeerName
+   *          the firstPeerName to set
+   */
+  private void setFirstPeerName(final String firstPeerName)
+  {
+    this.firstPeerName = firstPeerName;
+  }
+
+  /**
+   * @return the secondPeerName
+   */
+  public String getSecondPeerName()
+  {
+    return this.secondPeerName;
+  }
+
+  /**
+   * @param secondPeerName
+   *          the secondPeerName to set
+   */
+  private void setSecondPeerName(final String secondPeerName)
+  {
+    this.secondPeerName = secondPeerName;
+  }
+
+  /**
+   * @return the familyInstances
+   */
+  public List<AddressFamilyRoutingInstance> getFamilyInstances()
+  {
+    return this.familyInstances;
+  }
+
+  /**
+   * @return the state
+   */
+  public RoutingInstanceState getState()
+  {
+    return this.state;
+  }
 }

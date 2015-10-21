@@ -45,9 +45,12 @@ public class FSMRegistry
 
   private final ApplicationConfiguration applicationConfiguration;
 
-  public FSMRegistry(ApplicationConfiguration config)
+  private Scheduler scheduler;
+
+  public FSMRegistry(ApplicationConfiguration config, Scheduler scheduler)
   {
     this.applicationConfiguration = config;
+    this.scheduler = scheduler;
   }
 
   private final Map<InetSocketAddress, BGPv4FSM> fsmMap = new HashMap<InetSocketAddress, BGPv4FSM>();
@@ -55,13 +58,13 @@ public class FSMRegistry
   // private @Inject ApplicationConfiguration applicationConfiguration;
   private boolean haveRunningMachines = false;
 
-  public void createRegistry(Scheduler scheduler)
+  public void createRegistry()
   {
     for (final PeerConfiguration peerConfig : this.applicationConfiguration.listPeerConfigurations())
     {
       try
       {
-        final BGPv4FSM fsm = new BGPv4FSM(scheduler, new BGPv4Client(this), new CapabilitesNegotiator(), new PeerRoutingInformationBaseManager(), new OutboundRoutingUpdateQueue(scheduler));
+        final BGPv4FSM fsm = createFsm();
         fsm.configure(peerConfig);
         this.fsmMap.put(fsm.getRemotePeerAddress(), fsm);
       }
@@ -70,6 +73,11 @@ public class FSMRegistry
         FSMRegistry.log.error("Internal error: cannot create peer " + peerConfig.getPeerName(), e);
       }
     }
+  }
+
+  private BGPv4FSM createFsm()
+  {
+    return new BGPv4FSM(scheduler, new BGPv4Client(this), new CapabilitesNegotiator(), new PeerRoutingInformationBaseManager(), new OutboundRoutingUpdateQueue(scheduler));
   }
 
   public void registerFSM(final BGPv4FSM fsm)
@@ -138,7 +146,7 @@ public class FSMRegistry
         try
         {
 
-          fsm = this.fsmProvider.get();
+          fsm = this.createFsm();
 
           fsm.configure(event.getCurrent());
 

@@ -57,7 +57,7 @@ public class BGPv4Service
   public void startService()
   {
 
-    this.fsmRegistry.createRegistry(scheduler);
+    this.fsmRegistry.createRegistry();
 
     if (this.serverInstance != null)
     {
@@ -101,7 +101,7 @@ public class BGPv4Service
     ApplicationConfiguration app = new ApplicationConfiguration();
     app.addPeer(config);
 
-    final FSMRegistry reg = new FSMRegistry(app);
+    final FSMRegistry reg = new FSMRegistry(app, scheduler);
 
     BGPv4Service service = new BGPv4Service(reg, new BGPv4Server(app, reg), scheduler);
 
