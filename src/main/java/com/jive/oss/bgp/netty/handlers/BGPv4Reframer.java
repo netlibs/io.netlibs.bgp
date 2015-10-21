@@ -25,7 +25,6 @@ import com.jive.oss.bgp.netty.protocol.ConnectionNotSynchronizedNotificationPack
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.util.ByteProcessor;
 import lombok.extern.slf4j.Slf4j;
 
 /**

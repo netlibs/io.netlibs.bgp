@@ -18,8 +18,6 @@ package com.jive.oss.bgp.netty.handlers;
 
 import java.net.InetSocketAddress;
 
-import org.slf4j.Logger;
-
 import com.jive.oss.bgp.netty.PeerConnectionInformation;
 import com.jive.oss.bgp.netty.PeerConnectionInformationAware;
 import com.jive.oss.bgp.netty.fsm.BGPv4FSM;
@@ -33,9 +31,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

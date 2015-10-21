@@ -20,8 +20,6 @@ package com.jive.oss.bgp.netty.codec;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-
 import com.jive.oss.bgp.net.AddressFamily;
 import com.jive.oss.bgp.net.AddressPrefixBasedORFEntry;
 import com.jive.oss.bgp.net.ORFAction;

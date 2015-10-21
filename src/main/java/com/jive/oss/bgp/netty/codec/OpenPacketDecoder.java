@@ -26,13 +26,13 @@ import com.jive.oss.bgp.netty.protocol.open.CapabilityCodec;
 import com.jive.oss.bgp.netty.protocol.open.CapabilityListUnsupportedCapabilityNotificationPacket;
 import com.jive.oss.bgp.netty.protocol.open.OpenNotificationPacket;
 import com.jive.oss.bgp.netty.protocol.open.OpenPacket;
+import com.jive.oss.bgp.netty.protocol.open.OpenPacket.OpenPacketBuilder;
 import com.jive.oss.bgp.netty.protocol.open.UnacceptableHoldTimerNotificationPacket;
 import com.jive.oss.bgp.netty.protocol.open.UnspecificOpenNotificationPacket;
 import com.jive.oss.bgp.netty.protocol.open.UnsupportedOptionalParameterException;
 import com.jive.oss.bgp.netty.protocol.open.UnsupportedOptionalParameterNotificationPacket;
 import com.jive.oss.bgp.netty.protocol.open.UnsupportedVersionNumberException;
 import com.jive.oss.bgp.netty.protocol.open.UnsupportedVersionNumberNotificationPacket;
-import com.jive.oss.bgp.netty.protocol.open.OpenPacket.OpenPacketBuilder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

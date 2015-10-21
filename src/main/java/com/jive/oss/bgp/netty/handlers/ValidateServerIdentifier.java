@@ -20,7 +20,6 @@ import com.jive.oss.bgp.net.capabilities.AutonomousSystem4Capability;
 import com.jive.oss.bgp.netty.BGPv4Constants;
 import com.jive.oss.bgp.netty.PeerConnectionInformation;
 import com.jive.oss.bgp.netty.PeerConnectionInformationAware;
-import com.jive.oss.bgp.netty.fsm.BGPv4FSM;
 import com.jive.oss.bgp.netty.protocol.open.BadBgpIdentifierNotificationPacket;
 import com.jive.oss.bgp.netty.protocol.open.BadPeerASNotificationPacket;
 import com.jive.oss.bgp.netty.protocol.open.OpenPacket;

@@ -16,14 +16,10 @@
  */
 package com.jive.oss.bgp.net.attributes;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.jive.oss.bgp.net.attributes.bind.PathAttributeBindAdapter;
 
 /**
  * Superclass for all BGPv4 path attributes
@@ -32,7 +28,6 @@ import com.jive.oss.bgp.net.attributes.bind.PathAttributeBindAdapter;
  *
  */
 
-@XmlJavaTypeAdapter(value = PathAttributeBindAdapter.class)
 public abstract class PathAttribute implements Comparable<PathAttribute>
 {
 

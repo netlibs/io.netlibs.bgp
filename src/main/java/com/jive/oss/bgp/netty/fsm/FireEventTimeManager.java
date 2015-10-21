@@ -37,7 +37,6 @@ import org.quartz.TriggerKey;
 import org.quartz.impl.matchers.EverythingMatcher;
 import org.quartz.listeners.TriggerListenerSupport;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 /**

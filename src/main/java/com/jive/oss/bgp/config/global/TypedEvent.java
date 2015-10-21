@@ -12,8 +12,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4.config.global.TypedEvent.java 
+ *
+ * File: org.bgp4.config.global.TypedEvent.java
  */
 package com.jive.oss.bgp.config.global;
 
@@ -21,19 +21,22 @@ package com.jive.oss.bgp.config.global;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class TypedEvent {
+public class TypedEvent
+{
 
-	protected TypedEvent(EventType type) {
-		this.type = type;
-	}
+  protected TypedEvent(final EventType type)
+  {
+    this.type = type;
+  }
 
-	private EventType type;
+  private final EventType type;
 
-	/**
-	 * @return the type
-	 */
-	public EventType getType() {
-		return type;
-	}
+  /**
+   * @return the type
+   */
+  public EventType getType()
+  {
+    return this.type;
+  }
 
 }
