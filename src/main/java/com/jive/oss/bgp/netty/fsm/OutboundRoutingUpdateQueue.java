@@ -83,8 +83,7 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
     public void execute(final JobExecutionContext context) throws JobExecutionException
     {
       ((OutboundRoutingUpdateCallback) context.getMergedJobDataMap().get(CALLBACK_KEY))
-      .sendUpdates(((OutboundRoutingUpdateQueue) context.getMergedJobDataMap().get(QUEUE_KEY))
-          .buildUpdates());
+      .sendUpdates(((OutboundRoutingUpdateQueue) context.getMergedJobDataMap().get(QUEUE_KEY)).buildUpdates());
     }
 
   }
@@ -233,6 +232,7 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
   @SuppressWarnings("unchecked")
   private void addRoute(final String ribName, final RIBSide side, final Route route)
   {
+
     TopologicalTreeSortingKey key;
     Collection<PathAttribute> keyAttributes;
 
@@ -244,22 +244,32 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
     }
     else
     {
+
       // handle any other case
       keyAttributes = this.filterAttribute(route.getPathAttributes(), Arrays.asList(MultiProtocolReachableNLRI.class, MultiProtocolReachableNLRI.class));
-      keyAttributes.add(new MultiProtocolReachableNLRI(route.getAddressFamilyKey().getAddressFamily(),
-          route.getAddressFamilyKey().getSubsequentAddressFamily(), (BinaryNextHop) route.getNextHop()));
+
+      keyAttributes.add(
+          new MultiProtocolReachableNLRI(
+              route.getAddressFamilyKey().getAddressFamily(),
+              route.getAddressFamilyKey().getSubsequentAddressFamily(),
+              (BinaryNextHop) route.getNextHop()));
+
     }
 
     key = new TopologicalTreeSortingKey(route.getAddressFamilyKey(), keyAttributes);
 
     synchronized (this.addedRoutes)
     {
+
       if (!this.addedRoutes.containsKey(key))
       {
         this.addedRoutes.put(key, new LinkedList<NetworkLayerReachabilityInformation>());
       }
+
       this.addedRoutes.get(key).add(route.getNlri());
+
     }
+
   }
 
   private void withdrawRoute(final String ribName, final RIBSide side, final Route route)
@@ -359,11 +369,15 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
 
     synchronized (this.addedRoutes)
     {
+
       for (final Entry<TopologicalTreeSortingKey, List<NetworkLayerReachabilityInformation>> addedRouteEntry : this.addedRoutes.entrySet())
       {
+
         final TopologicalTreeSortingKey key = addedRouteEntry.getKey();
         final List<NetworkLayerReachabilityInformation> nlris = addedRouteEntry.getValue();
         MultiProtocolReachableNLRI mpNLRI = null;
+
+        System.err.println(nlris);
 
         if (!key.getAddressFamilyKey().matches(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING))
         {
@@ -387,6 +401,7 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
             updates.add(current);
           }
 
+
           if (key.getAddressFamilyKey().matches(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING))
           {
             current.getNlris().add(nlri);
@@ -403,11 +418,14 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
       this.addedRoutes.clear();
     }
 
+    System.err.println(updates);
+
     return updates;
   }
 
   int getNumberOfPendingUpdates()
   {
+
     int result = 0;
 
     synchronized (this.addedRoutes)
@@ -425,11 +443,14 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
 
   boolean isJobScheduled() throws SchedulerException
   {
+
     if (this.triggerKey == null)
     {
       return false;
     }
+
     return this.scheduler.checkExists(this.triggerKey);
+
   }
 
   public Date getNextFireWhen() throws SchedulerException

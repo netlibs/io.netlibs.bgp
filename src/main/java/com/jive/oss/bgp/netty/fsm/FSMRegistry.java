@@ -78,7 +78,7 @@ public class FSMRegistry
 
   private BGPv4FSM createFsm()
   {
-    return new BGPv4FSM(scheduler, new BGPv4Client(this), new CapabilitesNegotiator(), new PeerRoutingInformationBaseManager(), new OutboundRoutingUpdateQueue(scheduler));
+    return new BGPv4FSM(scheduler, new BGPv4Client(this), new CapabilitesNegotiator(), applicationConfiguration.getPeerRoutingInformationBaseManager(), new OutboundRoutingUpdateQueue(scheduler));
   }
 
   public void registerFSM(final BGPv4FSM fsm)

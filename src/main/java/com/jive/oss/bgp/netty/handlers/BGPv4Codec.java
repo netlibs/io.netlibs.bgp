@@ -87,9 +87,16 @@ public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
   @Override
   protected void encode(final ChannelHandlerContext ctx, final BGPv4Packet msg, final ByteBuf out) throws Exception
   {
-    final ByteBuf buffer = msg.apply(new BGPv4PacketEncoder());
-    log.debug("Sending: {}", msg);
-    ctx.writeAndFlush(buffer);
+    try
+    {
+      final ByteBuf buffer = msg.apply(new BGPv4PacketEncoder());
+      log.debug("Sending: {}", msg);
+      ctx.writeAndFlush(buffer);
+    }
+    catch (Exception ex)
+    {
+      log.warn("Error encoding packet: {}", msg, ex);
+    }
   }
 
 }

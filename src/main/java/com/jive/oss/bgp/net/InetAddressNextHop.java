@@ -23,10 +23,14 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import lombok.ToString;
+
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
+
+@ToString
 public class InetAddressNextHop<T extends InetAddress> implements NextHop
 {
 

@@ -313,9 +313,11 @@ public class BGPv4FSM
     @Override
     public void fireCompleteBGPPeerInitialization()
     {
+
       // allocate all RIBs for the local end which are configured
       for (final MultiProtocolCapability mpcap : BGPv4FSM.this.capabilitiesNegotiator.listRemoteCapabilities(MultiProtocolCapability.class))
       {
+        System.err.println(mpcap.toAddressFamilyKey());
         BGPv4FSM.this.prib.allocateRoutingInformationBase(RIBSide.Remote, mpcap.toAddressFamilyKey());
       }
 
@@ -345,6 +347,7 @@ public class BGPv4FSM
     @Override
     public void fireEstablished()
     {
+
       BGPv4FSM.this.prib.visitRoutingBases(RIBSide.Local, BGPv4FSM.this.oruq.getImportVisitor(), BGPv4FSM.this.outboundAddressFamilyMask);
 
       try
@@ -369,6 +372,7 @@ public class BGPv4FSM
     @Override
     public void sendUpdates(final List<UpdatePacket> updates)
     {
+
       UpdatePacket packet = null;
 
       synchronized (updates)
@@ -387,8 +391,7 @@ public class BGPv4FSM
       else if (packet != null)
       {
         final Channel channel = BGPv4FSM.this.managedChannels.iterator().next().getChannel();
-
-        channel.write(packet).addListener(this);
+        channel.writeAndFlush(packet).addListener(this);
       }
 
     }
@@ -396,6 +399,7 @@ public class BGPv4FSM
     @Override
     public void operationComplete(final ChannelFuture future) throws Exception
     {
+
       UpdatePacket packet = null;
 
       synchronized (this.updates)
@@ -478,10 +482,10 @@ public class BGPv4FSM
 
   public void handleMessage(final Channel channel, final BGPv4Packet message)
   {
-    BGPv4FSM.log.info("received message " + message);
 
     if (message instanceof OpenPacket)
     {
+
       this.internalFsm.setPeerProposedHoldTime(((OpenPacket) message).getHoldTime());
 
       this.capabilitiesNegotiator.recordPeerCapabilities((OpenPacket) message);
@@ -506,6 +510,7 @@ public class BGPv4FSM
     }
     else if (message instanceof UpdatePacket)
     {
+
       this.internalFsm.handleEvent(FSMEvent.updateMessage());
 
       try
@@ -638,11 +643,13 @@ public class BGPv4FSM
   {
 
     final Set<MultiProtocolReachableNLRI> mpReachables = message.lookupPathAttributes(MultiProtocolReachableNLRI.class);
-    
+
     final Set<MultiProtocolUnreachableNLRI> mpUnreachables = message.lookupPathAttributes(MultiProtocolUnreachableNLRI.class);
-    
-    final Set<PathAttribute> otherAttributes = message.filterPathAttributes(MultiProtocolReachableNLRI.class,
-        MultiProtocolUnreachableNLRI.class, NextHopPathAttribute.class);
+
+    final Set<PathAttribute> otherAttributes = message.filterPathAttributes(
+        MultiProtocolReachableNLRI.class,
+        MultiProtocolUnreachableNLRI.class,
+        NextHopPathAttribute.class);
 
     final AddressFamilyKey ipv4Unicast = new AddressFamilyKey(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING);
 
@@ -669,21 +676,39 @@ public class BGPv4FSM
       throw new InvalidNextHopException();
     }
 
-    if (!message.getNlris().isEmpty())
-    {
-      this.prib.routingBase(RIBSide.Remote, ipv4Unicast).addRoutes(message.getNlris(), otherAttributes, (nextHops.isEmpty()) ? null : nextHops.iterator().next().getNextHop());
-    }
+    this.prib.routingBase(RIBSide.Remote, ipv4Unicast).addRoutes(message.getNlris(), otherAttributes, (nextHops.isEmpty()) ? null : nextHops.iterator().next().getNextHop());
 
   }
 
   private void processRemoteUp(final Set<MultiProtocolUnreachableNLRI> mpUnreachables, final Set<PathAttribute> attrs)
   {
-    // TODO Auto-generated method stub
+    
+    
+    for (final MultiProtocolUnreachableNLRI mp : mpUnreachables)
+    {
+      this.prib
+          .routingBase(RIBSide.Remote, new AddressFamilyKey(mp.getAddressFamily(), mp.getSubsequentAddressFamily()))
+          .withdrawRoutes(mp.getNlris());
+    }
+    
   }
+
+  /**
+   * 
+   * @param mpReachables
+   * @param attrs
+   */
 
   private void processRemoteUpdateMultiProtocolReachables(final Set<MultiProtocolReachableNLRI> mpReachables, final Set<PathAttribute> attrs)
   {
-    // TODO Auto-generated method stub
+
+    for (final MultiProtocolReachableNLRI mp : mpReachables)
+    {
+      this.prib
+          .routingBase(RIBSide.Remote, new AddressFamilyKey(mp.getAddressFamily(), mp.getSubsequentAddressFamily()))
+          .addRoutes(mp.getNlris(), attrs, mp.getNextHop());
+    }
+
   }
 
 }

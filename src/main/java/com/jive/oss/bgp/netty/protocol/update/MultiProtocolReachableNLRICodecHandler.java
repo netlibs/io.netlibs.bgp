@@ -29,26 +29,15 @@ import io.netty.buffer.Unpooled;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class MultiProtocolReachableNLRICodecHandler extends
-PathAttributeCodecHandler<MultiProtocolReachableNLRI>
+public class MultiProtocolReachableNLRICodecHandler extends PathAttributeCodecHandler<MultiProtocolReachableNLRI>
 {
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.bgp4j.netty.protocol.update.PathAttributeCodecHandler#typeCode(org.bgp4j.netty.protocol.update.PathAttribute)
-   */
   @Override
   public int typeCode(final MultiProtocolReachableNLRI attr)
   {
     return BGPv4Constants.BGP_PATH_ATTRIBUTE_TYPE_MP_REACH_NLRI;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.bgp4j.netty.protocol.update.PathAttributeCodecHandler#valueLength(org.bgp4j.netty.protocol.update.PathAttribute)
-   */
   @Override
   public int valueLength(final MultiProtocolReachableNLRI attr)
   {
@@ -61,23 +50,30 @@ PathAttributeCodecHandler<MultiProtocolReachableNLRI>
 
     if (attr.getNlris() != null)
     {
+
       for (final NetworkLayerReachabilityInformation nlri : attr.getNlris())
       {
-        size += NLRICodec.calculateEncodedNLRILength(nlri);
+
+        if ((nlri.getPrefix() != null) && (nlri.getPrefixLength() == nlri.getPrefix().length))
+        {
+          size += nlri.getPrefixLength();
+        }
+        else
+        {
+          size += NLRICodec.calculateEncodedNLRILength(nlri);
+        }
+
       }
+
     }
 
     return size;
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.bgp4j.netty.protocol.update.PathAttributeCodecHandler#encodeValue(org.bgp4j.netty.protocol.update.PathAttribute)
-   */
   @Override
   public ByteBuf encodeValue(final MultiProtocolReachableNLRI attr)
   {
+
     final ByteBuf buffer = Unpooled.buffer(this.valueLength(attr));
 
     buffer.writeShort(attr.getAddressFamily().toCode());
@@ -99,7 +95,15 @@ PathAttributeCodecHandler<MultiProtocolReachableNLRI>
     {
       for (final NetworkLayerReachabilityInformation nlri : attr.getNlris())
       {
-        buffer.writeBytes(NLRICodec.encodeNLRI(nlri));
+        if ((nlri.getPrefix() != null) && (nlri.getPrefixLength() == nlri.getPrefix().length))
+        {
+          buffer.writeByte(nlri.getPrefixLength());
+          buffer.writeBytes(nlri.getPrefix());
+        }
+        else
+        {
+          buffer.writeBytes(NLRICodec.encodeNLRI(nlri));
+        }
       }
     }
 

@@ -32,200 +32,233 @@ import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
 import com.jive.oss.bgp.net.NextHop;
 import com.jive.oss.bgp.net.attributes.PathAttribute;
 
+import lombok.ToString;
+
 /**
  * Event fired by a RoutingInformationBase instance when a route has been added to the RIB.
  * 
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class Route implements Comparable<Route> {
-	
-	private AddressFamilyKey addressFamilyKey;
-	private NetworkLayerReachabilityInformation nlri;
-	private Set<PathAttribute> pathAttributes = new TreeSet<PathAttribute>();
-	private NextHop nextHop;
-	private UUID ribID;
-	
-	public Route(AddressFamilyKey addressFamilyKey, NetworkLayerReachabilityInformation nlri, 
-			Collection<PathAttribute> pathAttributes, NextHop nextHop) {
-		this.addressFamilyKey = addressFamilyKey;
-		this.nlri = nlri;
-		if(pathAttributes != null)
-			this.pathAttributes = new TreeSet<PathAttribute>(pathAttributes);
-		this.nextHop = nextHop;
-	}
 
-	Route(UUID ribID, AddressFamilyKey addressFamilyKey, NetworkLayerReachabilityInformation nlri, 
-			Collection<PathAttribute> pathAttributes, NextHop nextHop) {
-		this(addressFamilyKey, nlri, pathAttributes, nextHop);
-		
-		setRibID(ribID);
-	}
+@ToString
+public class Route implements Comparable<Route>
+{
 
-	/**
-	 * buidl a new route object from a source route but with changed additional fields
-	 * @param route
-	 * @param pathAttributes
-	 */
-	public Route(Route route, NetworkLayerReachabilityInformation nlri,  Set<PathAttribute> pathAttributes, NextHop nextHop) {
-		this(route.getRibID(), route.getAddressFamilyKey(), 
-				nlri != null ? nlri : route.getNlri(), 
-						pathAttributes != null ? pathAttributes : route.getPathAttributes(), 
-								nextHop != null ? nextHop : route.getNextHop());
-	}
+  private AddressFamilyKey addressFamilyKey;
+  private NetworkLayerReachabilityInformation nlri;
+  private Set<PathAttribute> pathAttributes = new TreeSet<PathAttribute>();
+  private NextHop nextHop;
+  private UUID ribID;
 
-	/**
-	 * @return the addressFamilyKey
-	 */
-	public AddressFamilyKey getAddressFamilyKey() {
-		return addressFamilyKey;
-	}
+  public Route(AddressFamilyKey addressFamilyKey, NetworkLayerReachabilityInformation nlri,
+      Collection<PathAttribute> pathAttributes, NextHop nextHop)
+  {
+    this.addressFamilyKey = addressFamilyKey;
+    this.nlri = nlri;
+    if (pathAttributes != null)
+      this.pathAttributes = new TreeSet<PathAttribute>(pathAttributes);
+    this.nextHop = nextHop;
+  }
 
-	/**
-	 * @return the nlri
-	 */
-	public NetworkLayerReachabilityInformation getNlri() {
-		return nlri;
-	}
+  Route(UUID ribID, AddressFamilyKey addressFamilyKey, NetworkLayerReachabilityInformation nlri,
+      Collection<PathAttribute> pathAttributes, NextHop nextHop)
+  {
+    this(addressFamilyKey, nlri, pathAttributes, nextHop);
 
-	/**
-	 * @return the pathAttributes
-	 */
-	public Set<PathAttribute> getPathAttributes() {
-		return pathAttributes;
-	}
+    setRibID(ribID);
+  }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		HashCodeBuilder builder = (new HashCodeBuilder())
-				.append(getAddressFamilyKey())
-				.append(getNlri())
-				.append(getNextHop())
-				.append(getRibID());
-		
-		for(PathAttribute pa : getPathAttributes())
-			builder.append(pa);
-		
-		return builder.toHashCode();
-	}
+  /**
+   * buidl a new route object from a source route but with changed additional fields
+   * 
+   * @param route
+   * @param pathAttributes
+   */
+  public Route(Route route, NetworkLayerReachabilityInformation nlri, Set<PathAttribute> pathAttributes, NextHop nextHop)
+  {
+    this(route.getRibID(), route.getAddressFamilyKey(),
+        nlri != null ? nlri : route.getNlri(),
+        pathAttributes != null ? pathAttributes : route.getPathAttributes(),
+        nextHop != null ? nextHop : route.getNextHop());
+  }
 
-	/**
-	 * @return the nextHop
-	 */
-	public NextHop getNextHop() {
-		return nextHop;
-	}
+  /**
+   * @return the addressFamilyKey
+   */
+  public AddressFamilyKey getAddressFamilyKey()
+  {
+    return addressFamilyKey;
+  }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		
-		Route o = (Route) obj;
-		
-		EqualsBuilder builder = (new EqualsBuilder())
-				.append(getAddressFamilyKey(), o.getAddressFamilyKey())
-				.append(getNlri(), o.getNlri())
-				.append(getPathAttributes().size(), o.getPathAttributes().size())
-				.append(getNextHop(), o.getNextHop())
-				.append(getRibID(), o.getRibID());
-		
-		if(builder.isEquals()) {
-			Iterator<PathAttribute> lit = getPathAttributes().iterator();
-			Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
-			
-			while(lit.hasNext())
-				builder.append(lit.next(), rit.next());
-		}
-		
-		return builder.isEquals();
-	}
+  /**
+   * @return the nlri
+   */
+  public NetworkLayerReachabilityInformation getNlri()
+  {
+    return nlri;
+  }
 
-	@Override
-	public int compareTo(Route o) {
-		CompareToBuilder builder = (new CompareToBuilder())
-				.append(getAddressFamilyKey(), o.getAddressFamilyKey())
-				.append(getNlri(), o.getNlri())
-				.append(getPathAttributes().size(), o.getPathAttributes().size())
-				.append(getNextHop(), o.getNextHop())
-				.append(getRibID(), o.getRibID());
-		
-		if(builder.toComparison() == 0) {
-			Iterator<PathAttribute> lit = getPathAttributes().iterator();
-			Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
-			
-			while(lit.hasNext())
-				builder.append(lit.next(), rit.next());
-		}
-		
-		return builder.toComparison();
-	}
+  /**
+   * @return the pathAttributes
+   */
+  public Set<PathAttribute> getPathAttributes()
+  {
+    return pathAttributes;
+  }
 
-	/**
-	 * compare only the network / routeing relevant 
-	 * @param o
-	 * @return
-	 */
-	public int networkCompareTo(Route o) {
-		CompareToBuilder builder = (new CompareToBuilder())
-				.append(getAddressFamilyKey(), o.getAddressFamilyKey())
-				.append(getNlri(), o.getNlri())
-				.append(getPathAttributes().size(), o.getPathAttributes().size())
-				.append(getNextHop(), o.getNextHop());
-		
-		if(builder.toComparison() == 0) {
-			Iterator<PathAttribute> lit = getPathAttributes().iterator();
-			Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
-			
-			while(lit.hasNext())
-				builder.append(lit.next(), rit.next());
-		}
-		
-		return builder.toComparison();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode()
+  {
+    HashCodeBuilder builder = (new HashCodeBuilder())
+        .append(getAddressFamilyKey())
+        .append(getNlri())
+        .append(getNextHop())
+        .append(getRibID());
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean networkEquals(Route o) {
-		EqualsBuilder builder = (new EqualsBuilder())
-				.append(getAddressFamilyKey(), o.getAddressFamilyKey())
-				.append(getNlri(), o.getNlri())
-				.append(getPathAttributes().size(), o.getPathAttributes().size())
-				.append(getNextHop(), o.getNextHop());
-		
-		if(builder.isEquals()) {
-			Iterator<PathAttribute> lit = getPathAttributes().iterator();
-			Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
-			
-			while(lit.hasNext())
-				builder.append(lit.next(), rit.next());
-		}
-		
-		return builder.isEquals();
-	}
-	/**
-	 * @return the ribID
-	 */
-	public UUID getRibID() {
-		return ribID;
-	}
+    for (PathAttribute pa : getPathAttributes())
+      builder.append(pa);
 
-	/**
-	 * @param ribID the ribID to set
-	 */
-	void setRibID(UUID ribID) {
-		this.ribID = ribID;
-	}
+    return builder.toHashCode();
+  }
+
+  /**
+   * @return the nextHop
+   */
+  public NextHop getNextHop()
+  {
+    return nextHop;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+
+    Route o = (Route) obj;
+
+    EqualsBuilder builder = (new EqualsBuilder())
+        .append(getAddressFamilyKey(), o.getAddressFamilyKey())
+        .append(getNlri(), o.getNlri())
+        .append(getPathAttributes().size(), o.getPathAttributes().size())
+        .append(getNextHop(), o.getNextHop())
+        .append(getRibID(), o.getRibID());
+
+    if (builder.isEquals())
+    {
+      Iterator<PathAttribute> lit = getPathAttributes().iterator();
+      Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
+
+      while (lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+
+    return builder.isEquals();
+  }
+
+  @Override
+  public int compareTo(Route o)
+  {
+    CompareToBuilder builder = (new CompareToBuilder())
+        .append(getAddressFamilyKey(), o.getAddressFamilyKey())
+        .append(getNlri(), o.getNlri())
+        .append(getPathAttributes().size(), o.getPathAttributes().size())
+        .append(getNextHop(), o.getNextHop())
+        .append(getRibID(), o.getRibID());
+
+    if (builder.toComparison() == 0)
+    {
+      Iterator<PathAttribute> lit = getPathAttributes().iterator();
+      Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
+
+      while (lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+
+    return builder.toComparison();
+  }
+
+  /**
+   * compare only the network / routeing relevant
+   * 
+   * @param o
+   * @return
+   */
+  public int networkCompareTo(Route o)
+  {
+    CompareToBuilder builder = (new CompareToBuilder())
+        .append(getAddressFamilyKey(), o.getAddressFamilyKey())
+        .append(getNlri(), o.getNlri())
+        .append(getPathAttributes().size(), o.getPathAttributes().size())
+        .append(getNextHop(), o.getNextHop());
+
+    if (builder.toComparison() == 0)
+    {
+      Iterator<PathAttribute> lit = getPathAttributes().iterator();
+      Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
+
+      while (lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+
+    return builder.toComparison();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  public boolean networkEquals(Route o)
+  {
+    EqualsBuilder builder = (new EqualsBuilder())
+        .append(getAddressFamilyKey(), o.getAddressFamilyKey())
+        .append(getNlri(), o.getNlri())
+        .append(getPathAttributes().size(), o.getPathAttributes().size())
+        .append(getNextHop(), o.getNextHop());
+
+    if (builder.isEquals())
+    {
+      Iterator<PathAttribute> lit = getPathAttributes().iterator();
+      Iterator<PathAttribute> rit = o.getPathAttributes().iterator();
+
+      while (lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+
+    return builder.isEquals();
+  }
+
+  /**
+   * @return the ribID
+   */
+  public UUID getRibID()
+  {
+    return ribID;
+  }
+
+  /**
+   * @param ribID
+   *          the ribID to set
+   */
+  void setRibID(UUID ribID)
+  {
+    this.ribID = ribID;
+  }
 
 }

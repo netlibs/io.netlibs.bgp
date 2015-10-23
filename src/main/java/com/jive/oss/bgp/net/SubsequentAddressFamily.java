@@ -11,11 +11,12 @@ import org.apache.commons.lang3.StringUtils;
 public enum SubsequentAddressFamily
 {
 
-  NLRI_UNICAST_FORWARDING, NLRI_MULTICAST_FORWARDING, NLRI_UNICAST_MULTICAST_FORWARDING;
+  NLRI_UNICAST_FORWARDING, NLRI_MULTICAST_FORWARDING, NLRI_UNICAST_MULTICAST_FORWARDING, NLRI_UNICAST_WITH_MPLS_FORWARDING;
 
   private static final String ENCODING_UNICAST_MULTICAST = "Unicast+Multicast";
   private static final String ENCODING_MULTICAST = "Multicast";
   private static final String ENCODING_UNICAST = "Unicast";
+  private static final String ENCODING_UNICAST_MPLS = "Unicast-MPLS";
 
   public int toCode()
   {
@@ -27,6 +28,8 @@ public enum SubsequentAddressFamily
         return 2;
       case NLRI_UNICAST_MULTICAST_FORWARDING:
         return 3;
+      case NLRI_UNICAST_WITH_MPLS_FORWARDING:
+        return 4;
       default:
         throw new IllegalArgumentException("Unknown subsequent address family: " + this);
     }
@@ -42,6 +45,8 @@ public enum SubsequentAddressFamily
         return NLRI_MULTICAST_FORWARDING;
       case 3:
         return NLRI_UNICAST_MULTICAST_FORWARDING;
+      case 4:
+        return NLRI_UNICAST_WITH_MPLS_FORWARDING;
       default:
         throw new IllegalArgumentException("Unknown subsequent address family code: " + code);
     }
@@ -78,6 +83,8 @@ public enum SubsequentAddressFamily
         return ENCODING_MULTICAST;
       case NLRI_UNICAST_MULTICAST_FORWARDING:
         return ENCODING_UNICAST_MULTICAST;
+      case NLRI_UNICAST_WITH_MPLS_FORWARDING:
+        return ENCODING_UNICAST_MPLS;
       default:
         throw new IllegalArgumentException("Unknown subsequent address family: " + this);
     }

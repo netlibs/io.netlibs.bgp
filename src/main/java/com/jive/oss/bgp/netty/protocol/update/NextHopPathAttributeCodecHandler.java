@@ -27,8 +27,7 @@ import io.netty.buffer.Unpooled;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class NextHopPathAttributeCodecHandler extends
-PathAttributeCodecHandler<NextHopPathAttribute>
+public class NextHopPathAttributeCodecHandler extends PathAttributeCodecHandler<NextHopPathAttribute>
 {
 
   /*
@@ -58,13 +57,12 @@ PathAttributeCodecHandler<NextHopPathAttribute>
    *
    * @see org.bgp4j.netty.protocol.update.PathAttributeCodecHandler#encodeValue(org.bgp4j.netty.protocol.update.PathAttribute)
    */
+
   @Override
   public ByteBuf encodeValue(final NextHopPathAttribute attr)
   {
     final ByteBuf buffer = Unpooled.buffer(4);
-
     buffer.writeBytes(attr.getNextHop().getAddress().getAddress());
-
     return buffer;
   }
 

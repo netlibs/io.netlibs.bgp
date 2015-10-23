@@ -627,7 +627,7 @@ public class PeerConfigurationImpl implements PeerConfiguration
    * @param capabilities
    *          the capabilities to set
    */
-  void setCapabilities(final Capabilities capabilities)
+  public void setCapabilities(final Capabilities capabilities)
   {
     this.capabilities = capabilities;
   }

@@ -33,6 +33,7 @@ import com.jive.oss.bgp.net.attributes.PathAttribute;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
+
 public class RoutingInformationBase
 {
 
@@ -115,6 +116,7 @@ public class RoutingInformationBase
   public void addRoutes(final Collection<NetworkLayerReachabilityInformation> nlris, final Collection<PathAttribute> pathAttributes, final NextHop nextHop)
   {
 
+
     for (final NetworkLayerReachabilityInformation nlri : nlris)
     {
 
@@ -124,6 +126,7 @@ public class RoutingInformationBase
       {
         final RouteAdded event = new RouteAdded(this.getPeerName(), this.getSide(), route);
 
+        // System.err.println(event);
         // this.routeAddedEvent.fire(event);
 
         if (this.listeners != null)
@@ -149,12 +152,17 @@ public class RoutingInformationBase
    */
   public void withdrawRoutes(final Collection<NetworkLayerReachabilityInformation> nlris)
   {
+
     for (final NetworkLayerReachabilityInformation nlri : nlris)
     {
+
       final Route route = new Route(this.getRibID(), this.getAddressFamilyKey(), nlri, null, null);
+
+      System.err.println("Withdrawinf " + route);
 
       if (this.routingTree.withdrawRoute(route))
       {
+
         final RouteWithdrawn event = new RouteWithdrawn(this.getPeerName(), this.getSide(), route);
 
         // this.routeWithdrawnEvent.fire(event);
@@ -170,7 +178,13 @@ public class RoutingInformationBase
         {
           listener.routeWithdrawn(event);
         }
+
       }
+      else
+      {
+        System.err.println("error: received withdrawn for unknown NLRI: " + route);
+      }
+
     }
   }
 

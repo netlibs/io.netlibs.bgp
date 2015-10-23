@@ -22,75 +22,91 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.jive.oss.bgp.net.RIBSide;
 
+import lombok.ToString;
+
 /**
  * Event fired by a RoutingInformationBase instance when a route has been added to the RIB.
  * 
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class RouteAdded {
 
-	private String peerName;
-	private RIBSide side;
-	private Route route;
-	
-	RouteAdded(String peerName, RIBSide side, Route route) {
-		this.peerName = peerName;
-		this.side = side;
-		this.route = route;
-	}
+@ToString
+public class RouteAdded
+{
 
-	/**
-	 * @return the peerName
-	 */
-	public String getPeerName() {
-		return peerName;
-	}
+  private String peerName;
+  private RIBSide side;
+  private Route route;
 
-	/**
-	 * @return the side
-	 */
-	public RIBSide getSide() {
-		return side;
-	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return (new HashCodeBuilder())
-				.append(getPeerName())
-				.append(getSide())
-				.append(getRoute())
-				.toHashCode();
-	}
+  RouteAdded(String peerName, RIBSide side, Route route)
+  {
+    this.peerName = peerName;
+    this.side = side;
+    this.route = route;
+  }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		
-		RouteAdded other = (RouteAdded) obj;
-		
-		return (new EqualsBuilder())
-				.append(getPeerName(), other.getPeerName())
-				.append(getSide(), other.getSide())
-				.append(getRoute(), other.getRoute())
-				.isEquals();
-	}
+  /**
+   * @return the peerName
+   */
+  public String getPeerName()
+  {
+    return peerName;
+  }
 
-	/**
-	 * @return the route
-	 */
-	public Route getRoute() {
-		return route;
-	}
+  /**
+   * @return the side
+   */
+  public RIBSide getSide()
+  {
+    return side;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode()
+  {
+    return (new HashCodeBuilder())
+        .append(getPeerName())
+        .append(getSide())
+        .append(getRoute())
+        .toHashCode();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+
+    RouteAdded other = (RouteAdded) obj;
+
+    return (new EqualsBuilder())
+        .append(getPeerName(), other.getPeerName())
+        .append(getSide(), other.getSide())
+        .append(getRoute(), other.getRoute())
+        .isEquals();
+  }
+
+  /**
+   * @return the route
+   */
+  public Route getRoute()
+  {
+    return route;
+  }
 
 }

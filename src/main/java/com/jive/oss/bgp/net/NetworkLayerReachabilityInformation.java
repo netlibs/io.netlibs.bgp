@@ -52,8 +52,15 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
   private int prefixLength;
   private byte[] prefix;
 
+
   public NetworkLayerReachabilityInformation()
   {
+  }
+
+  public NetworkLayerReachabilityInformation(final byte[] data)
+  {
+    this.prefixLength = data.length;
+    this.prefix = data;
   }
 
   public NetworkLayerReachabilityInformation(final int prefixLength, final byte[] prefix)
@@ -64,9 +71,9 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
   public NetworkLayerReachabilityInformation(final InetAddress source)
   {
     final byte[] raw = source.getAddress();
-
     this.setPrefix(8 * raw.length, raw);
   }
+
 
   /**
    * @return the prefixLength

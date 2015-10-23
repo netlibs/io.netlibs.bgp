@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
+ *
  */
 package com.jive.oss.bgp.net.capabilities;
 
@@ -20,66 +20,80 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class AutonomousSystem4Capability extends Capability {
+public class AutonomousSystem4Capability extends Capability
+{
 
-	private int autonomousSystem;
+  private int autonomousSystem;
 
-	public AutonomousSystem4Capability() {
-	}
+  public AutonomousSystem4Capability()
+  {
+  }
 
-	public AutonomousSystem4Capability(int autonomousSystem) {
-		this.autonomousSystem = autonomousSystem;
-	}
-	
-	/**
-	 * @return the autonomousSystem
-	 */
-	public int getAutonomousSystem() {
-		return autonomousSystem;
-	}
+  public AutonomousSystem4Capability(final int autonomousSystem)
+  {
+    this.autonomousSystem = autonomousSystem;
+  }
 
-	/**
-	 * @param autonomousSystem the autonomousSystem to set
-	 */
-	public void setAutonomousSystem(int autonomousSystem) {
-		this.autonomousSystem = autonomousSystem;
-	}
+  /**
+   * @return the autonomousSystem
+   */
+  public int getAutonomousSystem()
+  {
+    return this.autonomousSystem;
+  }
 
-	/* (non-Javadoc)
-	 * @see org.bgp4j.net.Capability#orderNumber()
-	 */
-	@Override
-	protected int orderNumber() {
-		return ORDER_NUMBER_AS4_CAPABILITY;
-	}
+  /**
+   * @param autonomousSystem
+   *          the autonomousSystem to set
+   */
+  public void setAutonomousSystem(final int autonomousSystem)
+  {
+    this.autonomousSystem = autonomousSystem;
+  }
 
-	@Override
-	protected boolean equalsSubclass(Capability other) {
-		return (getAutonomousSystem() == ((AutonomousSystem4Capability)other).getAutonomousSystem());
-	}
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.bgp4j.net.Capability#orderNumber()
+   */
+  @Override
+  protected int orderNumber()
+  {
+    return ORDER_NUMBER_AS4_CAPABILITY;
+  }
 
-	@Override
-	protected int hashCodeSubclass() {
-		return (new HashCodeBuilder()).append(getAutonomousSystem()).toHashCode();
-	}
+  @Override
+  protected boolean equalsSubclass(final Capability other)
+  {
+    return (this.getAutonomousSystem() == ((AutonomousSystem4Capability) other).getAutonomousSystem());
+  }
 
-	@Override
-	protected int compareToSubclass(Capability other) {
-		return (new CompareToBuilder())
-				.append(getAutonomousSystem(), ((AutonomousSystem4Capability)other).getAutonomousSystem())
-				.toComparison();
-	}
+  @Override
+  protected int hashCodeSubclass()
+  {
+    return (new HashCodeBuilder()).append(this.getAutonomousSystem()).toHashCode();
+  }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+  @Override
+  protected int compareToSubclass(final Capability other)
+  {
+    return (new CompareToBuilder())
+        .append(this.getAutonomousSystem(), ((AutonomousSystem4Capability) other).getAutonomousSystem())
+        .toComparison();
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString()
+  {
+    return ToStringBuilder.reflectionToString(this);
+  }
 }

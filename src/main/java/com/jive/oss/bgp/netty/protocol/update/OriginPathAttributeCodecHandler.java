@@ -62,9 +62,7 @@ PathAttributeCodecHandler<OriginPathAttribute>
   public ByteBuf encodeValue(final OriginPathAttribute attr)
   {
     final ByteBuf buffer = Unpooled.buffer(1);
-
     buffer.writeByte(OriginCodec.toCode(attr.getOrigin()));
-
     return buffer;
   }
 

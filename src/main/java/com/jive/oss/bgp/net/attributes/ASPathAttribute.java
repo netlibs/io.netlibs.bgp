@@ -29,132 +29,156 @@ import com.jive.oss.bgp.net.ASType;
 import com.jive.oss.bgp.net.ASTypeAware;
 import com.jive.oss.bgp.net.PathSegment;
 
+import lombok.ToString;
+
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class ASPathAttribute extends PathAttribute implements ASTypeAware {
 
-	private ASType asType;
-	private List<PathSegment> pathSegments = new LinkedList<PathSegment>(); 
+@ToString
+public class ASPathAttribute extends PathAttribute implements ASTypeAware
+{
 
-	public ASPathAttribute(ASType asType) {
-		super(Category.WELL_KNOWN_MANDATORY);
-		
-		this.asType = asType;
-	}
-	
-	public ASPathAttribute(ASType asType, PathSegment[] segs) {
-		this(asType);
-		
-		if(segs != null) {
-			for(PathSegment seg : segs) {
-				this.pathSegments.add(seg);
-			}
-		}
-	}
+  private ASType asType;
+  private List<PathSegment> pathSegments = new LinkedList<PathSegment>();
 
-	public ASPathAttribute(ASType asType, List<PathSegment> pathSegments) {
-		this(asType);
+  public ASPathAttribute(ASType asType)
+  {
+    super(Category.WELL_KNOWN_MANDATORY);
 
-		if(pathSegments != null)
-			this.pathSegments = new LinkedList<PathSegment>(pathSegments);
-	}
+    this.asType = asType;
+  }
 
-	/**
-	 * @return the fourByteASNumber
-	 */
-	public boolean isFourByteASNumber() {
-		return (this.asType == ASType.AS_NUMBER_4OCTETS);
-	}
+  public ASPathAttribute(ASType asType, PathSegment[] segs)
+  {
+    this(asType);
 
-	/**
-	 * @return the pathSegments
-	 */
-	public List<PathSegment> getPathSegments() {
-		return pathSegments;
-	}
+    if (segs != null)
+    {
+      for (PathSegment seg : segs)
+      {
+        this.pathSegments.add(seg);
+      }
+    }
+  }
 
-	/**
-	 * @param pathSegments the pathSegments to set
-	 */
-	public void setPathSegments(List<PathSegment> pathSegments) {
-		if(pathSegments != null)
-			this.pathSegments = pathSegments;
-		else
-			this.pathSegments = new LinkedList<PathSegment>();
-	}
+  public ASPathAttribute(ASType asType, List<PathSegment> pathSegments)
+  {
+    this(asType);
 
-	/* (non-Javadoc)
-	 * @see org.bgp4j.netty.protocol.update.ASTypeAware#getAsType()
-	 */
-	@Override
-	public ASType getAsType() {
-		return asType;
-	}
+    if (pathSegments != null)
+      this.pathSegments = new LinkedList<PathSegment>(pathSegments);
+  }
 
-	@Override
-	protected PathAttributeType internalType() {
-		return PathAttributeType.AS_PATH;
-	}
+  /**
+   * @return the fourByteASNumber
+   */
+  public boolean isFourByteASNumber()
+  {
+    return (this.asType == ASType.AS_NUMBER_4OCTETS);
+  }
 
-	@Override
-	protected boolean subclassEquals(PathAttribute obj) {
-		ASPathAttribute o = (ASPathAttribute)obj;
+  /**
+   * @return the pathSegments
+   */
+  public List<PathSegment> getPathSegments()
+  {
+    return pathSegments;
+  }
 
-		EqualsBuilder builder = (new EqualsBuilder())
-				.append(getAsType(), o.getAsType())
-				.append(getPathSegments().size(), o.getPathSegments().size());
-		
-		if(builder.isEquals()) {
-			Iterator<PathSegment> lit = getPathSegments().iterator();
-			Iterator<PathSegment> rit = o.getPathSegments().iterator();
-			
-			while(lit.hasNext())
-				builder.append(lit.next(), rit.next());
-		}
-		
-		return builder.isEquals();
-	}
+  /**
+   * @param pathSegments
+   *          the pathSegments to set
+   */
+  public void setPathSegments(List<PathSegment> pathSegments)
+  {
+    if (pathSegments != null)
+      this.pathSegments = pathSegments;
+    else
+      this.pathSegments = new LinkedList<PathSegment>();
+  }
 
-	@Override
-	protected int subclassHashCode() {
-		HashCodeBuilder builder = (new HashCodeBuilder())
-				.append(getAsType());
-		Iterator<PathSegment> it = getPathSegments().iterator();
-		
-		while(it.hasNext())
-			builder.append(it.next());
-		
-		return builder.toHashCode();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bgp4j.netty.protocol.update.ASTypeAware#getAsType()
+   */
+  @Override
+  public ASType getAsType()
+  {
+    return asType;
+  }
 
-	@Override
-	protected int subclassCompareTo(PathAttribute obj) {
-		ASPathAttribute o = (ASPathAttribute)obj;
+  @Override
+  protected PathAttributeType internalType()
+  {
+    return PathAttributeType.AS_PATH;
+  }
 
-		CompareToBuilder builder = (new CompareToBuilder())
-				.append(getAsType(), o.getAsType())
-				.append(getPathSegments().size(), o.getPathSegments().size());
-		
-		if(builder.toComparison() == 0) {
-			Iterator<PathSegment> lit = getPathSegments().iterator();
-			Iterator<PathSegment> rit = o.getPathSegments().iterator();
-			
-			while(lit.hasNext())
-				builder.append(lit.next(), rit.next());
-		}
-		
-		return builder.toComparison();
-	}
+  @Override
+  protected boolean subclassEquals(PathAttribute obj)
+  {
+    ASPathAttribute o = (ASPathAttribute) obj;
 
-	@Override
-	protected ToStringBuilder subclassToString() {
-		ToStringBuilder builder = new ToStringBuilder(this).append("asType", asType);
-		
-		for(PathSegment ps : this.pathSegments)
-			builder.append("pathSegment", ps);
-		
-		return builder;
-	}
+    EqualsBuilder builder = (new EqualsBuilder())
+        .append(getAsType(), o.getAsType())
+        .append(getPathSegments().size(), o.getPathSegments().size());
+
+    if (builder.isEquals())
+    {
+      Iterator<PathSegment> lit = getPathSegments().iterator();
+      Iterator<PathSegment> rit = o.getPathSegments().iterator();
+
+      while (lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+
+    return builder.isEquals();
+  }
+
+  @Override
+  protected int subclassHashCode()
+  {
+    HashCodeBuilder builder = (new HashCodeBuilder())
+        .append(getAsType());
+    Iterator<PathSegment> it = getPathSegments().iterator();
+
+    while (it.hasNext())
+      builder.append(it.next());
+
+    return builder.toHashCode();
+  }
+
+  @Override
+  protected int subclassCompareTo(PathAttribute obj)
+  {
+    ASPathAttribute o = (ASPathAttribute) obj;
+
+    CompareToBuilder builder = (new CompareToBuilder())
+        .append(getAsType(), o.getAsType())
+        .append(getPathSegments().size(), o.getPathSegments().size());
+
+    if (builder.toComparison() == 0)
+    {
+      Iterator<PathSegment> lit = getPathSegments().iterator();
+      Iterator<PathSegment> rit = o.getPathSegments().iterator();
+
+      while (lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+
+    return builder.toComparison();
+  }
+
+  @Override
+  protected ToStringBuilder subclassToString()
+  {
+    ToStringBuilder builder = new ToStringBuilder(this).append("asType", asType);
+
+    for (PathSegment ps : this.pathSegments)
+      builder.append("pathSegment", ps);
+
+    return builder;
+  }
 }

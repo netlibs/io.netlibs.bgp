@@ -33,10 +33,14 @@ import com.jive.oss.bgp.net.BinaryNextHop;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
 import com.jive.oss.bgp.net.SubsequentAddressFamily;
 
+import lombok.ToString;
+
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
+
+@ToString
 public class MultiProtocolReachableNLRI extends PathAttribute
 {
 
@@ -164,6 +168,7 @@ public class MultiProtocolReachableNLRI extends PathAttribute
   /**
    * @return the nextHopAddress
    */
+  
   public BinaryNextHop getNextHop()
   {
     return this.nextHop;

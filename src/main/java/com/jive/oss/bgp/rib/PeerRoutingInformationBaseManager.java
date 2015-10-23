@@ -53,7 +53,6 @@ public class PeerRoutingInformationBaseManager implements ExtensionRoutingBaseMa
 
     synchronized (this.peerRibs)
     {
-
       if (!this.peerRibs.containsKey(peerName))
       {
         final PeerRoutingInformationBase prib = new PeerRoutingInformationBase();
@@ -62,10 +61,12 @@ public class PeerRoutingInformationBaseManager implements ExtensionRoutingBaseMa
         created = true;
       }
       result = this.peerRibs.get(peerName);
+      System.err.println(peerName + " " + this);
     }
 
     if (created)
     {
+      System.err.println("Created: " + peerName + " " + this);
       // this.peerRibCreated.fire(new PeerRoutingInformationBaseCreated(peerName));
     }
 

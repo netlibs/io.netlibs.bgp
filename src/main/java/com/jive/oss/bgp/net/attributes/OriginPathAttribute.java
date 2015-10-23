@@ -23,12 +23,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.jive.oss.bgp.net.Origin;
 
+import lombok.ToString;
+
 /**
  * ORIGIN (type code 1) BGPv4 path attribute
  *
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
+
+@ToString
 public class OriginPathAttribute extends PathAttribute
 {
 
@@ -65,6 +69,8 @@ public class OriginPathAttribute extends PathAttribute
     this.origin = origin;
   }
 
+
+  
   @Override
   protected PathAttributeType internalType()
   {

@@ -25,91 +25,111 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.jive.oss.bgp.net.InetAddressNextHop;
 
+import lombok.ToString;
+
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class NextHopPathAttribute extends PathAttribute {
 
-	public NextHopPathAttribute() {
-		super(Category.WELL_KNOWN_MANDATORY);
-	}
+@ToString
+public class NextHopPathAttribute extends PathAttribute
+{
 
-	public NextHopPathAttribute(Inet4Address nextHop) {
-		super(Category.WELL_KNOWN_MANDATORY);
-		
-		setNextHop(new InetAddressNextHop<Inet4Address>(nextHop));
-	}
+  public NextHopPathAttribute()
+  {
+    super(Category.WELL_KNOWN_MANDATORY);
+  }
 
-	public NextHopPathAttribute(InetAddressNextHop<Inet4Address> nextHop) {
-		super(Category.WELL_KNOWN_MANDATORY);
-		
-		setNextHop(nextHop);
-	}
+  public NextHopPathAttribute(Inet4Address nextHop)
+  {
+    super(Category.WELL_KNOWN_MANDATORY);
 
-	private InetAddressNextHop<Inet4Address> nextHop;
-	
-	/**
-	 * @return the nextHop
-	 */
-	public InetAddressNextHop<Inet4Address> getNextHop() {
-		return nextHop;
-	}
+    setNextHop(new InetAddressNextHop<Inet4Address>(nextHop));
+  }
 
-	/**
-	 * set the next hop. If the next hop is semantically invalid, an exception is raised.
-	 * 
-	 * @param nextHop the nextHop to set, MUST NOT be an IP multicast address
-	 * @throws IllegalArgumentException next hop address is a multicast address.
-	 */
-	public void setNextHop(InetAddressNextHop<Inet4Address> nextHop) {
-		if(nextHop.getAddress().isMulticastAddress())
-			throw new IllegalArgumentException();
-		
-		this.nextHop = nextHop;
-	}
+  public NextHopPathAttribute(InetAddressNextHop<Inet4Address> nextHop)
+  {
+    super(Category.WELL_KNOWN_MANDATORY);
 
-	/**
-	 * set the next hop. If the next hop is semantically invalid, an exception is raised.
-	 * 
-	 * @param nextHop the nextHop to set, MUST NOT be an IP multicast address
-	 * @throws IllegalArgumentException next hop address is a multicast address.
-	 */
-	public void setNextHop(Inet4Address nextHop) {
-		if(nextHop.isMulticastAddress())
-			throw new IllegalArgumentException();
-		
-		this.nextHop = new InetAddressNextHop<Inet4Address>(nextHop);
-	}
+    setNextHop(nextHop);
+  }
 
-	@Override
-	protected PathAttributeType internalType() {
-		return PathAttributeType.NEXT_HOP;
-	}
+  private InetAddressNextHop<Inet4Address> nextHop;
 
-	@Override
-	protected boolean subclassEquals(PathAttribute obj) {
-		NextHopPathAttribute o = (NextHopPathAttribute)obj;
-		
-		return (new EqualsBuilder()).append(getNextHop(), o.getNextHop()).isEquals();
-	}
+  /**
+   * @return the nextHop
+   */
+  public InetAddressNextHop<Inet4Address> getNextHop()
+  {
+    return nextHop;
+  }
 
-	@Override
-	protected int subclassHashCode() {
-		return (new HashCodeBuilder()).append(getNextHop()).toHashCode();
-	}
+  /**
+   * set the next hop. If the next hop is semantically invalid, an exception is raised.
+   * 
+   * @param nextHop
+   *          the nextHop to set, MUST NOT be an IP multicast address
+   * @throws IllegalArgumentException
+   *           next hop address is a multicast address.
+   */
+  public void setNextHop(InetAddressNextHop<Inet4Address> nextHop)
+  {
+    if (nextHop.getAddress().isMulticastAddress())
+      throw new IllegalArgumentException();
 
-	@Override
-	protected int subclassCompareTo(PathAttribute obj) {
-		NextHopPathAttribute o = (NextHopPathAttribute)obj;
-		
-		return (new CompareToBuilder()).append(getNextHop(), o.getNextHop()).toComparison();
-	}
+    this.nextHop = nextHop;
+  }
 
-	@Override
-	protected ToStringBuilder subclassToString() {
-		return (new ToStringBuilder(this))
-				.append("nextHop", nextHop);
-	}
+  /**
+   * set the next hop. If the next hop is semantically invalid, an exception is raised.
+   * 
+   * @param nextHop
+   *          the nextHop to set, MUST NOT be an IP multicast address
+   * @throws IllegalArgumentException
+   *           next hop address is a multicast address.
+   */
+  public void setNextHop(Inet4Address nextHop)
+  {
+    if (nextHop.isMulticastAddress())
+      throw new IllegalArgumentException();
+
+    this.nextHop = new InetAddressNextHop<Inet4Address>(nextHop);
+  }
+
+  @Override
+  protected PathAttributeType internalType()
+  {
+    return PathAttributeType.NEXT_HOP;
+  }
+
+  @Override
+  protected boolean subclassEquals(PathAttribute obj)
+  {
+    NextHopPathAttribute o = (NextHopPathAttribute) obj;
+
+    return (new EqualsBuilder()).append(getNextHop(), o.getNextHop()).isEquals();
+  }
+
+  @Override
+  protected int subclassHashCode()
+  {
+    return (new HashCodeBuilder()).append(getNextHop()).toHashCode();
+  }
+
+  @Override
+  protected int subclassCompareTo(PathAttribute obj)
+  {
+    NextHopPathAttribute o = (NextHopPathAttribute) obj;
+
+    return (new CompareToBuilder()).append(getNextHop(), o.getNextHop()).toComparison();
+  }
+
+  @Override
+  protected ToStringBuilder subclassToString()
+  {
+    return (new ToStringBuilder(this))
+        .append("nextHop", nextHop);
+  }
 
 }

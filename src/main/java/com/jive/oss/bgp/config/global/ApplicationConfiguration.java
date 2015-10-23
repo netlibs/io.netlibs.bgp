@@ -7,11 +7,13 @@ import java.util.List;
 
 import com.jive.oss.bgp.config.nodes.PeerConfiguration;
 import com.jive.oss.bgp.config.nodes.RoutingProcessorConfiguration;
+import com.jive.oss.bgp.rib.PeerRoutingInformationBaseManager;
 
 public class ApplicationConfiguration
 {
 
   private final List<PeerConfiguration> peers;
+  private PeerRoutingInformationBaseManager pribm;
 
   public ApplicationConfiguration()
   {
@@ -40,5 +42,16 @@ public class ApplicationConfiguration
     // TODO Auto-generated method stub
     return null;
   }
+
+  public PeerRoutingInformationBaseManager getPeerRoutingInformationBaseManager()
+  {
+    return this.pribm;
+  }
+
+  public void setPeerRoutingInformationBaseManager(final PeerRoutingInformationBaseManager pribm)
+  {
+    this.pribm = pribm;
+  }
+
 
 }
