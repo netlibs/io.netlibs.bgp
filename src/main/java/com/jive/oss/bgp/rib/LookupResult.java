@@ -12,32 +12,35 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
- * File: org.bgp4j.rib.LookupResult.java 
+ *
+ * File: org.bgp4j.rib.LookupResult.java
  */
 package com.jive.oss.bgp.rib;
 
-
 /**
- * Result bean for a NLRI prefix lookup in a RIB 
- * 
+ * Result bean for a NLRI prefix lookup in a RIB
+ *
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class LookupResult {
 
-	private Route route;
-	
-	LookupResult(Route route) {
-		this.route = route;
-	}
+public class LookupResult
+{
 
-	/**
-	 * @return the route
-	 */
-	public Route getRoute() {
-		return route;
-	}
+  private final Route route;
 
-	
+  LookupResult(final Route route)
+  {
+    this.route = route;
+  }
+
+  /**
+   * @return the route
+   */
+
+  public Route getRoute()
+  {
+    return this.route;
+  }
+
 }

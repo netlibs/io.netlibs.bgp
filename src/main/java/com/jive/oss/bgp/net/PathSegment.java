@@ -9,6 +9,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import lombok.ToString;
+
+@ToString
 public class PathSegment implements Comparable<PathSegment>
 {
 
@@ -180,4 +183,5 @@ public class PathSegment implements Comparable<PathSegment>
 
     return builder.toString();
   }
+
 }

@@ -52,7 +52,6 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
   private int prefixLength;
   private byte[] prefix;
 
-
   public NetworkLayerReachabilityInformation()
   {
   }
@@ -73,7 +72,6 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
     final byte[] raw = source.getAddress();
     this.setPrefix(8 * raw.length, raw);
   }
-
 
   /**
    * @return the prefixLength
@@ -100,6 +98,7 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
    */
   public void setPrefix(final int prefixLength, final byte[] prefix)
   {
+
     this.prefixLength = prefixLength;
     this.prefix = prefix;
 
@@ -151,8 +150,10 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
    * @param other
    * @return
    */
+
   public boolean isPrefixOf(final NetworkLayerReachabilityInformation other)
   {
+
     boolean isPrefix = false;
 
     if (this.prefixLength > 0)
@@ -319,6 +320,13 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
     builder.append(Integer.toString(this.prefixLength));
 
     return builder.toString();
+  }
+
+  public NetworkLayerReachabilityInformation remove(final int i)
+  {
+    final byte[] data = new byte[this.prefix.length - i];
+    System.arraycopy(this.prefix, i, data, 0, this.prefix.length - i);
+    return new NetworkLayerReachabilityInformation(data);
   }
 
 }

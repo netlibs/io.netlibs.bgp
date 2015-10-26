@@ -36,6 +36,7 @@ public class NLRICodec
 
   public static NetworkLayerReachabilityInformation decodeNLRI(final ByteBuf buffer)
   {
+
     final NetworkLayerReachabilityInformation nlri = new NetworkLayerReachabilityInformation();
     final int prefixLength = buffer.readUnsignedByte();
     byte[] prefixBytes = null;
@@ -45,9 +46,11 @@ public class NLRICodec
       prefixBytes = new byte[NetworkLayerReachabilityInformation.calculateOctetsForPrefixLength(prefixLength)];
       buffer.readBytes(prefixBytes);
     }
+
     nlri.setPrefix(prefixLength, prefixBytes);
 
     return nlri;
+
   }
 
   /**

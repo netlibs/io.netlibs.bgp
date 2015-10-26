@@ -61,16 +61,20 @@ public class PeerRoutingInformationBase
 
   public void allocateRoutingInformationBase(final RIBSide side, final AddressFamilyKey afk)
   {
+
     RoutingInformationBase rib = null;
 
     switch (side)
     {
+
       case Local:
         rib = this.allocateRoutingInformationBase(this.localRIBs, side, afk);
         break;
+
       case Remote:
         rib = this.allocateRoutingInformationBase(this.remoteRIBs, side, afk);
         break;
+
     }
 
     if (rib != null)
@@ -167,6 +171,7 @@ public class PeerRoutingInformationBase
 
   private RoutingInformationBase allocateRoutingInformationBase(final Map<AddressFamilyKey, RoutingInformationBase> ribs, final RIBSide side, final AddressFamilyKey afk)
   {
+
     RoutingInformationBase rib = null;
 
     if (!ribs.containsKey(afk))
@@ -230,6 +235,7 @@ public class PeerRoutingInformationBase
   /**
    * @return the extensionRoutingBase
    */
+
   public boolean isExtensionRoutingBase()
   {
     return this.extensionRoutingBase;
@@ -239,8 +245,10 @@ public class PeerRoutingInformationBase
    * @param extensionRoutingBase
    *          the extensionRoutingBase to set
    */
+
   void setExtensionRoutingBase(final boolean extensionRoutingBase)
   {
     this.extensionRoutingBase = extensionRoutingBase;
   }
+
 }

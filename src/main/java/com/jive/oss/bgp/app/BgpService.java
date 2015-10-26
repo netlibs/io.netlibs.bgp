@@ -1,20 +1,4 @@
-/**
- *  Copyright 2012 Rainer Bieniek (Rainer.Bieniek@web.de)
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *  
- */
-package com.jive.oss.bgp.netty.service;
+package com.jive.oss.bgp.app;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -25,7 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.ConfigurationException;
+
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 import com.jive.oss.bgp.config.global.ApplicationConfiguration;
@@ -36,9 +23,7 @@ import com.jive.oss.bgp.net.ASType;
 import com.jive.oss.bgp.net.AddressFamily;
 import com.jive.oss.bgp.net.AddressFamilyKey;
 import com.jive.oss.bgp.net.BinaryNextHop;
-import com.jive.oss.bgp.net.InetAddressNextHop;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
-import com.jive.oss.bgp.net.NextHop;
 import com.jive.oss.bgp.net.Origin;
 import com.jive.oss.bgp.net.PathSegment;
 import com.jive.oss.bgp.net.PathSegmentType;
@@ -52,7 +37,10 @@ import com.jive.oss.bgp.net.attributes.PathAttribute;
 import com.jive.oss.bgp.net.capabilities.Capability;
 import com.jive.oss.bgp.net.capabilities.MultiProtocolCapability;
 import com.jive.oss.bgp.netty.fsm.FSMRegistry;
-import com.jive.oss.bgp.netty.fsm.OutboundRoutingUpdateQueue;
+import com.jive.oss.bgp.netty.service.BGPv4Server;
+import com.jive.oss.bgp.netty.service.MplsLabelNLRI;
+import com.jive.oss.bgp.netty.service.RouteHandle;
+import com.jive.oss.bgp.netty.service.RouteProcessor;
 import com.jive.oss.bgp.rib.PeerRoutingInformationBase;
 import com.jive.oss.bgp.rib.PeerRoutingInformationBaseManager;
 import com.jive.oss.bgp.rib.Route;
@@ -61,31 +49,56 @@ import com.jive.oss.bgp.rib.RouteWithdrawn;
 import com.jive.oss.bgp.rib.RoutingEventListener;
 import com.jive.oss.bgp.rib.RoutingInformationBase;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author Rainer Bieniek (Rainer.Bieniek@web.de)
+ * A higher level BGPv4 service which provides events to a registered handler.
+ *
+ * The BGP service itself doesn't deal with RiB handling. Instead, it passes events to the handler for the peer. A peer can have multiple
+ *
+ * @author theo
  *
  */
 
 @Slf4j
-@RequiredArgsConstructor
-public class BGPv4Service
+public class BgpService
 {
 
+  private final Scheduler scheduler;
+  private final PeerRoutingInformationBaseManager pribm = new PeerRoutingInformationBaseManager();
   private final FSMRegistry fsmRegistry;
   private final BGPv4Server serverInstance;
-  private final Scheduler scheduler;
+  private final ApplicationConfiguration app = new ApplicationConfiguration();
 
-  /**
-   * start the service
-   * 
-   * @param configuration
-   *          the initial service configuration
-   */
-  public void startService()
+  public BgpService()
   {
+
+    try
+    {
+      this.scheduler = new StdSchedulerFactory().getScheduler();
+    }
+    catch (final SchedulerException e)
+    {
+      throw new RuntimeException(e);
+    }
+
+    this.app.setPeerRoutingInformationBaseManager(this.pribm);
+    this.fsmRegistry = new FSMRegistry(this.app, this.scheduler);
+    this.serverInstance = new BGPv4Server(this.app, this.fsmRegistry);
+
+  }
+
+  public void start() throws Exception
+  {
+
+    try
+    {
+      this.scheduler.start();
+    }
+    catch (final SchedulerException e)
+    {
+      throw new RuntimeException(e);
+    }
 
     this.fsmRegistry.createRegistry();
 
@@ -96,14 +109,16 @@ public class BGPv4Service
     }
 
     this.fsmRegistry.startFiniteStateMachines();
+
   }
 
   /**
    * stop the running service
-   * 
    */
-  public void stopService()
+
+  public void stop()
   {
+
     this.fsmRegistry.stopFiniteStateMachines();
 
     if (this.serverInstance != null)
@@ -112,33 +127,21 @@ public class BGPv4Service
     }
 
     this.fsmRegistry.destroyRegistry();
+
   }
 
-  public static void main(final String[] args) throws Exception
+  public void addPeer(final InetSocketAddress addr, final int local, final int remote, final RouteProcessor proc)
   {
-
-    final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-
-    scheduler.start();
-
-    final PeerRoutingInformationBaseManager pribm = new PeerRoutingInformationBaseManager();
-
-    final OutboundRoutingUpdateQueue out = new OutboundRoutingUpdateQueue(scheduler);
-
-    final Collection<PathAttribute> pathAttributes = new LinkedList<>();
 
     // ----
 
     final List<PathSegment> segs = new LinkedList<>();
     segs.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
 
+    final Collection<PathAttribute> pathAttributes = new LinkedList<>();
     pathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, segs));
-    pathAttributes.add(new NextHopPathAttribute((Inet4Address) InetAddress.getByName("192.168.13.1")));
-
-    final NextHop nextHop = new InetAddressNextHop<InetAddress>(InetAddress.getByName("192.168.13.1"));
-
+    pathAttributes.add(new NextHopPathAttribute((Inet4Address) addr.getAddress()));
     pathAttributes.add(new OriginPathAttribute(Origin.INCOMPLETE));
-
     pathAttributes.add(new MultiProtocolReachableNLRI(
         AddressFamily.IPv4,
         SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING,
@@ -147,11 +150,15 @@ public class BGPv4Service
     // ----
 
     final NetworkLayerReachabilityInformation nlri = new NetworkLayerReachabilityInformation(56, new byte[] { 0, 2, 1, 2, 3, 4, 5 });
-    final Route route = new Route(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING, nlri, pathAttributes, new BinaryNextHop(InetAddress.getByName("192.168.13.1").getAddress()));
+    final Route route = new Route(
+        AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING,
+        nlri,
+        pathAttributes,
+        new BinaryNextHop(addr.getAddress().getAddress()));
 
     // ----
 
-    final PeerRoutingInformationBase prib = pribm.peerRoutingInformationBase("test");
+    final PeerRoutingInformationBase prib = this.pribm.peerRoutingInformationBase("test");
 
     prib.allocateRoutingInformationBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
     prib.allocateRoutingInformationBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
@@ -159,8 +166,6 @@ public class BGPv4Service
     final RoutingInformationBase rib = prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
 
     rib.addRoute(route);
-
-    final RouteProcessor proc = null;// new RouteProcessor();
 
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING).addPerRibListener(new RoutingEventListener() {
 
@@ -188,7 +193,7 @@ public class BGPv4Service
         final Route r = event.getRoute();
         final MplsLabelNLRI nlri = new MplsLabelNLRI(r.getNlri().getPrefix());
         log.info("Route DEL: {}: {}", nlri.getAddress(), event.getRoute());
-        RouteHandle handle = this.handles.get(nlri.getAddress());
+        final RouteHandle handle = this.handles.get(nlri.getAddress());
 
         if (handle != null)
         {
@@ -204,44 +209,35 @@ public class BGPv4Service
 
     // ----
 
-    final ClientConfigurationImpl clientConfig = new ClientConfigurationImpl(new InetSocketAddress("192.168.13.129", 179));
-
-    final PeerConfigurationImpl config = new PeerConfigurationImpl("test", clientConfig, 1234, 5678, 1, get(InetAddress.getByName("192.168.13.129")));
-
-    final CapabilitiesImpl caps = new CapabilitiesImpl(new Capability[] {
-        // new AutonomousSystem4Capability(16),
-        new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
-        new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
-        // new RouteRefreshCapability()
-    });
-
-    config.setCapabilities(caps);
-
-    final ApplicationConfiguration app = new ApplicationConfiguration();
-    app.addPeer(config);
-    app.setPeerRoutingInformationBaseManager(pribm);
-
-    final FSMRegistry reg = new FSMRegistry(app, scheduler);
-
-    final BGPv4Service service = new BGPv4Service(reg, new BGPv4Server(app, reg), scheduler);
-
-    // ----
-
-    service.startService();
-
-    Thread.sleep(1000);
-
-    // final BGPv4FSM fsm = new BGPv4FSM(scheduler, client, new CapabilitesNegotiator(), pribm, out);
-    // fsm.configure(config);
-    //
-    // reg.registerFSM(fsm);
-    //
-    // reg.startFiniteStateMachines();
-    // client.startClient(config).sync();
-
-    while (true)
+    try
     {
-      Thread.sleep(1000);
+
+      final ClientConfigurationImpl clientConfig = new ClientConfigurationImpl(addr);
+
+      final PeerConfigurationImpl config = new PeerConfigurationImpl(
+          "test",
+          clientConfig,
+          local,
+          remote,
+          1,
+          get(addr.getAddress()));
+
+      final CapabilitiesImpl caps = new CapabilitiesImpl(new Capability[] {
+          // new AutonomousSystem4Capability(16),
+          new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
+          new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
+          // new RouteRefreshCapability()
+      });
+
+      config.setCapabilities(caps);
+
+      this.app.addPeer(config);
+
+    }
+    catch (final ConfigurationException ex)
+    {
+      log.error("Config Error", ex);
+      throw new RuntimeException(ex);
     }
 
   }

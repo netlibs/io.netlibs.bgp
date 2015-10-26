@@ -29,6 +29,7 @@ import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
+
 class RoutingTree
 {
 
@@ -156,14 +157,14 @@ class RoutingTree
         added = true;
         break;
       }
-      else if (child.getRoute().getNlri().isPrefixOf(newNode.getRoute().getNlri()))
+      else if (NlriComparator.isPrefixOf(child.getRoute(), newNode.getRoute()))
       {
         // a child node has more coarse-grained routing info attached --> make this child node parent of the new node
         added = this.addRoute(child, newNode);
         handled = true;
         break;
       }
-      else if (newNode.getRoute().getNlri().isPrefixOf(child.getRoute().getNlri()))
+      else if (NlriComparator.isPrefixOf(newNode.getRoute(), child.getRoute()))
       {
         // the new node has more coarse-grained routing info attached --> the child must be reparented to the new node.
         reparentedNodes.add(child);
@@ -193,6 +194,7 @@ class RoutingTree
    *          the NLRI prefix to withdraw
    * @return <code>true</code> if the node was removed, <code>false</code> otherwise
    */
+
   synchronized boolean withdrawRoute(final Route route)
   {
     return this.withdrawRoute(this.rootNode, route);
@@ -208,6 +210,11 @@ class RoutingTree
     this.visitTree(this.rootNode, visitor);
   }
 
+  public NlriComparator comparator(final int type)
+  {
+    return null;
+  }
+
   /**
    * Withdraw the (NLRI prefix, Path attributes) tuple from the tree. The rules for this pürocess are as follows:
    * <ol>
@@ -221,30 +228,33 @@ class RoutingTree
    * @param nlri
    * @return
    */
+
   private boolean withdrawRoute(final RoutingTreeNode parent, final Route route)
   {
+
     boolean withdrawn = false;
     RoutingTreeNode candidate = null;
 
     for (final RoutingTreeNode child : parent.getChildNodes())
     {
-      if (child.getRoute().getNlri().equals(route.getNlri()))
+
+      if (NlriComparator.equals(child.getRoute(), route))
       {
         candidate = child;
         break;
       }
-      else if (child.getRoute().getNlri().isPrefixOf(route.getNlri()))
+      else if (NlriComparator.isPrefixOf(child.getRoute(), route))
       {
         withdrawn = this.withdrawRoute(child, route);
         break;
       }
+
     }
 
     if (candidate != null)
     {
       parent.getChildNodes().addAll(candidate.getChildNodes());
       parent.getChildNodes().remove(candidate);
-
       withdrawn = true;
     }
 
@@ -264,24 +274,32 @@ class RoutingTree
    * @param nlri
    * @return
    */
+
   LookupResult lookupRoute(final NetworkLayerReachabilityInformation nlri)
   {
     return this.lookupRoute(this.rootNode, nlri);
   }
 
+  /**
+   *
+   */
+
   private LookupResult lookupRoute(final RoutingTreeNode parent, final NetworkLayerReachabilityInformation nlri)
   {
+
     LookupResult result = null;
 
     for (final RoutingTreeNode child : parent.getChildNodes())
     {
-      if (child.getRoute().getNlri().equals(nlri))
+
+      if (NlriComparator.equals(child.getRoute(), nlri))
       {
         result = new LookupResult(child.getRoute());
         break;
       }
-      else if (child.getRoute().getNlri().isPrefixOf(nlri))
+      else if (NlriComparator.isPrefixOf(child.getRoute(), nlri))
       {
+
         // child node NLRI is less specific match --> descend into child node
         result = this.lookupRoute(child, nlri);
 
@@ -290,7 +308,9 @@ class RoutingTree
         {
           result = new LookupResult(child.getRoute());
         }
+
       }
+
     }
 
     return result;

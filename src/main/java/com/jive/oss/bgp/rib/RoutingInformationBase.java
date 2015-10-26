@@ -29,11 +29,14 @@ import com.jive.oss.bgp.net.NextHop;
 import com.jive.oss.bgp.net.RIBSide;
 import com.jive.oss.bgp.net.attributes.PathAttribute;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
 
+@Slf4j
 public class RoutingInformationBase
 {
 
@@ -113,9 +116,9 @@ public class RoutingInformationBase
    * @param nlris
    * @param pathAttributes
    */
+
   public void addRoutes(final Collection<NetworkLayerReachabilityInformation> nlris, final Collection<PathAttribute> pathAttributes, final NextHop nextHop)
   {
-
 
     for (final NetworkLayerReachabilityInformation nlri : nlris)
     {
@@ -158,7 +161,7 @@ public class RoutingInformationBase
 
       final Route route = new Route(this.getRibID(), this.getAddressFamilyKey(), nlri, null, null);
 
-      System.err.println("Withdrawinf " + route);
+      log.debug("Withdrawing {}", route);
 
       if (this.routingTree.withdrawRoute(route))
       {
@@ -174,6 +177,7 @@ public class RoutingInformationBase
             listener.routeWithdrawn(event);
           }
         }
+
         for (final RoutingEventListener listener : this.perRibListeners)
         {
           listener.routeWithdrawn(event);
@@ -182,7 +186,7 @@ public class RoutingInformationBase
       }
       else
       {
-        System.err.println("error: received withdrawn for unknown NLRI: " + route);
+        log.warn("error: received withdrawn for unknown NLRI: {}", route);
       }
 
     }
@@ -195,6 +199,7 @@ public class RoutingInformationBase
    *          prefix to look up
    * @return the result or <code>null</code> if no result can be found.
    */
+
   public LookupResult lookupRoute(final NetworkLayerReachabilityInformation nlri)
   {
     return this.routingTree.lookupRoute(nlri);
@@ -205,15 +210,24 @@ public class RoutingInformationBase
    *
    * @param visitor
    */
+
   public void visitRoutingNodes(final RoutingInformationBaseVisitor visitor)
   {
     this.routingTree.visitTree(route -> visitor.visitRouteNode(RoutingInformationBase.this.getPeerName(), RoutingInformationBase.this.getSide(), route));
   }
 
+  /**
+   *
+   */
+
   public void addPerRibListener(final RoutingEventListener listener)
   {
     this.perRibListeners.add(listener);
   }
+
+  /**
+   *
+   */
 
   public void removePerRibListener(final RoutingEventListener listener)
   {
@@ -224,6 +238,7 @@ public class RoutingInformationBase
    * @param listeners
    *          the listeners to set
    */
+
   void setListeners(final Collection<RoutingEventListener> listeners)
   {
     this.listeners = listeners;
@@ -232,13 +247,54 @@ public class RoutingInformationBase
   /**
    * @return the ribID
    */
+
   public UUID getRibID()
   {
     return this.ribID;
   }
 
+  /**
+   *
+   */
+
+  public void addRoute(Route route)
+  {
+
+    if (route.getRibID() == null)
+    {
+      route = new Route(this.getRibID(), route.getAddressFamilyKey(), route.getNlri(), route.getPathAttributes(), route.getNextHop());
+    }
+
+    if (this.routingTree.addRoute(route))
+    {
+
+      final RouteAdded event = new RouteAdded(this.getPeerName(), this.getSide(), route);
+
+      // this.routeAddedEvent.fire(event);
+
+      if (this.listeners != null)
+      {
+        for (final RoutingEventListener listener : this.listeners)
+        {
+          listener.routeAdded(event);
+        }
+      }
+
+      for (final RoutingEventListener listener : this.perRibListeners)
+      {
+        listener.routeAdded(event);
+      }
+
+    }
+  }
+
+  /**
+   *
+   */
+
   public void withdrawRoute(Route route)
   {
+
     if (route.getRibID() == null)
     {
       route = new Route(this.getRibID(), route.getAddressFamilyKey(), route.getNlri(), route.getPathAttributes(), route.getNextHop());
@@ -246,6 +302,7 @@ public class RoutingInformationBase
 
     if (this.routingTree.withdrawRoute(route))
     {
+
       final RouteWithdrawn event = new RouteWithdrawn(this.getPeerName(), this.getSide(), route);
 
       // this.routeWithdrawnEvent.fire(event);
@@ -257,39 +314,14 @@ public class RoutingInformationBase
           listener.routeWithdrawn(event);
         }
       }
+
       for (final RoutingEventListener listener : this.perRibListeners)
       {
         listener.routeWithdrawn(event);
       }
+
     }
+
   }
 
-  public void addRoute(Route route)
-  {
-    if (route.getRibID() == null)
-    {
-      route = new Route(this.getRibID(), route.getAddressFamilyKey(), route.getNlri(), route.getPathAttributes(), route.getNextHop());
-    }
-
-    if (this.routingTree.addRoute(route))
-    {
-      final RouteAdded event = new RouteAdded(this.getPeerName(),
-          this.getSide(),
-          route);
-
-      // this.routeAddedEvent.fire(event);
-
-      if (this.listeners != null)
-      {
-        for (final RoutingEventListener listener : this.listeners)
-        {
-          listener.routeAdded(event);
-        }
-      }
-      for (final RoutingEventListener listener : this.perRibListeners)
-      {
-        listener.routeAdded(event);
-      }
-    }
-  }
 }

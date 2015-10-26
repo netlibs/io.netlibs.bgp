@@ -22,66 +22,80 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import lombok.ToString;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class MultiExitDiscPathAttribute extends PathAttribute {
 
-	public MultiExitDiscPathAttribute() {
-		super(Category.OPTIONAL_NON_TRANSITIVE);
-	}
+@ToString
+public class MultiExitDiscPathAttribute extends PathAttribute
+{
 
-	public MultiExitDiscPathAttribute(int discriminator) {
-		super(Category.OPTIONAL_NON_TRANSITIVE);
-		
-		this.discriminator = discriminator;
-	}
+  public MultiExitDiscPathAttribute()
+  {
+    super(Category.OPTIONAL_NON_TRANSITIVE);
+  }
 
-	private int discriminator;
-	
-	/**
-	 * @return the discriminator
-	 */
-	public int getDiscriminator() {
-		return discriminator;
-	}
+  public MultiExitDiscPathAttribute(final int discriminator)
+  {
+    super(Category.OPTIONAL_NON_TRANSITIVE);
 
-	/**
-	 * @param discriminator the discriminator to set
-	 */
-	public void setDiscriminator(int discriminator) {
-		this.discriminator = discriminator;
-	}
+    this.discriminator = discriminator;
+  }
 
-	@Override
-	protected PathAttributeType internalType() {
-		return PathAttributeType.MULTI_EXIT_DISC;
-	}
+  private int discriminator;
 
-	@Override
-	protected boolean subclassEquals(PathAttribute obj) {
-		MultiExitDiscPathAttribute o = (MultiExitDiscPathAttribute)obj;
-		
-		return (new EqualsBuilder()).append(getDiscriminator(), o.getDiscriminator()).isEquals();
-	}
+  /**
+   * @return the discriminator
+   */
+  public int getDiscriminator()
+  {
+    return this.discriminator;
+  }
 
-	@Override
-	protected int subclassHashCode() {
-		return (new HashCodeBuilder()).append(getDiscriminator()).toHashCode();
-	}
+  /**
+   * @param discriminator
+   *          the discriminator to set
+   */
+  public void setDiscriminator(final int discriminator)
+  {
+    this.discriminator = discriminator;
+  }
 
-	@Override
-	protected int subclassCompareTo(PathAttribute obj) {
-		MultiExitDiscPathAttribute o = (MultiExitDiscPathAttribute)obj;
-		
-		return (new CompareToBuilder()).append(getDiscriminator(), o.getDiscriminator()).toComparison();
-	}
+  @Override
+  protected PathAttributeType internalType()
+  {
+    return PathAttributeType.MULTI_EXIT_DISC;
+  }
 
-	@Override
-	protected ToStringBuilder subclassToString() {
-		return (new ToStringBuilder(this))
-				.append("discriminator", discriminator);
-	}
+  @Override
+  protected boolean subclassEquals(final PathAttribute obj)
+  {
+    final MultiExitDiscPathAttribute o = (MultiExitDiscPathAttribute) obj;
+
+    return (new EqualsBuilder()).append(this.getDiscriminator(), o.getDiscriminator()).isEquals();
+  }
+
+  @Override
+  protected int subclassHashCode()
+  {
+    return (new HashCodeBuilder()).append(this.getDiscriminator()).toHashCode();
+  }
+
+  @Override
+  protected int subclassCompareTo(final PathAttribute obj)
+  {
+    final MultiExitDiscPathAttribute o = (MultiExitDiscPathAttribute) obj;
+
+    return (new CompareToBuilder()).append(this.getDiscriminator(), o.getDiscriminator()).toComparison();
+  }
+
+  @Override
+  protected ToStringBuilder subclassToString()
+  {
+    return (new ToStringBuilder(this))
+        .append("discriminator", this.discriminator);
+  }
 }
