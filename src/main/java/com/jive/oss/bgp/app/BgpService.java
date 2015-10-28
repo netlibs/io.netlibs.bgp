@@ -64,6 +64,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BgpService
 {
 
+  public static AddressFamilyKey AF = AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING;
   private final Scheduler scheduler;
   private final PeerRoutingInformationBaseManager pribm = new PeerRoutingInformationBaseManager();
   private final FSMRegistry fsmRegistry;
@@ -130,28 +131,32 @@ public class BgpService
 
   }
 
+
   public void addPeer(final InetSocketAddress addr, final int local, final int remote, final RouteProcessor proc)
   {
+    
+    // ---
 
     // ----
 
     final List<PathSegment> segs = new LinkedList<>();
-    segs.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
+    segs.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { local }));
 
     final Collection<PathAttribute> pathAttributes = new LinkedList<>();
     pathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, segs));
     pathAttributes.add(new NextHopPathAttribute((Inet4Address) addr.getAddress()));
     pathAttributes.add(new OriginPathAttribute(Origin.INCOMPLETE));
+    
     pathAttributes.add(new MultiProtocolReachableNLRI(
-        AddressFamily.IPv4,
-        SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING,
+        AF.getAddressFamily(),
+        AF.getSubsequentAddressFamily(),
         new BinaryNextHop(new byte[] { 8, 1, 1, 1, 1, 2, 3, 4, 32 })));
 
     // ----
 
     final NetworkLayerReachabilityInformation nlri = new NetworkLayerReachabilityInformation(56, new byte[] { 0, 2, 1, 2, 3, 4, 5 });
     final Route route = new Route(
-        AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING,
+        AF,
         nlri,
         pathAttributes,
         new BinaryNextHop(addr.getAddress().getAddress()));
@@ -160,14 +165,14 @@ public class BgpService
 
     final PeerRoutingInformationBase prib = this.pribm.peerRoutingInformationBase("test");
 
-    prib.allocateRoutingInformationBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
-    prib.allocateRoutingInformationBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
+    prib.allocateRoutingInformationBase(RIBSide.Local, AF);
+    prib.allocateRoutingInformationBase(RIBSide.Remote, AF);
 
-    final RoutingInformationBase rib = prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
+    final RoutingInformationBase rib = prib.routingBase(RIBSide.Local, AF);
 
     rib.addRoute(route);
 
-    prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING).addPerRibListener(new RoutingEventListener() {
+    prib.routingBase(RIBSide.Remote, AF).addPerRibListener(new RoutingEventListener() {
 
       private final Map<NetworkLayerReachabilityInformation, RouteHandle> handles = new HashMap<>();
 
@@ -225,7 +230,7 @@ public class BgpService
       final CapabilitiesImpl caps = new CapabilitiesImpl(new Capability[] {
           // new AutonomousSystem4Capability(16),
           new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
-          new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
+          new MultiProtocolCapability(AF.getAddressFamily(), AF.getSubsequentAddressFamily()),
           // new RouteRefreshCapability()
       });
 

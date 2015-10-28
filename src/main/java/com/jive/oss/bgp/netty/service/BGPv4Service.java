@@ -212,6 +212,7 @@ public class BGPv4Service
         // new AutonomousSystem4Capability(16),
         new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
         new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
+        new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
         // new RouteRefreshCapability()
     });
 
