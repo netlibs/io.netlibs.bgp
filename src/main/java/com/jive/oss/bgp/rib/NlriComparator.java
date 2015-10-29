@@ -1,5 +1,7 @@
 package com.jive.oss.bgp.rib;
 
+import java.util.Arrays;
+
 import com.jive.oss.bgp.net.AddressFamilyKey;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
 
@@ -35,8 +37,36 @@ public class NlriComparator
 
     if (afk.equals(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING))
     {
-      // remove the first 3 bytes.
+      // RFC3107 -  Encoding is:
+      //  3-byte label
+      //  4-byte IPv4 address
       return isPrefixOf(AddressFamilyKey.IPV4_UNICAST_FORWARDING, left.remove(3), right.remove(3));
+    }
+    else if (afk.equals(AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING))
+    {
+      // RFC3107 Encoding is:
+      //  3-byte label
+      //  16-byte IPv6 address
+      return isPrefixOf(AddressFamilyKey.IPV6_UNICAST_FORWARDING, left.remove(3), right.remove(3));
+    }
+    else if (afk.equals(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING) || afk.equals(AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING))
+    {
+      // For IPv4 RFC4364 - Encoding is:    label (3-byte) RD (type (2-byte), value(6-byte)) IPv4 (4-byte)
+      // For IPv6 RFC4659 - Encoding is:    label (3-byte) RD (type (2-byte), value(6-byte)) IPv6 (16-byte)
+         
+      // For both AFs - remove label and then extract the subsequent 8-bytes (RD)
+      // if the RD is not equal (including the same type), then these
+      // are not the same prefix.
+      if (!Arrays.equals(left.remove(3).pop(8), right.remove(3).pop(8)))
+        return false;
+ 
+  
+      if (afk.equals(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING))
+        // Remove both the label and the RD and check whether these are the same IPv4 prefix
+        return isPrefixOf(AddressFamilyKey.IPV4_UNICAST_FORWARDING, left.remove(11), right.remove(11));        
+      else
+        // Remaining case is IPv6 comparison
+        return isPrefixOf(AddressFamilyKey.IPV6_UNICAST_FORWARDING, left.remove(11), right.remove(11));
     }
     else
     {
@@ -54,6 +84,23 @@ public class NlriComparator
     if (afk.equals(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING))
     {
       return equals(AddressFamilyKey.IPV4_UNICAST_FORWARDING, left.remove(3), right.remove(3));
+    }
+    else if (afk.equals(AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING))
+    {
+      return equals(AddressFamilyKey.IPV6_UNICAST_FORWARDING, left.remove(3), right.remove(3));
+    }
+    else if (afk.equals(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING) || afk.equals(AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING))
+    {
+      // First comparison based on RD
+      if (!Arrays.equals(left.remove(3).pop(8), right.remove(3).pop(8)))
+        return false;
+      
+      // Compare prefix
+      if (afk.equals(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING))
+        return equals(AddressFamilyKey.IPV4_UNICAST_FORWARDING, left.remove(11), right.remove(11));
+      else
+        return equals(AddressFamilyKey.IPV6_UNICAST_FORWARDING, left.remove(11), right.remove(11));
+      
     }
     else
     {

@@ -328,5 +328,11 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
     System.arraycopy(this.prefix, i, data, 0, this.prefix.length - i);
     return new NetworkLayerReachabilityInformation(data);
   }
-
+  
+  public byte[] pop(final int i)
+  {
+    final byte[] data = new byte[i];
+    System.arraycopy(this.prefix, 0, data, i, i);
+    return data;
+  }
 }

@@ -683,7 +683,6 @@ public class BGPv4FSM
   private void processRemoteUp(final Set<MultiProtocolUnreachableNLRI> mpUnreachables, final Set<PathAttribute> attrs)
   {
     
-    
     for (final MultiProtocolUnreachableNLRI mp : mpUnreachables)
     {
       this.prib

@@ -36,7 +36,9 @@ public class AddressFamilyKey implements Comparable<AddressFamilyKey>
   public static final AddressFamilyKey IPV6_UNICAST_FORWARDING = new AddressFamilyKey(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING);
   public static final AddressFamilyKey IPV4_UNICAST_MPLS_FORWARDING = new AddressFamilyKey(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING);
   public static final AddressFamilyKey IPV6_UNICAST_MPLS_FORWARDING = new AddressFamilyKey(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING);
-
+  public static final AddressFamilyKey IPV4_MPLS_VPN_FORWARDING  = new AddressFamilyKey(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN);
+  public static final AddressFamilyKey IPV6_MPLS_VPN_FORWARDING = new AddressFamilyKey(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN);
+  
   private final AddressFamily addressFamily;
   private final SubsequentAddressFamily subsequentAddressFamily;
 

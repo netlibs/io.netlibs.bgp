@@ -11,15 +11,17 @@ import org.apache.commons.lang3.StringUtils;
 public enum SubsequentAddressFamily
 {
 
-  NLRI_UNICAST_FORWARDING, NLRI_MULTICAST_FORWARDING, NLRI_UNICAST_MULTICAST_FORWARDING, NLRI_UNICAST_WITH_MPLS_FORWARDING;
+  NLRI_UNICAST_FORWARDING, NLRI_MULTICAST_FORWARDING, NLRI_UNICAST_MULTICAST_FORWARDING, NLRI_UNICAST_WITH_MPLS_FORWARDING, NLRI_MPLS_LABELLED_VPN;
 
   private static final String ENCODING_UNICAST_MULTICAST = "Unicast+Multicast";
   private static final String ENCODING_MULTICAST = "Multicast";
   private static final String ENCODING_UNICAST = "Unicast";
   private static final String ENCODING_UNICAST_MPLS = "Unicast-MPLS";
+  private static final String ENCODING_MPLS_LABELLED_VPN = "MPLS-Labelled-VPN";
 
   public int toCode()
   {
+	 
     switch (this)
     {
       case NLRI_UNICAST_FORWARDING:
@@ -30,6 +32,8 @@ public enum SubsequentAddressFamily
         return 3;
       case NLRI_UNICAST_WITH_MPLS_FORWARDING:
         return 4;
+      case NLRI_MPLS_LABELLED_VPN:
+        return 128;
       default:
         throw new IllegalArgumentException("Unknown subsequent address family: " + this);
     }
@@ -47,6 +51,8 @@ public enum SubsequentAddressFamily
         return NLRI_UNICAST_MULTICAST_FORWARDING;
       case 4:
         return NLRI_UNICAST_WITH_MPLS_FORWARDING;
+      case 128:
+        return NLRI_MPLS_LABELLED_VPN;
       default:
         throw new IllegalArgumentException("Unknown subsequent address family code: " + code);
     }
@@ -65,6 +71,10 @@ public enum SubsequentAddressFamily
     else if (StringUtils.equalsIgnoreCase(ENCODING_UNICAST_MULTICAST, value) || StringUtils.equalsIgnoreCase("NLRI_UNICAST_MULTICAST_FORWARDING", value))
     {
       return NLRI_UNICAST_MULTICAST_FORWARDING;
+    }
+    else if (StringUtils.equalsIgnoreCase(ENCODING_MPLS_LABELLED_VPN, value) || StringUtils.equalsIgnoreCase("NLRI_MPLS_LABELLED_VPN", value))
+    {
+      return NLRI_MPLS_LABELLED_VPN;
     }
     else
     {
@@ -85,6 +95,8 @@ public enum SubsequentAddressFamily
         return ENCODING_UNICAST_MULTICAST;
       case NLRI_UNICAST_WITH_MPLS_FORWARDING:
         return ENCODING_UNICAST_MPLS;
+      case NLRI_MPLS_LABELLED_VPN:
+        return ENCODING_MPLS_LABELLED_VPN;
       default:
         throw new IllegalArgumentException("Unknown subsequent address family: " + this);
     }
