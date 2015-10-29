@@ -28,7 +28,7 @@ public class MplsLabelNLRI
     this.label >>= 12;
     this.bos = (data[3] & 1) == 0;
     
-    // find all but the first 3 bytes and conert them to the NLRI
+    // find all but the first 3 bytes and convert them to the NLRI
     final byte[] pt = new byte[data.length - 3];
     System.arraycopy(data, 3, pt, 0, data.length - 3);
 

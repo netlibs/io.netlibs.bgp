@@ -18,10 +18,14 @@ package com.jive.oss.bgp.net;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.google.common.net.InetAddresses;
+import com.google.common.primitives.Ints;
 
 /**
  * This class models the generic network layer reachabibility information as defined in RFC 4271 and RFC 2858.
@@ -87,6 +91,32 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
   public byte[] getPrefix()
   {
     return this.prefix;
+  }
+  
+  // return the prefix part of the NLRI
+  public byte[] getNlriPrefix()
+  {
+    byte[] buf = new byte[this.prefix.length - 1];
+    System.arraycopy(this.prefix, 1, buf, 0, this.prefix.length - 1);
+    return buf;
+  }
+  
+  // return the netmask part of the NLRI
+  public byte getNlriLength()
+  {
+    return this.prefix[0];
+  }
+  
+  // return the prefix mask as an integer (CIDR netmask length)
+  public int getNlriLengthAsInt()
+  {
+    return Ints.fromBytes((byte) 0, (byte) 0, (byte) 0, this.prefix[0]);
+  }
+  
+  // return the prefix as an InetAddress
+  public InetAddress getNlriPrefixAsInetAddress() throws UnknownHostException
+  {
+    return InetAddresses.fromLittleEndianByteArray(this.getNlriPrefix());
   }
 
   /**
