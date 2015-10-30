@@ -171,7 +171,7 @@ public class BGPv4Service
       {
         final Route r = event.getRoute();
         final MplsLabelNLRI nlri = new MplsLabelNLRI(r.getNlri().getPrefix());
-        final RouteHandle handle = proc.add(nlri, r.getNextHop(), r.getPathAttributes());
+        final RouteHandle handle = null; //proc.add(nlri, r.getNextHop(), r.getPathAttributes());
 
         log.info("Route ADD[{}]: nh={}: {}", nlri.getAddress(), event.getRoute().getNextHop(), event.getRoute().getPathAttributes());
 
