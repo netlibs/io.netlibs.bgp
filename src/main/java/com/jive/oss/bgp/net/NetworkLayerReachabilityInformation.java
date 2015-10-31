@@ -116,7 +116,7 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
   // return the prefix as an InetAddress
   public InetAddress getNlriPrefixAsInetAddress() throws UnknownHostException
   {
-    return InetAddresses.fromLittleEndianByteArray(this.getNlriPrefix());
+    return InetAddress.getByAddress(this.getNlriPrefix());
   }
 
   /**

@@ -24,7 +24,7 @@ public class AbstractMplsLabelledVPNNLRI
   private RouteDistinguisherType rd;
 
   @Getter
-  private NetworkLayerReachabilityInformation address;
+  private NetworkLayerReachabilityInformation nlri;
   
   public AbstractMplsLabelledVPNNLRI(byte[] data) throws UnknownHostException
   {
@@ -66,6 +66,6 @@ public class AbstractMplsLabelledVPNNLRI
     // (RDType,RD) tuple.
     byte[] prefix = new byte[data.length - 3 - 8];
     System.arraycopy(data, 11, prefix, 0, data.length - 11);
-    this.address = new NetworkLayerReachabilityInformation((data.length - 11) * 8, prefix);
+    this.nlri = new NetworkLayerReachabilityInformation((data.length - 11) * 8, prefix);
   }
 }

@@ -1,6 +1,7 @@
 package com.jive.oss.bgp.netty.service;
 
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.google.common.base.Preconditions;
@@ -44,9 +45,10 @@ import lombok.Value;
   {
     byte[] admin_part = new byte[4];  
     
+    
     // read first 4 bytes
     System.arraycopy(data, 0, admin_part, 0, 4);
-    Inet4Address read_administrator = (Inet4Address) InetAddresses.fromLittleEndianByteArray(admin_part);
+    Inet4Address read_administrator = (Inet4Address) InetAddress.getByAddress(admin_part);
     int read_assigned_number = Ints.fromBytes((byte) 0, (byte) 0, data[4], data[5]);
     return new RouteDistinguisherType1(read_administrator, read_assigned_number);
   }

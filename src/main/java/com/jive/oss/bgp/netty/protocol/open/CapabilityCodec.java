@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.common.primitives.Ints;
 import com.jive.oss.bgp.net.AddressFamily;
 import com.jive.oss.bgp.net.ORFSendReceive;
 import com.jive.oss.bgp.net.ORFType;
@@ -177,7 +178,9 @@ public class CapabilityCodec
 
     cap.setAfi(AddressFamily.fromCode(buffer.readShort()));
     buffer.readByte(); // reserved
-    cap.setSafi(SubsequentAddressFamily.fromCode(buffer.readByte()));
+    
+    int safiCode = Ints.fromBytes((byte) 0, (byte) 0, (byte) 0, buffer.readByte());
+    cap.setSafi(SubsequentAddressFamily.fromCode(safiCode));
 
     return cap;
   }
