@@ -51,7 +51,7 @@ public class AbstractMPLSLabelNLRI
     }
     
     // Copy the encoded label into the first 3 bytes of the encoded NLRI
-    for(int i=1; i<3;i++)
+    for(int i=0; i<3;i++)
       finalNlri[i] = encodedLabel[i];
   
     // Copy the remaining length of the NLRI (prefix) into the encoded NLRI

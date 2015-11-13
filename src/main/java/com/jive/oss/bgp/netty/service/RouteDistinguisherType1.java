@@ -12,7 +12,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Value;
 
-@Value class RouteDistinguisherType1 implements RouteDistinguisherType
+@Value class RouteDistinguisherType1 implements AbstractRouteDistinguisherType
 {
   
   private int assigned_number;
@@ -39,6 +39,12 @@ import lombok.Value;
     byte[] buf = new byte[data.readableBytes()];
     data.readBytes(buf);
     return buf;
+  }
+
+  @Override
+  public byte[] getType()
+  {
+    return new byte[] { 0, 1 };
   }
   
   public static RouteDistinguisherType1 fromBytes(byte[] data) throws UnknownHostException

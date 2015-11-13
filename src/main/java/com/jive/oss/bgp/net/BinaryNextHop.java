@@ -17,14 +17,15 @@
  */
 package com.jive.oss.bgp.net;
 
+import java.net.InetAddress;
+
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-/**
- * @author Rainer Bieniek (Rainer.Bieniek@web.de)
- *
- */
+import com.jive.oss.bgp.netty.service.AbstractRouteDistinguisherType;
+import com.jive.oss.bgp.netty.service.RouteDistinguisherType0;
+
 public class BinaryNextHop implements NextHop
 {
 
@@ -104,6 +105,20 @@ public class BinaryNextHop implements NextHop
       builder.append(chars[(addres % 16) & 0x0f]);
     }
     return builder.toString();
+  }
+  
+  public static BinaryNextHop fromRDandNextHop(AbstractRouteDistinguisherType nhrd, InetAddress nhaddr){
+    
+    byte[] overallNH = new byte[8+nhaddr.getAddress().length];
+    
+    // Copy the RD type
+    System.arraycopy(nhrd.getType(), 0, overallNH, 0, 2);
+    // followed by the RD
+    System.arraycopy(nhrd.getBytes(), 0, overallNH, 2, 6);
+    // and the RD address
+    System.arraycopy(nhaddr.getAddress(), 0, overallNH, 8, nhaddr.getAddress().length);
+    return new BinaryNextHop(overallNH);
+    
   }
 
 }

@@ -2,7 +2,7 @@ package com.jive.oss.bgp.netty.service;
 
 import lombok.Getter;
 
-public class RouteDistinguisherUnknownType implements RouteDistinguisherType {
+public class RouteDistinguisherUnknownType implements AbstractRouteDistinguisherType {
   
   @Getter
   byte[] type;

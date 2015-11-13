@@ -8,7 +8,7 @@ import io.netty.buffer.Unpooled;
 import lombok.Value;
 
 @Value
-public class RouteDistinguisherType0 implements RouteDistinguisherType
+public class RouteDistinguisherType0 implements AbstractRouteDistinguisherType
 { 
   private int administrator;
   private long assigned_number;
@@ -35,6 +35,12 @@ public class RouteDistinguisherType0 implements RouteDistinguisherType
     byte[] buf = new byte[data.readableBytes()];
     data.readBytes(buf);
     return buf;
+  }
+  
+  @Override
+  public byte[] getType()
+  {
+    return new byte[] { 0, 0 };
   }
 
   public static RouteDistinguisherType0 fromBytes(byte[] data)

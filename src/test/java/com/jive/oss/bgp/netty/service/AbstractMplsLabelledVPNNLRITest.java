@@ -160,7 +160,7 @@ public class AbstractMplsLabelledVPNNLRITest
     Assert.assertEquals(data.isBos(), true);
     Assert.assertEquals(data.getRd(), new RouteDistinguisherType2((long) 65535, 1));
     Assert.assertEquals(data.getNlri().getPrefixLength(), 128);
-    // TOD: Create a specific IPv6 VPN NLRI class
+    // TODO: Create a specific IPv6 VPN NLRI class
     //Assert.assertEquals(data.getNlri().getNlriPrefixAsInetAddress(), InetAddresses.forString("2001::1"));
   }
 }

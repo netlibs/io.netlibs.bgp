@@ -57,9 +57,14 @@ public class NlriComparator
       // For both AFs - remove label and then extract the subsequent 8-bytes (RD)
       // if the RD is not equal (including the same type), then these
       // are not the same prefix.
-      if (!Arrays.equals(left.remove(3).pop(8), right.remove(3).pop(8)))
+      byte[] leftrd = new byte[8];
+      byte[] rightrd = new byte[8];
+      
+      System.arraycopy(left.getPrefix(), 3, leftrd, 0, 8);
+      System.arraycopy(right.getPrefix(), 3, rightrd, 0, 8);
+      
+      if (!Arrays.equals(leftrd, rightrd))
         return false;
- 
   
       if (afk.equals(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING))
         // Remove both the label and the RD and check whether these are the same IPv4 prefix

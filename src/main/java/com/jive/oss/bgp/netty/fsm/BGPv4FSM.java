@@ -686,11 +686,13 @@ public class BGPv4FSM
     
     for (final MultiProtocolUnreachableNLRI mp : mpUnreachables)
     {
-      this.prib
+      // null NLRI MP_UNREACH is used to indicate VPNvX EOR
+      if (!mp.getNlris().isEmpty()){
+        this.prib
           .routingBase(RIBSide.Remote, new AddressFamilyKey(mp.getAddressFamily(), mp.getSubsequentAddressFamily()))
           .withdrawRoutes(mp.getNlris());
+      }
     }
-    
   }
 
   /**

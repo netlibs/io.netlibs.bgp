@@ -21,7 +21,7 @@ public class AbstractMPLSLabelledVPNNLRI
   private boolean bos;
 
   @Getter
-  private RouteDistinguisherType rd;
+  private AbstractRouteDistinguisherType rd;
 
   @Getter
   private NetworkLayerReachabilityInformation nlri;
@@ -67,5 +67,49 @@ public class AbstractMPLSLabelledVPNNLRI
     byte[] prefix = new byte[data.length - 3 - 8];
     System.arraycopy(data, 11, prefix, 0, data.length - 11);
     this.nlri = new NetworkLayerReachabilityInformation((data.length - 11) * 8, prefix);
+  }
+  
+  public AbstractMPLSLabelledVPNNLRI(int label, AbstractRouteDistinguisherType rd, int prefixlen, byte[] prefix){
+    this.label = label;
+    this.rd = rd;
+    this.nlri = new NetworkLayerReachabilityInformation(prefixlen, prefix);
+    // currently, we assume all service labels are BOS!
+    this.bos = true;
+  }
+  
+  public NetworkLayerReachabilityInformation getEncodedNLRI(){
+    // prefixlength + 2 bytes RD type + 6 bytes RD + 3 bytes label
+    int finalLength = this.nlri.getPrefix().length + 2 + 6 + 3;
+    byte[] finalNlri = new byte[finalLength];
+    
+    byte[] label = Ints.toByteArray(this.label << 12);
+    byte[] encodedLabel = new byte[] { label[0], label[1], label[2] };
+    
+    // If the BOS bit is to be set then we need to set the last bit of the
+    // 3-byte label value (BOS indicator). Hence OR it with 0x01.
+    if(this.bos){
+      encodedLabel[2] |= 1;
+    }
+    
+    // Copy the encoded label into the first 3 bytes of the encoded NLRI
+    for(int i=0; i<3;i++)
+      finalNlri[i] = encodedLabel[i];
+    
+    // Copy the RD type into the buffer
+    for(int i=0; i<2; i++)
+      finalNlri[i+3] = rd.getType()[i];
+ 
+    // Encode the 6-byte RD
+    byte[] rd_content = this.rd.getBytes();
+    for(int i=0; i<6; i++)
+      finalNlri[i+5] = rd_content[i];
+  
+    // Copy the remaining length of the NLRI (prefix) into the encoded NLRI
+    for(int i=0;i<this.nlri.getPrefix().length; i++)
+      finalNlri[i+11] = this.nlri.getPrefix()[i];
+    
+    // Return an encoded NLRI value which can be used in generating an UPDATE message
+    System.err.printf("total NLRI length is going to be %d+88 = %d\n", this.nlri.getPrefixLength(), this.nlri.getPrefixLength()+88);
+    return new NetworkLayerReachabilityInformation(this.nlri.getPrefixLength()+((3+2+6)*8), finalNlri);
   }
 }

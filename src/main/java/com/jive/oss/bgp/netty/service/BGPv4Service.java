@@ -57,6 +57,7 @@ import com.jive.oss.bgp.net.attributes.MultiProtocolReachableNLRI;
 import com.jive.oss.bgp.net.attributes.NextHopPathAttribute;
 import com.jive.oss.bgp.net.attributes.OriginPathAttribute;
 import com.jive.oss.bgp.net.attributes.PathAttribute;
+import com.jive.oss.bgp.net.attributes.UnknownPathAttribute;
 import com.jive.oss.bgp.net.capabilities.Capability;
 import com.jive.oss.bgp.net.capabilities.MultiProtocolCapability;
 import com.jive.oss.bgp.netty.fsm.FSMRegistry;
@@ -144,6 +145,7 @@ public class BGPv4Service
     List<AddressFamilyKey> enabledAfis = new ArrayList<AddressFamilyKey>() {{ 
         add(AddressFamilyKey.IPV4_UNICAST_FORWARDING);
         add(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
+        add(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING);
     }};
     
     for (AddressFamilyKey afi : enabledAfis){
@@ -159,9 +161,9 @@ public class BGPv4Service
     final List<PathSegment> v4lSegm = new LinkedList<>();
     v4lSegm.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
     v4lPathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, v4lSegm));
-    v4lPathAttributes.add(new OriginPathAttribute(Origin.IGP));
+    v4lPathAttributes.add(new OriginPathAttribute(Origin.EGP));
     v4lPathAttributes.add(new MultiProtocolReachableNLRI(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING));
-    IPv4MPLSLabelNLRI v4lNlri = IPv4MPLSLabelNLRI.fromCidrV4AddressAndLabel(CidrV4Address.fromString("172.12.13.0/24"), 256, true);
+    IPv4MPLSLabelNLRI v4lNlri = IPv4MPLSLabelNLRI.fromCidrV4AddressAndLabel(CidrV4Address.fromString("172.12.13.0/24"), 408392, true);
     Route v4lroute = new Route(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING, v4lNlri.getEncodedNLRI(), v4lPathAttributes, new BinaryNextHop(InetAddress.getByName("192.168.207.1").getAddress()));
     prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING).addRoute(v4lroute);
     
@@ -197,7 +199,7 @@ public class BGPv4Service
     final List<PathSegment> v4Segm = new LinkedList<>();
     v4Segm.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
     v4PathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, v4Segm));
-    v4PathAttributes.add(new OriginPathAttribute(Origin.INCOMPLETE));
+    v4PathAttributes.add(new OriginPathAttribute(Origin.EGP));
     IPv4UnicastNLRI v4Nlri = IPv4UnicastNLRI.fromCidrV4Address(CidrV4Address.fromString("172.13.1.2/32"));
     Route v4route = new Route(AddressFamilyKey.IPV4_UNICAST_FORWARDING, v4Nlri.getEncodedNlri(), v4PathAttributes, new InetAddressNextHop<InetAddress>(InetAddress.getByName("192.168.207.1")));
     prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_FORWARDING).addRoute(v4route);
@@ -226,6 +228,58 @@ public class BGPv4Service
       }
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_FORWARDING).addPerRibListener(adjRIBv4Uni);
+
+    
+    // ---------------------------- VPNv4 ----------------------------------------------//
+    
+    // VPNv4 UNICAST ADVERTISE CODE
+    final Collection<PathAttribute> vpn4PathAttributes = new LinkedList<>();
+    final List<PathSegment> vpn4Segm = new LinkedList<>();
+    vpn4Segm.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
+    vpn4PathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, v4Segm));
+    vpn4PathAttributes.add(new OriginPathAttribute(Origin.EGP));
+    vpn4PathAttributes.add(new MultiProtocolReachableNLRI(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN));
+    IPv4MPLSVPNNLRI vpn4Nlri = IPv4MPLSVPNNLRI.fromCidrV4AddressRDAndLabel(CidrV4Address.fromString("192.168.0.0/31"), new RouteDistinguisherType0(6643, 4421), 400);
+    // TODO: need to implement extended communities
+    vpn4PathAttributes.add(new UnknownPathAttribute(16, new byte[] {0, 2, 25, -13, 0, 0, 0, 10}));
+       
+    Route vpn4route = new Route(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING, vpn4Nlri.getEncodedNLRI(), vpn4PathAttributes, BinaryNextHop.fromRDandNextHop(new RouteDistinguisherType0(42, 43), InetAddress.getByName("192.168.207.1")));
+    prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING).addRoute(vpn4route);
+    
+    /// VPNv4 UNICAST LISTEN CODE
+    RoutingEventListener adjRIBvpn4Uni = new RoutingEventListener() {
+      @Override
+      public void routeAdded(final RouteAdded event){
+        Route rt = event.getRoute();
+        IPv4MPLSVPNNLRI nlri = null;
+        try
+        {
+          nlri = new IPv4MPLSVPNNLRI(rt.getNlri().getPrefix());
+        }
+        catch (UnknownHostException e1)
+        {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        try
+        {
+          if (nlri != null)
+            System.err.printf("received update for %s:%s/%s", nlri.getRd(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void routeWithdrawn(RouteWithdrawn event)
+      {
+        System.err.println("routeWithdrawn Called");
+      }
+    };
+    prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING).addPerRibListener(adjRIBvpn4Uni);
     
     
     final ClientConfigurationImpl clientConfig = new ClientConfigurationImpl(new InetSocketAddress("192.168.207.130", 179));
