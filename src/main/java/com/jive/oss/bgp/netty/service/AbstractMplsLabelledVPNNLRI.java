@@ -12,7 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @ToString
-public class AbstractMplsLabelledVPNNLRI
+public class AbstractMPLSLabelledVPNNLRI
 {
   @Getter
   private int label;
@@ -26,7 +26,7 @@ public class AbstractMplsLabelledVPNNLRI
   @Getter
   private NetworkLayerReachabilityInformation nlri;
   
-  public AbstractMplsLabelledVPNNLRI(byte[] data) throws UnknownHostException
+  public AbstractMPLSLabelledVPNNLRI(byte[] data) throws UnknownHostException
   {
     // Format
     // Label: 3-bytes

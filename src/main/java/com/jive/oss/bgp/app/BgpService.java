@@ -38,7 +38,7 @@ import com.jive.oss.bgp.net.capabilities.Capability;
 import com.jive.oss.bgp.net.capabilities.MultiProtocolCapability;
 import com.jive.oss.bgp.netty.fsm.FSMRegistry;
 import com.jive.oss.bgp.netty.service.BGPv4Server;
-import com.jive.oss.bgp.netty.service.MplsLabelNLRI;
+import com.jive.oss.bgp.netty.service.IPv4MPLSLabelNLRI;
 import com.jive.oss.bgp.netty.service.RouteHandle;
 import com.jive.oss.bgp.netty.service.RouteProcessor;
 import com.jive.oss.bgp.rib.PeerRoutingInformationBase;
@@ -180,7 +180,7 @@ public class BgpService
       public void routeAdded(final RouteAdded event)
       {
         final Route r = event.getRoute();
-        final MplsLabelNLRI nlri = new MplsLabelNLRI(r.getNlri().getPrefix());
+        final IPv4MPLSLabelNLRI nlri = new IPv4MPLSLabelNLRI(r.getNlri().getPrefix());
         final RouteHandle handle = proc.add(nlri, r.getNextHop(), r.getPathAttributes());
 
         log.info("Route ADD[{}]: nh={}: {}", nlri.getAddress(), event.getRoute().getNextHop(), event.getRoute().getPathAttributes());
@@ -196,7 +196,7 @@ public class BgpService
       public void routeWithdrawn(final RouteWithdrawn event)
       {
         final Route r = event.getRoute();
-        final MplsLabelNLRI nlri = new MplsLabelNLRI(r.getNlri().getPrefix());
+        final IPv4MPLSLabelNLRI nlri = new IPv4MPLSLabelNLRI(r.getNlri().getPrefix());
         log.info("Route DEL: {}: {}", nlri.getAddress(), event.getRoute());
         final RouteHandle handle = this.handles.get(nlri.getAddress());
 

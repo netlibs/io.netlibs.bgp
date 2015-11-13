@@ -12,6 +12,6 @@ import com.jive.oss.bgp.net.attributes.PathAttribute;
 public interface RouteProcessor
 {
 
-  public RouteHandle add(final MplsLabelNLRI nlri, final NextHop nh, final Set<PathAttribute> attrs);
+  public RouteHandle add(final IPv4MPLSLabelNLRI nlri, final NextHop nh, final Set<PathAttribute> attrs);
 
 }

@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import javax.sound.midi.SysexMessage;
+
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -92,32 +94,6 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
   {
     return this.prefix;
   }
-  
-  // return the prefix part of the NLRI
-  public byte[] getNlriPrefix()
-  {
-    byte[] buf = new byte[this.prefix.length - 1];
-    System.arraycopy(this.prefix, 1, buf, 0, this.prefix.length - 1);
-    return buf;
-  }
-  
-  // return the netmask part of the NLRI
-  public byte getNlriLength()
-  {
-    return this.prefix[0];
-  }
-  
-  // return the prefix mask as an integer (CIDR netmask length)
-  public int getNlriLengthAsInt()
-  {
-    return Ints.fromBytes((byte) 0, (byte) 0, (byte) 0, this.prefix[0]);
-  }
-  
-  // return the prefix as an InetAddress
-  public InetAddress getNlriPrefixAsInetAddress() throws UnknownHostException
-  {
-    return InetAddress.getByAddress(this.getNlriPrefix());
-  }
 
   /**
    * set the prefix length and value in one step. The prefix value length in octets is checked against the prefix length and the number of
@@ -158,7 +134,7 @@ public class NetworkLayerReachabilityInformation implements Serializable, Compar
       {
         // mask out trailing bits
         final int trailingBits = ((8 * prefixSize) - prefixLength);
-
+       
         if (trailingBits > 0)
         {
           for (int bit = 0; bit < trailingBits; bit++)

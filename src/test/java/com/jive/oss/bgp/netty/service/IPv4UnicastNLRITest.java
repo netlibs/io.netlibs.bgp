@@ -16,11 +16,38 @@ public class IPv4UnicastNLRITest
   public void IPv4UnicastNLRI_t1() throws UnknownHostException
   {
     // check that correct addresses are created
-    byte[] buf = { 24, (byte) 192, 0, 2, 1};
+    // using explicit prefix length constructor
+    byte[] buf = { (byte) 192, 0, 2 };
+    IPv4UnicastNLRI data = new IPv4UnicastNLRI(24, buf);
+    
+    Assert.assertEquals(data.getAddress().getPrefixLength(), 24);
+    Assert.assertEquals(data.getInetAddress(), InetAddresses.forString("192.0.2.0"));
+  }
+  
+  @Test
+  public void IPv4UnicastNLRI_t2() throws UnknownHostException
+  {
+    // check that host bits are masked when specifying the prefix length shorter than supplied address
+    // using explicit prefix length constructor
+    byte[] buf = { (byte) 192, 0, 2, 1 };
+    IPv4UnicastNLRI data = new IPv4UnicastNLRI(24, buf);
+    
+    Assert.assertEquals(data.getAddress().getPrefixLength(), 24);
+    Assert.assertEquals(data.getInetAddress(), InetAddresses.forString("192.0.2.0"));
+  }
+  
+  @Test
+  public void IPv4UnicastNLRI_t3() throws UnknownHostException
+  {
+    // check that correct addresses are created
+    // using implied prefix-len constructor
+    byte[] buf = { (byte) 172, 16, 24 };
     IPv4UnicastNLRI data = new IPv4UnicastNLRI(buf);
     
-    Assert.assertEquals(data.getAddress().getNlriLengthAsInt(), 24);
-    Assert.assertEquals(data.getAddress().getNlriPrefixAsInetAddress(), InetAddresses.forString("192.0.2.1"));
+    Assert.assertEquals(data.getAddress().getPrefixLength(), 24);
+    Assert.assertEquals(data.getInetAddress(), InetAddresses.forString("172.16.24.0"));
   }
 
+
+  
 }

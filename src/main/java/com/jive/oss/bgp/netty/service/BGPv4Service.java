@@ -19,6 +19,11 @@ package com.jive.oss.bgp.netty.service;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,6 +33,8 @@ import java.util.Map;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
+import com.google.common.primitives.Ints;
+import com.google.common.primitives.Longs;
 import com.jive.oss.bgp.config.global.ApplicationConfiguration;
 import com.jive.oss.bgp.config.nodes.impl.CapabilitiesImpl;
 import com.jive.oss.bgp.config.nodes.impl.ClientConfigurationImpl;
@@ -45,6 +52,7 @@ import com.jive.oss.bgp.net.PathSegmentType;
 import com.jive.oss.bgp.net.RIBSide;
 import com.jive.oss.bgp.net.SubsequentAddressFamily;
 import com.jive.oss.bgp.net.attributes.ASPathAttribute;
+import com.jive.oss.bgp.net.attributes.MultiExitDiscPathAttribute;
 import com.jive.oss.bgp.net.attributes.MultiProtocolReachableNLRI;
 import com.jive.oss.bgp.net.attributes.NextHopPathAttribute;
 import com.jive.oss.bgp.net.attributes.OriginPathAttribute;
@@ -60,6 +68,8 @@ import com.jive.oss.bgp.rib.RouteAdded;
 import com.jive.oss.bgp.rib.RouteWithdrawn;
 import com.jive.oss.bgp.rib.RoutingEventListener;
 import com.jive.oss.bgp.rib.RoutingInformationBase;
+import com.jive.oss.commons.ip.CidrV4Address;
+import com.jive.oss.commons.ip.CidrV4AddressTest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -68,6 +78,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -125,95 +136,106 @@ public class BGPv4Service
 
     final OutboundRoutingUpdateQueue out = new OutboundRoutingUpdateQueue(scheduler);
 
-    final Collection<PathAttribute> pathAttributes = new LinkedList<>();
-
     // ----
 
-    final List<PathSegment> segs = new LinkedList<>();
-    segs.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
+    // this is the Adj-RIB-In and Adj-RIB-Out construct
+    final PeerRoutingInformationBase prib = pribm.peerRoutingInformationBase("test-v4UnicastRIB");
 
-    pathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, segs));
-    pathAttributes.add(new NextHopPathAttribute((Inet4Address) InetAddress.getByName("192.168.13.1")));
+    List<AddressFamilyKey> enabledAfis = new ArrayList<AddressFamilyKey>() {{ 
+        add(AddressFamilyKey.IPV4_UNICAST_FORWARDING);
+        add(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
+    }};
+    
+    for (AddressFamilyKey afi : enabledAfis){
+      prib.allocateRoutingInformationBase(RIBSide.Local, afi);
+      prib.allocateRoutingInformationBase(RIBSide.Remote, afi);
+    }
+   
+    
+    // ---------------------------- IPv6 LABELLED UNICAST ----------------------------------------------//
 
-    final NextHop nextHop = new InetAddressNextHop<InetAddress>(InetAddress.getByName("192.168.13.1"));
-
-    pathAttributes.add(new OriginPathAttribute(Origin.INCOMPLETE));
-
-    pathAttributes.add(new MultiProtocolReachableNLRI(
-        AddressFamily.IPv4,
-        SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING,
-        new BinaryNextHop(new byte[] { 8, 1, 1, 1, 1, 2, 3, 4, 32 })));
-
-    // ----
-
-    final NetworkLayerReachabilityInformation nlri = new NetworkLayerReachabilityInformation(56, new byte[] { 0, 2, 1, 2, 3, 4, 5 });
-    final Route route = new Route(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING, nlri, pathAttributes, new BinaryNextHop(InetAddress.getByName("192.168.13.1").getAddress()));
-
-    // ----
-
-    final PeerRoutingInformationBase prib = pribm.peerRoutingInformationBase("test");
-
-    prib.allocateRoutingInformationBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
-    prib.allocateRoutingInformationBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
-
-    final RoutingInformationBase rib = prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
-
-    rib.addRoute(route);
-
-    final RouteProcessor proc = null;// new RouteProcessor();
-
-    prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING).addPerRibListener(new RoutingEventListener() {
-
-      private final Map<NetworkLayerReachabilityInformation, RouteHandle> handles = new HashMap<>();
-
+    /// IPV4 LABELLED UNICAST ADVERTISE CODE
+    final Collection<PathAttribute> v4lPathAttributes = new LinkedList<>();
+    final List<PathSegment> v4lSegm = new LinkedList<>();
+    v4lSegm.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
+    v4lPathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, v4lSegm));
+    v4lPathAttributes.add(new OriginPathAttribute(Origin.IGP));
+    v4lPathAttributes.add(new MultiProtocolReachableNLRI(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING));
+    IPv4MPLSLabelNLRI v4lNlri = IPv4MPLSLabelNLRI.fromCidrV4AddressAndLabel(CidrV4Address.fromString("172.12.13.0/24"), 256, true);
+    Route v4lroute = new Route(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING, v4lNlri.getEncodedNLRI(), v4lPathAttributes, new BinaryNextHop(InetAddress.getByName("192.168.207.1").getAddress()));
+    prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING).addRoute(v4lroute);
+    
+    /// IPV4 LABELLED UNICAST LISTEN CODE
+    RoutingEventListener adjRIBv4LabelledUni = new RoutingEventListener() {
       @Override
-      public void routeAdded(final RouteAdded event)
-      {
-        final Route r = event.getRoute();
-        final MplsLabelNLRI nlri = new MplsLabelNLRI(r.getNlri().getPrefix());
-        final RouteHandle handle = null; //proc.add(nlri, r.getNextHop(), r.getPathAttributes());
-
-        log.info("Route ADD[{}]: nh={}: {}", nlri.getAddress(), event.getRoute().getNextHop(), event.getRoute().getPathAttributes());
-
-        if (handle != null)
+      public void routeAdded(final RouteAdded event){
+        Route rt = event.getRoute();
+        IPv4MPLSLabelNLRI nlri = new IPv4MPLSLabelNLRI(rt.getNlri().getPrefix());
+        try
         {
-          this.handles.put(nlri.getAddress(), handle);
+          System.err.printf("received UPDATE for %s/%s -> lbl %s\n", nlri.getInetAddress(), nlri.getAddress().getPrefixLength(), nlri.getLabel());
         }
-
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
 
       @Override
-      public void routeWithdrawn(final RouteWithdrawn event)
+      public void routeWithdrawn(RouteWithdrawn event)
       {
-        final Route r = event.getRoute();
-        final MplsLabelNLRI nlri = new MplsLabelNLRI(r.getNlri().getPrefix());
-        log.info("Route DEL: {}: {}", nlri.getAddress(), event.getRoute());
-        RouteHandle handle = this.handles.get(nlri.getAddress());
-
-        if (handle != null)
+        System.err.println("routeWithdrawn Called");
+      }
+    };
+    prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING).addPerRibListener(adjRIBv4LabelledUni);
+    
+    // ---------------------------- IPv4 UNICAST ----------------------------------------------//
+    
+    // IPv4 UNICAST ADVERTISE CODE
+    final Collection<PathAttribute> v4PathAttributes = new LinkedList<>();
+    final List<PathSegment> v4Segm = new LinkedList<>();
+    v4Segm.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
+    v4PathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, v4Segm));
+    v4PathAttributes.add(new OriginPathAttribute(Origin.INCOMPLETE));
+    IPv4UnicastNLRI v4Nlri = IPv4UnicastNLRI.fromCidrV4Address(CidrV4Address.fromString("172.13.1.2/32"));
+    Route v4route = new Route(AddressFamilyKey.IPV4_UNICAST_FORWARDING, v4Nlri.getEncodedNlri(), v4PathAttributes, new InetAddressNextHop<InetAddress>(InetAddress.getByName("192.168.207.1")));
+    prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_UNICAST_FORWARDING).addRoute(v4route);
+    
+    /// IPV4 UNICAST LISTEN CODE
+    RoutingEventListener adjRIBv4Uni = new RoutingEventListener() {
+      @Override
+      public void routeAdded(final RouteAdded event){
+        Route rt = event.getRoute();
+        IPv4UnicastNLRI nlri = new IPv4UnicastNLRI(rt.getNlri().getPrefix());
+        try
         {
-          handle.withdraw(r.getPathAttributes());
+          System.err.printf("received UPDATE for %s/%s.\n", nlri.getInetAddress(), nlri.getAddress().getPrefixLength());
         }
-        else
+        catch (UnknownHostException e)
         {
-          log.warn("failed to find route that is withdrawn: {}", r);
+          // TODO Auto-generated catch block
+          e.printStackTrace();
         }
       }
 
-    });
-
-    // ----
-
-    final ClientConfigurationImpl clientConfig = new ClientConfigurationImpl(new InetSocketAddress("192.168.13.129", 179));
-
-    final PeerConfigurationImpl config = new PeerConfigurationImpl("test", clientConfig, 1234, 5678, 1, get(InetAddress.getByName("192.168.13.129")));
+      @Override
+      public void routeWithdrawn(RouteWithdrawn event)
+      {
+        System.err.println("routeWithdrawn Called");
+      }
+    };
+    prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_FORWARDING).addPerRibListener(adjRIBv4Uni);
+    
+    
+    final ClientConfigurationImpl clientConfig = new ClientConfigurationImpl(new InetSocketAddress("192.168.207.130", 179));
+    
+    final PeerConfigurationImpl config = new PeerConfigurationImpl("test-v4UnicastRIB", clientConfig, 1234, 5678, 1, get(InetAddress.getByName("192.168.207.130")));
 
     final CapabilitiesImpl caps = new CapabilitiesImpl(new Capability[] {
-        // new AutonomousSystem4Capability(16),
         new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
         new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
-        new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
-        // new RouteRefreshCapability()
+        new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN),
     });
 
     config.setCapabilities(caps);
@@ -232,26 +254,26 @@ public class BGPv4Service
 
     Thread.sleep(1000);
 
-    // final BGPv4FSM fsm = new BGPv4FSM(scheduler, client, new CapabilitesNegotiator(), pribm, out);
-    // fsm.configure(config);
-    //
-    // reg.registerFSM(fsm);
-    //
-    // reg.startFiniteStateMachines();
-    // client.startClient(config).sync();
-
     while (true)
     {
       Thread.sleep(1000);
+      
     }
 
   }
 
   private static long get(final InetAddress a)
   {
-    final byte[] b = a.getAddress();
-    final long i = 16843266L;
-    return i;
+    byte[] buf = a.getAddress();
+    byte[] pad = { 0, 0, 0, 0 };
+    ByteBuffer target = ByteBuffer.allocate(Long.BYTES);
+    // pad the buffer with 4-bytes of 0s
+    target.put(pad);
+    // put the 32-bits of router-ID here
+    target.put(buf);
+    // return to position 0
+    target.flip();
+    return target.getLong();
   }
 
 }

@@ -676,7 +676,8 @@ public class BGPv4FSM
       throw new InvalidNextHopException();
     }
 
-    this.prib.routingBase(RIBSide.Remote, ipv4Unicast).addRoutes(message.getNlris(), otherAttributes, (nextHops.isEmpty()) ? null : nextHops.iterator().next().getNextHop());
+    if (!(message.getNlris() == null) && !(message.getNlris().isEmpty()))
+      this.prib.routingBase(RIBSide.Remote, ipv4Unicast).addRoutes(message.getNlris(), otherAttributes, (nextHops.isEmpty()) ? null : nextHops.iterator().next().getNextHop());
 
   }
 

@@ -78,9 +78,10 @@ public class MultiProtocolReachableNLRICodecHandler extends PathAttributeCodecHa
 
     buffer.writeShort(attr.getAddressFamily().toCode());
     buffer.writeByte(attr.getSubsequentAddressFamily().toCode());
-
+    
     if (attr.getNextHop() != null)
     {
+
       buffer.writeByte(attr.getNextHop().getAddress().length);
       buffer.writeBytes(attr.getNextHop().getAddress());
     }
@@ -106,7 +107,6 @@ public class MultiProtocolReachableNLRICodecHandler extends PathAttributeCodecHa
         }
       }
     }
-
     return buffer;
   }
 

@@ -49,6 +49,7 @@ public abstract class BGPv4Packet
 
   public ByteBuf encodePacket()
   {
+    ByteBuf encodedPayload = this.encodePayload();
     return this.wrapBufferHeader(this.encodePayload(), this.getType());
   }
 
@@ -78,15 +79,16 @@ public abstract class BGPv4Packet
 
   private ByteBuf wrapBufferHeader(final ByteBuf wrapped, final int type)
   {
-
+      
     final int wrappedSize = (wrapped != null) ? wrapped.readableBytes() : 0;
+
     final ByteBuf buffer = Unpooled.buffer(wrappedSize + BGPv4Constants.BGP_PACKET_HEADER_LENGTH);
 
     for (int i = 0; i < BGPv4Constants.BGP_PACKET_MARKER_LENGTH; i++)
     {
       buffer.writeByte(0xff);
     }
-
+    
     buffer.writeShort(wrappedSize + BGPv4Constants.BGP_PACKET_HEADER_LENGTH);
     buffer.writeByte(type);
 

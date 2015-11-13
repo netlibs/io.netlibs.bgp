@@ -377,8 +377,6 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
         final List<NetworkLayerReachabilityInformation> nlris = addedRouteEntry.getValue();
         MultiProtocolReachableNLRI mpNLRI = null;
 
-        System.err.println(nlris);
-
         if (!key.getAddressFamilyKey().matches(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING))
         {
           for (final PathAttribute pathAttribute : key.getPathAttributes())
@@ -417,8 +415,6 @@ public class OutboundRoutingUpdateQueue implements RoutingEventListener
 
       this.addedRoutes.clear();
     }
-
-    System.err.println(updates);
 
     return updates;
   }

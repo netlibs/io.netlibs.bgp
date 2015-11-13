@@ -1,7 +1,7 @@
 /**
  *  Copyright 2012 Rainer Bieniek (Rainer.Bieniek@web.de)
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  Licensed under the Apache License, Version 2.0 (the "License");˙
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
+import com.jive.oss.bgp.net.attributes.MultiProtocolReachableNLRI;
+import com.jive.oss.bgp.net.attributes.MultiProtocolUnreachableNLRI;
+import com.jive.oss.bgp.net.attributes.OriginPathAttribute;
 import com.jive.oss.bgp.net.attributes.PathAttribute;
 import com.jive.oss.bgp.netty.BGPv4Constants;
 import com.jive.oss.bgp.netty.NLRICodec;
@@ -59,7 +62,6 @@ public class UpdatePacket extends BGPv4Packet
     buffer.writeShort(pathAttributesBuffer.readableBytes());
     buffer.writeBytes(pathAttributesBuffer);
     buffer.writeBytes(this.encodeNlris());
-
     return buffer;
   }
 
@@ -97,14 +99,28 @@ public class UpdatePacket extends BGPv4Packet
 
     final ByteBuf buffer = Unpooled.buffer(BGPv4Constants.BGP_PACKET_MAX_LENGTH);
 
+    // RJS: Need to encode MP_REACH_NLRI first in the message according to the
+    // recommendations in RFC 7606.
+    
     if (this.pathAttributes != null)
     {
-      for (final PathAttribute pathAttribute : this.pathAttributes)
+      for (PathAttribute pathAttr: this.pathAttributes)
       {
-        buffer.writeBytes(PathAttributeCodec.encodePathAttribute(pathAttribute));
+
+        if (pathAttr instanceof MultiProtocolReachableNLRI || pathAttr instanceof MultiProtocolUnreachableNLRI){
+          buffer.writeBytes(PathAttributeCodec.encodePathAttribute(pathAttr));
+        }
+      }
+
+      for (PathAttribute pathAttribute : this.pathAttributes)
+      {
+        if (!(pathAttribute instanceof MultiProtocolReachableNLRI) && !(pathAttribute instanceof MultiProtocolUnreachableNLRI))
+        {
+          buffer.writeBytes(PathAttributeCodec.encodePathAttribute(pathAttribute));
+        }
       }
     }
-
+    
     return buffer;
   }
 
