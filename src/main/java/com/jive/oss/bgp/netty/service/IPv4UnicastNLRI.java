@@ -27,7 +27,7 @@ public class IPv4UnicastNLRI
  
   public static IPv4UnicastNLRI fromCidrV4Address(CidrV4Address cidr){
     // When we convert to an NLRI later, the bits we do not need get masked
-    byte data[] = new byte[4];
+    byte[] data = new byte[4];
     byte[] prefix = Longs.toByteArray(cidr.prefix());
     for(int i=0; i<4; i++){
       data[i] = prefix[4+i];
