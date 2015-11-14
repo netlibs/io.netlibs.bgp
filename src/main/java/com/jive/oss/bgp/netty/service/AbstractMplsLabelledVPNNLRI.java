@@ -72,7 +72,7 @@ public class AbstractMPLSLabelledVPNNLRI
   public AbstractMPLSLabelledVPNNLRI(int label, AbstractRouteDistinguisherType rd, int prefixlen, byte[] prefix){
     this.label = label;
     this.rd = rd;
-    this.nlri = new NetworkLayerReachabilityInformation(prefixlen, prefix);
+    this.nlri = new NetworkLayerReachabilityInformation(prefixlen, NLRIHelper.trimNLRI(prefixlen, prefix));
     // currently, we assume all service labels are BOS!
     this.bos = true;
   }
@@ -109,7 +109,6 @@ public class AbstractMPLSLabelledVPNNLRI
       finalNlri[i+11] = this.nlri.getPrefix()[i];
     
     // Return an encoded NLRI value which can be used in generating an UPDATE message
-    System.err.printf("total NLRI length is going to be %d+88 = %d\n", this.nlri.getPrefixLength(), this.nlri.getPrefixLength()+88);
     return new NetworkLayerReachabilityInformation(this.nlri.getPrefixLength()+((3+2+6)*8), finalNlri);
   }
 }

@@ -15,7 +15,6 @@ public class IPv4MPLSVPNNLRI extends AbstractMPLSLabelledVPNNLRI
   
   public IPv4MPLSVPNNLRI(int label, AbstractRouteDistinguisherType rd, int prefixlen, byte[] data){
     super(label, rd, prefixlen, data);
-    System.err.printf("label: %d, rd: %s, pfxln: %d, data: %s\n", label, rd, prefixlen, data);
   }
 
   public InetAddress getInetAddress() throws UnknownHostException

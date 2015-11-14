@@ -149,6 +149,8 @@ public class BGPv4Service
         add(AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING);
         add(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING);
         add(AddressFamilyKey.IPV6_UNICAST_FORWARDING);
+        add(AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING);
+        add(AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING);
     }};
     
     for (AddressFamilyKey afi : enabledAfis){
@@ -246,7 +248,7 @@ public class BGPv4Service
     // TODO: need to implement extended communities
     vpn4PathAttributes.add(new UnknownPathAttribute(16, new byte[] {0, 2, 25, -13, 0, 0, 0, 10}));
        
-    Route vpn4route = new Route(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING, vpn4Nlri.getEncodedNLRI(), vpn4PathAttributes, BinaryNextHop.fromRDandNextHop(new RouteDistinguisherType0(42, 43), InetAddress.getByName("192.168.207.1")));
+    Route vpn4route = new Route(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING, vpn4Nlri.getEncodedNLRI(), vpn4PathAttributes, BinaryNextHop.fromRDandNextHop(new RouteDistinguisherType0(0, 0), InetAddress.getByName("192.168.207.1")));
     prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING).addRoute(vpn4route);
     
     /// VPNv4 UNICAST LISTEN CODE
@@ -322,6 +324,95 @@ public class BGPv4Service
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV6_UNICAST_FORWARDING).addPerRibListener(adjRIBv6Uni);    
 
+    // ---------------------------- IPv6 LABELLED UNICAST ----------------------------------------------//
+    
+    // IPv6 LABELLED UNICAST ADVERTISE CODE
+    final Collection<PathAttribute> v6lPathAttributes = new LinkedList<>();
+    final List<PathSegment> v6lSegm = new LinkedList<>();
+    v6lSegm.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
+    v6lPathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, v4Segm));
+    v6lPathAttributes.add(new OriginPathAttribute(Origin.EGP));
+    v6lPathAttributes.add(new MultiProtocolReachableNLRI(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING));
+    IPv6MPLSLabelNLRI v6lNlri = IPv6MPLSLabelNLRI.fromCidrV6AddressAndLabel(CidrV6Address.fromString("2001:4c22:1648::/48"), 509728, true);
+    Route v6lroute = new Route(AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING, v6lNlri.getEncodedNLRI(), v6lPathAttributes, new BinaryNextHop(IPv6Address.fromString("2001:4c20::42").toByteArray()));
+    prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING).addRoute(v6lroute);
+    
+    /// IPV6 UNICAST LISTEN CODE
+    RoutingEventListener adjRIBv6lUni = new RoutingEventListener() {
+      @Override
+      public void routeAdded(final RouteAdded event){
+        Route rt = event.getRoute();
+        IPv6MPLSLabelNLRI nlri = new IPv6MPLSLabelNLRI(rt.getNlri().getPrefix());
+        try
+        {
+          System.err.printf("received UPDATE for %s/%s.\n", nlri.getInetAddress(), nlri.getAddress().getPrefixLength());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void routeWithdrawn(RouteWithdrawn event)
+      {
+        System.err.println("routeWithdrawn Called");
+      }
+    };
+    prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING).addPerRibListener(adjRIBv6lUni);        
+
+    
+    // ---------------------------- VPNv6 ----------------------------------------------//
+    
+    // VPNv6 UNICAST ADVERTISE CODE
+    final Collection<PathAttribute> vpn6PathAttributes = new LinkedList<>();
+    final List<PathSegment> vpn6Segm = new LinkedList<>();
+    vpn6Segm.add(new PathSegment(ASType.AS_NUMBER_2OCTETS, PathSegmentType.AS_SEQUENCE, new int[] { 1234 }));
+    vpn6PathAttributes.add(new ASPathAttribute(ASType.AS_NUMBER_2OCTETS, v4Segm));
+    vpn6PathAttributes.add(new OriginPathAttribute(Origin.EGP));
+    vpn6PathAttributes.add(new MultiProtocolReachableNLRI(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN));
+    IPv6MPLSVPNNLRI vpn6Nlri = IPv6MPLSVPNNLRI.fromCidrV6AddressRDAndLabel(CidrV6Address.fromString("2a02:46::/32"), new RouteDistinguisherType0(6643, 4421), 422);
+    // TODO: need to implement extended communities
+    vpn6PathAttributes.add(new UnknownPathAttribute(16, new byte[] {0, 2, 25, -13, 0, 0, 0, 10}));
+       
+    Route vpn6route = new Route(AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING, vpn6Nlri.getEncodedNLRI(), vpn6PathAttributes, BinaryNextHop.fromRDandNextHop(new RouteDistinguisherType0(0, 0), InetAddress.getByName("2001:4c20::2")));
+    prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING).addRoute(vpn6route);
+    
+    /// VPNv6 UNICAST LISTEN CODE
+    RoutingEventListener adjRIBvpn6Uni = new RoutingEventListener() {
+      @Override
+      public void routeAdded(final RouteAdded event){
+        Route rt = event.getRoute();
+        IPv6MPLSVPNNLRI nlri = null;
+        try
+        {
+          nlri = new IPv6MPLSVPNNLRI(rt.getNlri().getPrefix());
+        }
+        catch (UnknownHostException e1)
+        {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        try
+        {
+          if (nlri != null)
+            System.err.printf("received update for %s:%s/%s", nlri.getRd(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+
+      @Override
+      public void routeWithdrawn(RouteWithdrawn event)
+      {
+        System.err.println("routeWithdrawn Called");
+      }
+    };
+    prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING).addPerRibListener(adjRIBvpn6Uni);    
     
     final ClientConfigurationImpl clientConfig = new ClientConfigurationImpl(new InetSocketAddress("192.168.207.130", 179));
     
@@ -332,6 +423,8 @@ public class BGPv4Service
         new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
         new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN),
         new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
+        new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
+        new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN),
     });
 
     config.setCapabilities(caps);
