@@ -1,9 +1,12 @@
 package com.jive.oss.bgp.net.attributes;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ExtendedCommunityPathAttribute extends PathAttribute
@@ -51,10 +54,19 @@ public class ExtendedCommunityPathAttribute extends PathAttribute
   @Override
   protected boolean subclassEquals(PathAttribute obj){
     ExtendedCommunityPathAttribute o = (ExtendedCommunityPathAttribute) obj;
-    return false;
     
-//    EqualsBuilder builder = (new EqualsBuilder())
-//        // TODO
+    final EqualsBuilder builder = (new EqualsBuilder())
+        .append(this.getMembers().size(), o.getMembers().size());
+    
+    if (builder.isEquals()){
+      Iterator<AbstractExtendedCommunityInterface> lit = this.getMembers().iterator();
+      Iterator<AbstractExtendedCommunityInterface> rit = o.getMembers().iterator();
+      
+      while(lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+    
+    return builder.isEquals();
   }
 
   @Override
@@ -70,15 +82,32 @@ public class ExtendedCommunityPathAttribute extends PathAttribute
   @Override
   protected int subclassHashCode()
   {
-    // TODO Auto-generated method stub
-    return 0;
+    final HashCodeBuilder builder = (new HashCodeBuilder());
+    final Iterator<AbstractExtendedCommunityInterface> it = this.getMembers().iterator();
+    
+    while(it.hasNext())
+      builder.append(it.next());
+    
+    return builder.toHashCode();
   }
 
   @Override
-  protected int subclassCompareTo(PathAttribute o)
+  protected int subclassCompareTo(PathAttribute obj)
   {
-    // TODO Auto-generated method stub
-    return 0;
+    final ExtendedCommunityPathAttribute o = (ExtendedCommunityPathAttribute) obj;
+    final CompareToBuilder builder =  (new CompareToBuilder())
+        .append(this.getMembers().size(), o.getMembers().size());
+    
+    if (builder.toComparison() == 0)
+    {
+      final Iterator<AbstractExtendedCommunityInterface> lit = this.getMembers().iterator();
+      final Iterator<AbstractExtendedCommunityInterface> rit = o.getMembers().iterator();
+      
+      while(lit.hasNext())
+        builder.append(lit.next(), rit.next());
+    }
+    
+    return builder.toComparison();
   }
   
   
