@@ -35,5 +35,8 @@ public class RouteDistinguisherUnknownType implements AbstractRouteDistinguisher
   
     return new RouteDistinguisherUnknownType(type, value);
   }
-  
+
+  public String humanReadable(){
+    return new String("unknownRD " + this.type + " " + this.value);
+  }  
 }

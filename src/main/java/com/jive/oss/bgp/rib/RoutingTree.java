@@ -237,7 +237,6 @@ class RoutingTree
 
     for (final RoutingTreeNode child : parent.getChildNodes())
     {
-
       if (NlriComparator.equals(child.getRoute(), route))
       {
         candidate = child;

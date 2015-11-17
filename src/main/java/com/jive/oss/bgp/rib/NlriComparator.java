@@ -96,8 +96,13 @@ public class NlriComparator
     }
     else if (afk.equals(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING) || afk.equals(AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING))
     {
-      // First comparison based on RD
-      if (!Arrays.equals(left.remove(3).pop(8), right.remove(3).pop(8)))
+      byte[] leftrd = new byte[8];
+      byte[] rightrd = new byte[8];
+      
+      System.arraycopy(left.getPrefix(), 3, leftrd, 0, 8);
+      System.arraycopy(right.getPrefix(), 3, rightrd, 0, 8);
+      
+      if (!Arrays.equals(leftrd, rightrd))
         return false;
       
       // Compare prefix

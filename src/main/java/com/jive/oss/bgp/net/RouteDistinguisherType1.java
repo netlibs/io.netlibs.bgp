@@ -42,4 +42,8 @@ public class RouteDistinguisherType1 extends AbstractIPv4AddressTwoByteAdministr
     int read_assigned_number = Ints.fromBytes((byte) 0, (byte) 0, data[4], data[5]);
     return new RouteDistinguisherType1(read_administrator, read_assigned_number);
   }
+  
+  public String humanReadable(){
+    return new String(this.getAdministrator() + ":" + this.getAssignedNumber());
+  }
 }

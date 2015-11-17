@@ -37,4 +37,9 @@ public class RouteDistinguisherType0 extends AbstractTwoByteASNFourByteAdministr
     
     return new RouteDistinguisherType0(read_administrator, read_assigned_number);
   }
+
+  public String humanReadable()
+  {
+    return new String(this.getAdministrator() + ":" + this.getAssignedNumber());
+  }
 }

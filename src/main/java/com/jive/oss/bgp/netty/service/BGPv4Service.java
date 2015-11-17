@@ -204,7 +204,17 @@ public class BGPv4Service
       @Override
       public void routeWithdrawn(RouteWithdrawn event)
       {
-        System.err.println("routeWithdrawn Called");
+        Route rt = event.getRoute();
+        IPv4MPLSLabelNLRI nlri = new IPv4MPLSLabelNLRI(rt.getNlri().getPrefix());
+        try
+        {
+          System.err.printf("WITHDRAW received UPDATE for %s/%s -> lbl %s\n", nlri.getInetAddress(), nlri.getAddress().getPrefixLength(), nlri.getLabel());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_MPLS_FORWARDING).addPerRibListener(adjRIBv4LabelledUni);
@@ -241,7 +251,17 @@ public class BGPv4Service
       @Override
       public void routeWithdrawn(RouteWithdrawn event)
       {
-        System.err.println("routeWithdrawn Called");
+        Route rt = event.getRoute();
+        IPv4UnicastNLRI nlri = new IPv4UnicastNLRI(rt.getNlri().getPrefix());
+        try
+        {
+          System.err.printf("WITHDRAW received UPDATE for %s/%s.\n", nlri.getInetAddress(), nlri.getAddress().getPrefixLength());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_UNICAST_FORWARDING).addPerRibListener(adjRIBv4Uni);
@@ -283,7 +303,7 @@ public class BGPv4Service
         try
         {
           if (nlri != null)
-            System.err.printf("received update for %s:%s/%s", nlri.getRd(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength());
+            System.err.printf("received update for %s:%s/%s -> lbl %d\n", nlri.getRd().humanReadable(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength(), nlri.getLabel());
         }
         catch (UnknownHostException e)
         {
@@ -295,7 +315,27 @@ public class BGPv4Service
       @Override
       public void routeWithdrawn(RouteWithdrawn event)
       {
-        System.err.println("routeWithdrawn Called");
+        Route rt = event.getRoute();
+        IPv4MPLSVPNNLRI nlri = null;
+        try
+        {
+          nlri = new IPv4MPLSVPNNLRI(rt.getNlri().getPrefix());
+        }
+        catch (UnknownHostException e1)
+        {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        try
+        {
+          if (nlri != null)
+            System.err.printf("WITHDRAW received update for %s:%s/%s -> lbl %d\n", nlri.getRd().humanReadable(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength(), nlri.getLabel());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING).addPerRibListener(adjRIBvpn4Uni);
@@ -333,7 +373,17 @@ public class BGPv4Service
       @Override
       public void routeWithdrawn(RouteWithdrawn event)
       {
-        System.err.println("routeWithdrawn Called");
+        Route rt = event.getRoute();
+        IPv6UnicastNLRI nlri = new IPv6UnicastNLRI(rt.getNlri().getPrefix());
+        try
+        {
+          System.err.printf("WITHDRAW received UPDATE for %s/%s.\n", nlri.getInetAddress(), nlri.getAddress().getPrefixLength());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV6_UNICAST_FORWARDING).addPerRibListener(adjRIBv6Uni);    
@@ -371,7 +421,17 @@ public class BGPv4Service
       @Override
       public void routeWithdrawn(RouteWithdrawn event)
       {
-        System.err.println("routeWithdrawn Called");
+        Route rt = event.getRoute();
+        IPv6MPLSLabelNLRI nlri = new IPv6MPLSLabelNLRI(rt.getNlri().getPrefix());
+        try
+        {
+          System.err.printf("WITHDRAW received UPDATE for %s/%s.\n", nlri.getInetAddress(), nlri.getAddress().getPrefixLength());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV6_UNICAST_MPLS_FORWARDING).addPerRibListener(adjRIBv6lUni);        
@@ -413,7 +473,7 @@ public class BGPv4Service
         try
         {
           if (nlri != null)
-            System.err.printf("received update for %s:%s/%s", nlri.getRd(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength());
+            System.err.printf("received update for %s:%s/%s lbl %s\n", nlri.getRd().humanReadable(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength(), nlri.getLabel());
         }
         catch (UnknownHostException e)
         {
@@ -425,7 +485,27 @@ public class BGPv4Service
       @Override
       public void routeWithdrawn(RouteWithdrawn event)
       {
-        System.err.println("routeWithdrawn Called");
+        Route rt = event.getRoute();
+        IPv6MPLSVPNNLRI nlri = null;
+        try
+        {
+          nlri = new IPv6MPLSVPNNLRI(rt.getNlri().getPrefix());
+        }
+        catch (UnknownHostException e1)
+        {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        try
+        {
+          if (nlri != null)
+            System.err.printf("WITHDRAW received update for %s:%s/%s lbl %s\n", nlri.getRd().humanReadable(), nlri.getInetAddress(), nlri.getNlri().getPrefixLength(), nlri.getLabel());
+        }
+        catch (UnknownHostException e)
+        {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
       }
     };
     prib.routingBase(RIBSide.Remote, AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING).addPerRibListener(adjRIBvpn6Uni);    
@@ -435,12 +515,12 @@ public class BGPv4Service
     final PeerConfigurationImpl config = new PeerConfigurationImpl("test-v4UnicastRIB", clientConfig, 1234, 5678, 1, get(InetAddress.getByName("192.168.207.130")));
 
     final CapabilitiesImpl caps = new CapabilitiesImpl(new Capability[] {
-        new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
-        new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
-        new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN),
+       new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
+       //new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
+       //new MultiProtocolCapability(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN),
         new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_FORWARDING),
-        new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
-        new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN),
+       //new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_UNICAST_WITH_MPLS_FORWARDING),
+       //new MultiProtocolCapability(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN),
     });
 
     config.setCapabilities(caps);
