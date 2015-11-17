@@ -12,6 +12,11 @@ import org.junit.Test;
 import com.google.common.net.InetAddresses;
 import com.google.common.primitives.Ints;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
+import com.jive.oss.bgp.net.RouteDistinguisherType0;
+import com.jive.oss.bgp.net.RouteDistinguisherType1;
+import com.jive.oss.bgp.net.RouteDistinguisherType2;
+import com.jive.oss.bgp.net.attributes.IPv4MPLSVPNNLRI;
+import com.jive.oss.bgp.net.attributes.IPv6MPLSVPNNLRI;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -52,7 +57,7 @@ public class AbstractMplsLabelledVPNNLRITest
     byte[] buf = { 0, 4, 0, 0, 0, 1 };
     RouteDistinguisherType0 data = RouteDistinguisherType0.fromBytes(buf);
     
-    Assert.assertEquals(data.getAssigned_number(), 1);
+    Assert.assertEquals(data.getAssignedNumber(), 1);
     Assert.assertEquals(data.getAdministrator(), 4);
   }
   
@@ -64,7 +69,7 @@ public class AbstractMplsLabelledVPNNLRITest
     RouteDistinguisherType1 data = RouteDistinguisherType1.fromBytes(buf);
     
     Assert.assertEquals(data.getAdministrator(), (Inet4Address) InetAddresses.forString("1.2.3.4"));
-    Assert.assertEquals(data.getAssigned_number(), 5);
+    Assert.assertEquals(data.getAssignedNumber(), 5);
   }
   
   @Test
@@ -74,7 +79,7 @@ public class AbstractMplsLabelledVPNNLRITest
     RouteDistinguisherType2 data = RouteDistinguisherType2.fromBytes(buf);
     
     Assert.assertEquals(data.getAdministrator(), 65536);
-    Assert.assertEquals(data.getAssigned_number(), 1);    
+    Assert.assertEquals(data.getAssignedNumber(), 1);    
   }
   
   @Test
@@ -93,6 +98,7 @@ public class AbstractMplsLabelledVPNNLRITest
     IPv4MPLSVPNNLRI data = new IPv4MPLSVPNNLRI(buf);
     
     Assert.assertEquals(data.isBos(), true);
+    RouteDistinguisherType0 rd = (RouteDistinguisherType0) data.getRd();    
     Assert.assertEquals(data.getRd(), new RouteDistinguisherType0(2, 1));
     Assert.assertEquals(data.getNlri().getPrefixLength(), 32);
     Assert.assertEquals(data.getInetAddress(), InetAddresses.forString("1.2.3.4"));

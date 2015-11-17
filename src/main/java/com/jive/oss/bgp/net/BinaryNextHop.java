@@ -23,9 +23,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.jive.oss.bgp.netty.service.AbstractRouteDistinguisherType;
-import com.jive.oss.bgp.netty.service.RouteDistinguisherType0;
-
 public class BinaryNextHop implements NextHop
 {
 

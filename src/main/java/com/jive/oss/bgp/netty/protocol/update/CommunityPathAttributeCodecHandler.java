@@ -51,7 +51,7 @@ PathAttributeCodecHandler<CommunityPathAttribute>
   @Override
   public int valueLength(final CommunityPathAttribute attr)
   {
-    int size = 4;
+    int size = 0;
 
     if (attr.getMembers() != null)
     {
@@ -71,13 +71,12 @@ PathAttributeCodecHandler<CommunityPathAttribute>
   {
     final ByteBuf buffer = Unpooled.buffer(this.valueLength(attr));
 
-    buffer.writeInt(attr.getCommunity());
     if (attr.getMembers() != null)
     {
       for (final CommunityMember member : attr.getMembers())
       {
         buffer.writeShort(member.getAsNumber());
-        buffer.writeShort(member.getMemberFlags());
+        buffer.writeShort(member.getValue());
       }
     }
 

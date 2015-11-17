@@ -38,5 +38,6 @@ public enum PathAttributeType
   NEXT_HOP,
   ORIGINATOR_ID,
   ORIGIN,
+  EXTENDED_COMMUNITY,
   UNKNOWN
 }

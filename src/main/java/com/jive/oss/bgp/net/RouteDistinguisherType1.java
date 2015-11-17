@@ -1,4 +1,4 @@
-package com.jive.oss.bgp.netty.service;
+package com.jive.oss.bgp.net;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -12,12 +12,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Value;
 
-@Value class RouteDistinguisherType1 implements AbstractRouteDistinguisherType
+@Value
+public class RouteDistinguisherType1 extends AbstractIPv4AddressTwoByteAdministratorRDCommunityType implements AbstractRouteDistinguisherType
 {
-  
-  private int assigned_number;
-  private Inet4Address administrator;
-  
+ 
   // Type 1:
   //  Administrator Subfield: 4-bytes, IPAddr
   //  Assigned Number Subfield: 2-bytes, arbitrary number
@@ -25,20 +23,7 @@ import lombok.Value;
 
   public RouteDistinguisherType1(Inet4Address administrator, int assigned_number)
   {
-    Preconditions.checkArgument(assigned_number > 0 || assigned_number < 65536, "Invalid assigned_number");
-    this.assigned_number = assigned_number;
-    this.administrator = administrator;
-  }
-  
-  @Override
-  public byte[] getBytes()
-  {
-    ByteBuf data = Unpooled.buffer();
-    data.writeInt(InetAddresses.coerceToInteger(administrator));
-    data.writeShort(this.assigned_number);
-    byte[] buf = new byte[data.readableBytes()];
-    data.readBytes(buf);
-    return buf;
+    super(administrator, assigned_number);
   }
 
   @Override
@@ -50,7 +35,6 @@ import lombok.Value;
   public static RouteDistinguisherType1 fromBytes(byte[] data) throws UnknownHostException
   {
     byte[] admin_part = new byte[4];  
-    
     
     // read first 4 bytes
     System.arraycopy(data, 0, admin_part, 0, 4);

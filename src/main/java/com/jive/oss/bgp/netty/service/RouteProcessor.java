@@ -3,6 +3,7 @@ package com.jive.oss.bgp.netty.service;
 import java.util.Set;
 
 import com.jive.oss.bgp.net.NextHop;
+import com.jive.oss.bgp.net.attributes.IPv4MPLSLabelNLRI;
 import com.jive.oss.bgp.net.attributes.PathAttribute;
 
 /**

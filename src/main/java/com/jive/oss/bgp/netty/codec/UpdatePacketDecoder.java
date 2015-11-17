@@ -17,23 +17,37 @@
  */
 package com.jive.oss.bgp.netty.codec;
 
+import java.math.BigInteger;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.common.net.InetAddresses;
 import com.jive.oss.bgp.net.ASType;
 import com.jive.oss.bgp.net.AddressFamily;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
+import com.jive.oss.bgp.net.NonTransitiveExtendedCommunityType;
 import com.jive.oss.bgp.net.PathSegment;
 import com.jive.oss.bgp.net.SubsequentAddressFamily;
+import com.jive.oss.bgp.net.TransitiveExtendedCommunityType;
+import com.jive.oss.bgp.net.TransitiveIPv4AddressSpecificExtCommSubTypes;
+import com.jive.oss.bgp.net.TransitiveIPv4AddressTwoByteAdministratorRT;
+import com.jive.oss.bgp.net.TransitiveTwoByteASNFourByteAdministratorRT;
+import com.jive.oss.bgp.net.TransitiveTwoOctetASSpecificExtCommSubTypes;
+import com.jive.oss.bgp.net.UnknownNonTransitiveExtendedCommunity;
+import com.jive.oss.bgp.net.UnknownTransitiveExtendedCommunity;
+import com.jive.oss.bgp.net.UnknownTransitiveIPv4AddressSpecificExtendedCommunity;
+import com.jive.oss.bgp.net.UnknownTransitiveTwoByteASNSpecificExtendedCommunity;
 import com.jive.oss.bgp.net.attributes.ASPathAttribute;
+import com.jive.oss.bgp.net.attributes.AbstractExtendedCommunityInterface;
 import com.jive.oss.bgp.net.attributes.AggregatorPathAttribute;
 import com.jive.oss.bgp.net.attributes.AtomicAggregatePathAttribute;
 import com.jive.oss.bgp.net.attributes.ClusterListPathAttribute;
 import com.jive.oss.bgp.net.attributes.CommunityMember;
 import com.jive.oss.bgp.net.attributes.CommunityPathAttribute;
+import com.jive.oss.bgp.net.attributes.ExtendedCommunityPathAttribute;
 import com.jive.oss.bgp.net.attributes.LocalPrefPathAttribute;
 import com.jive.oss.bgp.net.attributes.MultiExitDiscPathAttribute;
 import com.jive.oss.bgp.net.attributes.MultiProtocolReachableNLRI;
@@ -428,13 +442,13 @@ public class UpdatePacketDecoder
       throw new OptionalAttributeErrorException();
     }
 
-    attr.setCommunity((int) buffer.readUnsignedInt());
     while (buffer.isReadable())
     {
       final CommunityMember member = new CommunityMember();
 
       member.setAsNumber(buffer.readUnsignedShort());
-      member.setMemberFlags(buffer.readUnsignedShort());
+      member.setValue(buffer.readUnsignedShort());
+      System.err.printf("adding %d:%d to members\n", member.getAsNumber(), member.getValue());
 
       attr.getMembers().add(member);
     }
@@ -442,6 +456,76 @@ public class UpdatePacketDecoder
     return attr;
   }
 
+  private ExtendedCommunityPathAttribute decodeExtendedCommunityPathAttribute(final ByteBuf buffer){
+    final ExtendedCommunityPathAttribute attr = new ExtendedCommunityPathAttribute();
+    
+    if ((buffer.readableBytes() < 8) || ((buffer.readableBytes() % 8) != 0))
+    {
+      throw new OptionalAttributeErrorException();
+    }
+    
+    while(buffer.isReadable())
+    {
+      AbstractExtendedCommunityInterface extcomm;
+      // we need to check whether this is a transitive or non-transitive value
+      // and then determine whether we need to red the lower type byte
+      byte higherType = buffer.readByte();
+      byte higherTypeCompare = (byte) (higherType & ~(1 << 6));
+      if (((higherType >> 6) & 1) == 0)
+      {
+        // bit 7 is not set in the byte, therefore this is a transitive type
+        // clear bit 8, not interested in this value
+        TransitiveExtendedCommunityType transCommType = TransitiveExtendedCommunityType.fromCode((byte) (higherType & (~(3 << 6))));
+       
+        switch(transCommType)
+        {
+          case TWO_OCTET_AS_SPECIFIC:
+            TransitiveTwoOctetASSpecificExtCommSubTypes twoOctASNLowerType = TransitiveTwoOctetASSpecificExtCommSubTypes.fromCode(buffer.readByte());
+            switch(twoOctASNLowerType){
+              case ROUTE_TARGET:
+                extcomm = new TransitiveTwoByteASNFourByteAdministratorRT((int) buffer.readShort(), (long) buffer.readInt());
+                break;
+              default:
+                // all non-RT types are currently unimplemented
+                extcomm = new UnknownTransitiveTwoByteASNSpecificExtendedCommunity(transCommType, twoOctASNLowerType, buffer.readBytes(6).array());
+            }
+            break;
+          case TWO_OCTET_IPv4_ADDRESS_SPECIFIC:
+            TransitiveIPv4AddressSpecificExtCommSubTypes ipv4LowerType = TransitiveIPv4AddressSpecificExtCommSubTypes.fromCode(buffer.readByte());
+            switch (ipv4LowerType){
+              case ROUTE_TARGET:
+                try
+                {
+                  extcomm = new TransitiveIPv4AddressTwoByteAdministratorRT((Inet4Address) InetAddresses.fromLittleEndianByteArray(buffer.readBytes(4).array()), (int) buffer.readShort());
+                }
+                catch (UnknownHostException e)
+                {
+                  ByteBuf data = Unpooled.buffer();
+                  data.getByte(ipv4LowerType.toCode());
+                  data.readBytes(buffer.readBytes(6));
+                  extcomm = new UnknownTransitiveExtendedCommunity(transCommType,data.array());
+                }
+              default:
+                // all non-RT types are currently unimplemented
+                extcomm = new UnknownTransitiveIPv4AddressSpecificExtendedCommunity(transCommType, ipv4LowerType, buffer.readBytes(6).array());
+            }
+            break;
+          default:
+            // by default, just create an unknown type, reading the subsequent
+            // 7 bytes (we have already read byte 1)
+            extcomm = new UnknownTransitiveExtendedCommunity(transCommType, buffer.readBytes(7).array());
+        }
+      } else {
+        // bit 7 is set, these are non-transitive        
+        NonTransitiveExtendedCommunityType nonTransCommType = NonTransitiveExtendedCommunityType.fromCode((byte) (higherType & (~(3 << 6))));
+        // all non-transitive types are currently unimplemented
+        extcomm = new UnknownNonTransitiveExtendedCommunity(nonTransCommType, buffer.readBytes(7).array()); 
+      }
+      attr.getMembers().add(extcomm);
+    }
+    return attr;
+  }
+  
   private MultiProtocolReachableNLRI decodeMpReachNlriPathAttribute(final ByteBuf buffer)
   {
     final MultiProtocolReachableNLRI attr = new MultiProtocolReachableNLRI();
@@ -607,6 +691,9 @@ public class UpdatePacketDecoder
             break;
           case BGPv4Constants.BGP_PATH_ATTRIBUTE_TYPE_CLUSTER_LIST:
             attr = this.decodeClusterListPathAttribute(valueBuffer);
+            break;
+          case BGPv4Constants.BGP_PATH_ATTRIBUTE_TYPE_EXTENDED_COMMUNITIES:
+            attr = this.decodeExtendedCommunityPathAttribute(valueBuffer);
             break;
           default:
           {

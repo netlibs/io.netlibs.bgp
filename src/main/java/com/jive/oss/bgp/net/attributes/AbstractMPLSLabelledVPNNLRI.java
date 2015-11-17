@@ -1,10 +1,16 @@
-package com.jive.oss.bgp.netty.service;
+package com.jive.oss.bgp.net.attributes;
 
 import java.net.UnknownHostException;
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
+import com.jive.oss.bgp.net.AbstractRouteDistinguisherType;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
+import com.jive.oss.bgp.net.RouteDistinguisherType0;
+import com.jive.oss.bgp.net.RouteDistinguisherType1;
+import com.jive.oss.bgp.net.RouteDistinguisherType2;
+import com.jive.oss.bgp.net.RouteDistinguisherUnknownType;
+import com.jive.oss.bgp.netty.service.NLRIHelper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

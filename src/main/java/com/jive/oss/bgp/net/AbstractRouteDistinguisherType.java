@@ -1,4 +1,4 @@
-package com.jive.oss.bgp.netty.service;
+package com.jive.oss.bgp.net;
 
 public interface AbstractRouteDistinguisherType 
 {

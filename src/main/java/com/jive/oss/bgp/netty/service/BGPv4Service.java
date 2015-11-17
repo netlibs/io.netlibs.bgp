@@ -33,6 +33,7 @@ import java.util.Map;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
+import com.google.common.net.InetAddresses;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import com.jive.oss.bgp.config.global.ApplicationConfiguration;
@@ -50,8 +51,19 @@ import com.jive.oss.bgp.net.Origin;
 import com.jive.oss.bgp.net.PathSegment;
 import com.jive.oss.bgp.net.PathSegmentType;
 import com.jive.oss.bgp.net.RIBSide;
+import com.jive.oss.bgp.net.RouteDistinguisherType0;
 import com.jive.oss.bgp.net.SubsequentAddressFamily;
+import com.jive.oss.bgp.net.TransitiveIPv4AddressTwoByteAdministratorRT;
+import com.jive.oss.bgp.net.TransitiveTwoByteASNFourByteAdministratorRT;
 import com.jive.oss.bgp.net.attributes.ASPathAttribute;
+import com.jive.oss.bgp.net.attributes.AbstractExtendedCommunityInterface;
+import com.jive.oss.bgp.net.attributes.ExtendedCommunityPathAttribute;
+import com.jive.oss.bgp.net.attributes.IPv4MPLSLabelNLRI;
+import com.jive.oss.bgp.net.attributes.IPv4MPLSVPNNLRI;
+import com.jive.oss.bgp.net.attributes.IPv4UnicastNLRI;
+import com.jive.oss.bgp.net.attributes.IPv6MPLSLabelNLRI;
+import com.jive.oss.bgp.net.attributes.IPv6MPLSVPNNLRI;
+import com.jive.oss.bgp.net.attributes.IPv6UnicastNLRI;
 import com.jive.oss.bgp.net.attributes.MultiExitDiscPathAttribute;
 import com.jive.oss.bgp.net.attributes.MultiProtocolReachableNLRI;
 import com.jive.oss.bgp.net.attributes.NextHopPathAttribute;
@@ -245,9 +257,11 @@ public class BGPv4Service
     vpn4PathAttributes.add(new OriginPathAttribute(Origin.EGP));
     vpn4PathAttributes.add(new MultiProtocolReachableNLRI(AddressFamily.IPv4, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN));
     IPv4MPLSVPNNLRI vpn4Nlri = IPv4MPLSVPNNLRI.fromCidrV4AddressRDAndLabel(CidrV4Address.fromString("192.168.0.0/31"), new RouteDistinguisherType0(6643, 4421), 400);
-    // TODO: need to implement extended communities
-    vpn4PathAttributes.add(new UnknownPathAttribute(16, new byte[] {0, 2, 25, -13, 0, 0, 0, 10}));
-       
+    final List<AbstractExtendedCommunityInterface> v4extComms = new LinkedList<>();
+    v4extComms.add(new TransitiveTwoByteASNFourByteAdministratorRT(6643, 10L));
+    v4extComms.add(new TransitiveIPv4AddressTwoByteAdministratorRT((Inet4Address) InetAddresses.forString("14.15.27.32"), 4231));
+    vpn4PathAttributes.add(new ExtendedCommunityPathAttribute(v4extComms));
+   
     Route vpn4route = new Route(AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING, vpn4Nlri.getEncodedNLRI(), vpn4PathAttributes, BinaryNextHop.fromRDandNextHop(new RouteDistinguisherType0(0, 0), InetAddress.getByName("192.168.207.1")));
     prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV4_MPLS_VPN_FORWARDING).addRoute(vpn4route);
     
@@ -373,8 +387,10 @@ public class BGPv4Service
     vpn6PathAttributes.add(new OriginPathAttribute(Origin.EGP));
     vpn6PathAttributes.add(new MultiProtocolReachableNLRI(AddressFamily.IPv6, SubsequentAddressFamily.NLRI_MPLS_LABELLED_VPN));
     IPv6MPLSVPNNLRI vpn6Nlri = IPv6MPLSVPNNLRI.fromCidrV6AddressRDAndLabel(CidrV6Address.fromString("2a02:46::/32"), new RouteDistinguisherType0(6643, 4421), 422);
-    // TODO: need to implement extended communities
-    vpn6PathAttributes.add(new UnknownPathAttribute(16, new byte[] {0, 2, 25, -13, 0, 0, 0, 10}));
+    final List<AbstractExtendedCommunityInterface> v6extComms = new LinkedList<>();
+    v6extComms.add(new TransitiveTwoByteASNFourByteAdministratorRT(6643, 10L));
+    v6extComms.add(new TransitiveIPv4AddressTwoByteAdministratorRT((Inet4Address) InetAddresses.forString("43.23.12.24"), 4231));
+    vpn6PathAttributes.add(new ExtendedCommunityPathAttribute(v6extComms));
        
     Route vpn6route = new Route(AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING, vpn6Nlri.getEncodedNLRI(), vpn6PathAttributes, BinaryNextHop.fromRDandNextHop(new RouteDistinguisherType0(0, 0), InetAddress.getByName("2001:4c20::2")));
     prib.routingBase(RIBSide.Local, AddressFamilyKey.IPV6_MPLS_VPN_FORWARDING).addRoute(vpn6route);

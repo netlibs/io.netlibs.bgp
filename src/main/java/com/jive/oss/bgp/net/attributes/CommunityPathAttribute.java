@@ -27,7 +27,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * @author Rainer Bieniek (Rainer.Bieniek@web.de)
+ * Refactored by rjs, to remove 'special' first community.
  *
  */
 
@@ -42,38 +42,11 @@ public class CommunityPathAttribute extends PathAttribute
     super(Category.OPTIONAL_TRANSITIVE);
   }
 
-  public CommunityPathAttribute(final int community)
+
+  public CommunityPathAttribute(final List<CommunityMember> members)
   {
     super(Category.OPTIONAL_TRANSITIVE);
-
-    this.community = community;
-  }
-
-  public CommunityPathAttribute(final int community, final List<CommunityMember> members)
-  {
-    this(community);
-
-    if (members != null)
-    {
-      this.members = new LinkedList<CommunityMember>(members);
-    }
-  }
-
-  /**
-   * @return the community
-   */
-  public int getCommunity()
-  {
-    return this.community;
-  }
-
-  /**
-   * @param community
-   *          the community to set
-   */
-  public void setCommunity(final int community)
-  {
-    this.community = community;
+    this.members.addAll(members);
   }
 
   /**
@@ -90,14 +63,14 @@ public class CommunityPathAttribute extends PathAttribute
    */
   public void setMembers(final List<CommunityMember> members)
   {
-    if (members != null)
-    {
-      this.members = members;
-    }
-    else
-    {
+    this.members = members;
+  }
+  
+  public void addMember(CommunityMember member){
+    if (members == null){
       this.members = new LinkedList<CommunityMember>();
     }
+    this.members.add(member);
   }
 
   @Override
@@ -112,7 +85,6 @@ public class CommunityPathAttribute extends PathAttribute
     final CommunityPathAttribute o = (CommunityPathAttribute) obj;
 
     final EqualsBuilder builder = (new EqualsBuilder())
-        .append(this.getCommunity(), o.getCommunity())
         .append(this.getMembers().size(), o.getMembers().size());
 
     if (builder.isEquals())
@@ -132,8 +104,7 @@ public class CommunityPathAttribute extends PathAttribute
   @Override
   protected int subclassHashCode()
   {
-    final HashCodeBuilder builder = (new HashCodeBuilder())
-        .append(this.getCommunity());
+    final HashCodeBuilder builder = (new HashCodeBuilder());
     final Iterator<CommunityMember> it = this.getMembers().iterator();
 
     while (it.hasNext())
@@ -149,7 +120,6 @@ public class CommunityPathAttribute extends PathAttribute
   {
     final CommunityPathAttribute o = (CommunityPathAttribute) obj;
     final CompareToBuilder builder = (new CompareToBuilder())
-        .append(this.getCommunity(), o.getCommunity())
         .append(this.getMembers().size(), o.getMembers().size());
 
     if (builder.toComparison() == 0)
@@ -169,8 +139,7 @@ public class CommunityPathAttribute extends PathAttribute
   @Override
   protected ToStringBuilder subclassToString()
   {
-    final ToStringBuilder builder = new ToStringBuilder(this)
-        .append("community", this.community);
+    final ToStringBuilder builder = new ToStringBuilder(this);
 
     for (final CommunityMember c : this.members)
     {

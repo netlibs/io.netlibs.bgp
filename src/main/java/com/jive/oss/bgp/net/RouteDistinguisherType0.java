@@ -1,17 +1,16 @@
-package com.jive.oss.bgp.netty.service;
+package com.jive.oss.bgp.net;
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import lombok.Getter;
 import lombok.Value;
 
 @Value
-public class RouteDistinguisherType0 implements AbstractRouteDistinguisherType
+public class RouteDistinguisherType0 extends AbstractTwoByteASNFourByteAdministratorRDCommunityType implements AbstractRouteDistinguisherType
 { 
-  private int administrator;
-  private long assigned_number;
 
   // Type 0:
   //  Administrator Subfield: 2-bytes, ASN
@@ -20,23 +19,9 @@ public class RouteDistinguisherType0 implements AbstractRouteDistinguisherType
   
   public RouteDistinguisherType0(int administrator, long assigned_number)
   {
-    Preconditions.checkArgument(administrator > 0 || administrator < 65536, "Invalid administrator");
-    Preconditions.checkArgument(assigned_number > 0 || assigned_number < 4294967296L, "Invalid assigned_number");
-    this.administrator = administrator; 
-    this.assigned_number = assigned_number;
+    super(administrator, assigned_number);
   }
 
-  @Override
-  public byte[] getBytes()
-  {
-    ByteBuf data = Unpooled.buffer();
-    data.writeShort(this.administrator);
-    data.writeInt((int) this.assigned_number);
-    byte[] buf = new byte[data.readableBytes()];
-    data.readBytes(buf);
-    return buf;
-  }
-  
   @Override
   public byte[] getType()
   {

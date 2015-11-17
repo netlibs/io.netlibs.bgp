@@ -25,6 +25,7 @@ import com.jive.oss.bgp.net.attributes.AggregatorPathAttribute;
 import com.jive.oss.bgp.net.attributes.AtomicAggregatePathAttribute;
 import com.jive.oss.bgp.net.attributes.ClusterListPathAttribute;
 import com.jive.oss.bgp.net.attributes.CommunityPathAttribute;
+import com.jive.oss.bgp.net.attributes.ExtendedCommunityPathAttribute;
 import com.jive.oss.bgp.net.attributes.LocalPrefPathAttribute;
 import com.jive.oss.bgp.net.attributes.MultiExitDiscPathAttribute;
 import com.jive.oss.bgp.net.attributes.MultiProtocolReachableNLRI;
@@ -57,6 +58,7 @@ public class PathAttributeCodec
     codecs.put(AtomicAggregatePathAttribute.class, new AtomicAggregatePathAttributeCodecHandler());
     codecs.put(ClusterListPathAttribute.class, new ClusterListPathAttributeCodecHandler());
     codecs.put(CommunityPathAttribute.class, new CommunityPathAttributeCodecHandler());
+    codecs.put(ExtendedCommunityPathAttribute.class, new ExtendedCommunityPathAttributeCodecHandler());
     codecs.put(LocalPrefPathAttribute.class, new LocalPrefPathAttributeCodecHandler());
     codecs.put(MultiExitDiscPathAttribute.class, new MultiExitDiscPathAttributeCodecHandler());
     codecs.put(MultiProtocolReachableNLRI.class, new MultiProtocolReachableNLRICodecHandler());

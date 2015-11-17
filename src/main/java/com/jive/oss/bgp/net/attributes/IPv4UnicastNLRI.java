@@ -1,4 +1,4 @@
-package com.jive.oss.bgp.netty.service;
+package com.jive.oss.bgp.net.attributes;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Longs;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
+import com.jive.oss.bgp.netty.service.NLRIHelper;
 import com.jive.oss.commons.ip.CidrV4Address;
 
 import lombok.Getter;

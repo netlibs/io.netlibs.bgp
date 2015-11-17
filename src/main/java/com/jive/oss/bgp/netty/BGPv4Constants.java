@@ -156,6 +156,9 @@ public class BGPv4Constants {
 	/** PATH ATTRIBUTE AGGREGATOR type code (RFC 4760) */
 	public static final int BGP_PATH_ATTRIBUTE_TYPE_MP_UNREACH_NLRI = 15;
 	
+	/** PATH ATTRIBUTE EXTENDED COMMUNITIES (RFC4360) */
+	public static final int BGP_PATH_ATTRIBUTE_TYPE_EXTENDED_COMMUNITIES = 16;
+	
 	/** PATH ATTRIBUTE AS PATH type code (RFC 4893) */
 	public static final int BGP_PATH_ATTRIBUTE_TYPE_AS4_PATH = 17;
 

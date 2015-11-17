@@ -19,7 +19,7 @@ public class CommunityMember implements Comparable<CommunityMember>
   @Getter
   @Setter
 
-  private int memberFlags;
+  private int value;
 
   public CommunityMember()
   {
@@ -28,7 +28,7 @@ public class CommunityMember implements Comparable<CommunityMember>
   public CommunityMember(final int asNumber, final int memberFlags)
   {
     this.asNumber = asNumber;
-    this.memberFlags = memberFlags;
+    this.value = memberFlags;
   }
 
   @Override
@@ -36,7 +36,7 @@ public class CommunityMember implements Comparable<CommunityMember>
   {
     return (new CompareToBuilder())
         .append(this.getAsNumber(), o.getAsNumber())
-        .append(this.getMemberFlags(), o.getMemberFlags())
+        .append(this.getValue(), o.getValue())
         .toComparison();
   }
 

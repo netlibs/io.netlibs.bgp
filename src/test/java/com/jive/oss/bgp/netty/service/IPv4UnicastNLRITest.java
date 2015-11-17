@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.net.InetAddresses;
+import com.jive.oss.bgp.net.attributes.IPv4UnicastNLRI;
 
 public class IPv4UnicastNLRITest
 {

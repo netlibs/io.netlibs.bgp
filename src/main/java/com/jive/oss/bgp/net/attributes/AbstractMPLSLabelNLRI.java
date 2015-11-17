@@ -1,7 +1,8 @@
-package com.jive.oss.bgp.netty.service;
+package com.jive.oss.bgp.net.attributes;
 
 import com.google.common.primitives.Ints;
 import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
+import com.jive.oss.bgp.netty.service.NLRIHelper;
 
 import lombok.Getter;
 
