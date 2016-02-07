@@ -37,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-@AllArgsConstructor
 public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
 {
 
@@ -45,9 +44,28 @@ public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
 
   private final BGPv4PacketDecoder packetDecoder;
 
+  // set to true when we see an invalid packet.
+  private boolean failed = false;
+
+  public BGPv4Codec(BGPv4PacketDecoder instance)
+  {
+    this.packetDecoder = instance;
+  }
+
+  public BGPv4Codec()
+  {
+    this(BGPv4PacketDecoder.getInstance());
+  }
+
   @Override
   protected void decode(final ChannelHandlerContext ctx, final ByteBuf buffer, final List<Object> out) throws Exception
   {
+
+    
+    if (failed)
+    {
+      return;
+    }
 
     try
     {
@@ -59,7 +77,7 @@ public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
 
       final BGPv4Packet packet = this.packetDecoder.decodePacket(buffer);
 
-      log.debug("Received: {}", packet);
+      log.trace("Received: {}", packet);
 
       if (packet != null)
       {
@@ -69,8 +87,11 @@ public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
     }
     catch (final ProtocolPacketException ex)
     {
+
       log.error("received malformed protocol packet, closing connection", ex);
       NotificationHelper.sendNotification(ctx, ex.toNotificationPacket(), new BgpEventFireChannelFutureListener(ctx));
+      this.failed = true;
+
     }
     catch (final Exception ex)
     {

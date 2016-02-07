@@ -310,4 +310,11 @@ public class MultiProtocolReachableNLRI extends PathAttribute
     return builder;
   }
 
+  
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitMultiProtocolReachableNLRI(this);
+  }
+  
 }

@@ -23,21 +23,29 @@ import com.jive.oss.bgp.netty.protocol.ProtocolPacketException;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public abstract class UpdatePacketException extends ProtocolPacketException {
+public abstract class UpdatePacketException extends ProtocolPacketException
+{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 755683737903202898L;
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 755683737903202898L;
 
-	/**
-	 * 
-	 */
-	public UpdatePacketException() {
-	}
+  /**
+   * 
+   */
+  public UpdatePacketException()
+  {
+  }
 
-	public UpdatePacketException(String message) {
-		super(message);
-	}
+  public UpdatePacketException(Exception inner)
+  {
+    super(inner);
+  }
+
+  public UpdatePacketException(String message)
+  {
+    super(message);
+  }
 
 }

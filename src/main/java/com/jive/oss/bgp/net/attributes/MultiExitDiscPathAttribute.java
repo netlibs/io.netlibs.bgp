@@ -98,4 +98,10 @@ public class MultiExitDiscPathAttribute extends PathAttribute
     return (new ToStringBuilder(this))
         .append("discriminator", this.discriminator);
   }
+  
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitMultiExitDiscPathAttribute(this);
+  }
 }

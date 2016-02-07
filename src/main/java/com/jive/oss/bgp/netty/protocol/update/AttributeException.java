@@ -35,6 +35,7 @@ public abstract class AttributeException extends UpdatePacketException
   /**
    *
    */
+  
   public AttributeException()
   {
   }
@@ -42,10 +43,19 @@ public abstract class AttributeException extends UpdatePacketException
   /**
    *
    */
-  public AttributeException(final byte[] offendingAttribute)
+  
+  public AttributeException(Exception ex, final byte[] offendingAttribute)
   {
+    super(ex);
     this.setOffendingAttribute(offendingAttribute);
   }
+  /**
+  *
+  */
+ public AttributeException(final byte[] offendingAttribute)
+ {
+   this.setOffendingAttribute(offendingAttribute);
+ }
 
   /**
    * @param message

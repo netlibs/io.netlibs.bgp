@@ -84,5 +84,11 @@ public class LocalPrefPathAttribute extends PathAttribute {
 		return (new ToStringBuilder(this))
 				.append("localPreference", localPreference);
 	}
+	
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitLocalPrefPathAttribute(this);
+  }
 
 }

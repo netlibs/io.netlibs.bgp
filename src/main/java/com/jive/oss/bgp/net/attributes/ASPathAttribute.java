@@ -181,4 +181,10 @@ public class ASPathAttribute extends PathAttribute implements ASTypeAware
 
     return builder;
   }
+  
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitASPath(this);
+  }
 }

@@ -18,4 +18,5 @@ public interface AbstractExtendedCommunityInterface
     data.readBytes(buf);
     return buf;
   }
+  
 }

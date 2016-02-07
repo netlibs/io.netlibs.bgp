@@ -230,4 +230,11 @@ public class MultiProtocolUnreachableNLRI extends PathAttribute
 
     return builder;
   }
+  
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitMultiProtocolUnreachableNLRI(this);
+  }
+  
 }

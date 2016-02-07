@@ -64,7 +64,7 @@ public class BGPv4ClientEndpoint extends SimpleChannelInboundHandler<Object>
 
     if (fsm == null)
     {
-      log.error("Internal Error: client for address " + ctx.channel().remoteAddress() + " is unknown");
+      log.error("Internal Error: client for address " + ctx.channel().remoteAddress() + " is unknown (peer not configured)");
       ctx.channel().close();
     }
     else
@@ -173,7 +173,7 @@ public class BGPv4ClientEndpoint extends SimpleChannelInboundHandler<Object>
   public void channelUnregistered(final ChannelHandlerContext ctx) throws Exception
   {
 
-    log.info("closed channel to client {}", ctx.channel().remoteAddress());
+    log.info("channel was closed to client {}", ctx.channel().remoteAddress());
 
     final BGPv4FSM fsm = this.fsmRegistry.lookupFSM((InetSocketAddress) ctx.channel().remoteAddress());
 

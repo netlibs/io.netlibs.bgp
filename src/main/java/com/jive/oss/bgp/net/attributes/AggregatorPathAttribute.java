@@ -154,4 +154,10 @@ public class AggregatorPathAttribute extends PathAttribute implements ASTypeAwar
         .append("asType", this.asType);
   }
 
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitAggregatorPathAttribute(this);
+  }
+
 }

@@ -35,9 +35,13 @@ public class AttributeLengthException extends AttributeException {
 	public AttributeLengthException() {
 	}
 
-	public AttributeLengthException(byte[] offendingAttribute) {
-		super(offendingAttribute);
-	}
+  public AttributeLengthException(Exception ex, byte[] offendingAttribute) {
+    super(ex, offendingAttribute);
+  }
+
+  public AttributeLengthException(byte[] offendingAttribute) {
+    super(offendingAttribute);
+  }
 
 	public AttributeLengthException(String message, byte[] offendingAttribute) {
 		super(message, offendingAttribute);

@@ -9,6 +9,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.google.common.base.Joiner;
+
 import lombok.ToString;
 
 @ToString
@@ -172,16 +174,43 @@ public class PathSegment implements Comparable<PathSegment>
   @Override
   public String toString()
   {
-    final ToStringBuilder builder = new ToStringBuilder(this)
-        .append("asType", this.asType)
-        .append("pathSegmentType", this.pathSegmentType);
 
-    for (final int as : this.ases)
+    StringBuilder sb = new StringBuilder();
+
+    switch (this.pathSegmentType)
     {
-      builder.append("as", as);
+      case AS_SEQUENCE:
+        break;
+      case AS_SET:
+        sb.append("{ ");
+        break;
+      case AS_CONFED_SEQUENCE:
+        sb.append("( ");
+        break;
+      case AS_CONFED_SET:
+        sb.append("[ ");
+        break;
     }
 
-    return builder.toString();
+    sb.append(Joiner.on(' ').join(this.ases));
+
+    switch (this.pathSegmentType)
+    {
+      case AS_SEQUENCE:
+        break;
+      case AS_SET:
+        sb.append(" }");
+        break;
+      case AS_CONFED_SEQUENCE:
+        sb.append(" )");
+        break;
+      case AS_CONFED_SET:
+        sb.append(" ]");
+        break;
+    }
+
+    return sb.toString();
+
   }
 
 }

@@ -21,75 +21,88 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class UnknownPathAttribute extends PathAttribute {
+public class UnknownPathAttribute extends PathAttribute
+{
 
-	private int typeCode;
-	private byte[] value;
-	
-	public UnknownPathAttribute(int typeCode, byte[] value) {
-		super(Category.OPTIONAL_TRANSITIVE);
-		
-		this.typeCode = typeCode;
-		this.value = value;
-	}
+  private int typeCode;
+  private byte[] value;
 
-	/**
-	 * @return the value
-	 */
-	public byte[] getValue() {
-		return value;
-	}
+  public UnknownPathAttribute(int typeCode, byte[] value)
+  {
+    super(Category.OPTIONAL_TRANSITIVE);
 
-	/**
-	 * @return the typeCode
-	 */
-	public int getTypeCode() {
-		return typeCode;
-	}
+    this.typeCode = typeCode;
+    this.value = value;
+  }
 
-	@Override
-	protected PathAttributeType internalType() {
-		return PathAttributeType.UNKNOWN;
-	}
+  /**
+   * @return the value
+   */
+  public byte[] getValue()
+  {
+    return value;
+  }
 
-	@Override
-	protected boolean subclassEquals(PathAttribute obj) {
-		UnknownPathAttribute o =(UnknownPathAttribute)obj;
-		
-		return (new EqualsBuilder())
-				.append(getTypeCode(), o.getTypeCode())
-				.append(getValue(), o.getValue())
-				.isEquals();
-	}
+  /**
+   * @return the typeCode
+   */
+  public int getTypeCode()
+  {
+    return typeCode;
+  }
 
-	@Override
-	protected int subclassHashCode() {
-		return (new HashCodeBuilder())
-			.append(getTypeCode())
-			.append(getValue())
-			.toHashCode();
-	}
+  @Override
+  protected PathAttributeType internalType()
+  {
+    return PathAttributeType.UNKNOWN;
+  }
 
-	@Override
-	protected int subclassCompareTo(PathAttribute obj) {
-		UnknownPathAttribute o =(UnknownPathAttribute)obj;
-		
-		return (new CompareToBuilder())
-				.append(getTypeCode(), o.getTypeCode())
-				.append(getValue(), o.getValue())
-				.toComparison();
-	}
+  @Override
+  protected boolean subclassEquals(PathAttribute obj)
+  {
+    UnknownPathAttribute o = (UnknownPathAttribute) obj;
 
-	@Override
-	protected ToStringBuilder subclassToString() {
-		return (new ToStringBuilder(this))
-				.append("typeCode", typeCode)
-				.append("value", value);
-	}
+    return (new EqualsBuilder())
+        .append(getTypeCode(), o.getTypeCode())
+        .append(getValue(), o.getValue())
+        .isEquals();
+  }
 
+  @Override
+  protected int subclassHashCode()
+  {
+    return (new HashCodeBuilder())
+        .append(getTypeCode())
+        .append(getValue())
+        .toHashCode();
+  }
+
+  @Override
+  protected int subclassCompareTo(PathAttribute obj)
+  {
+    UnknownPathAttribute o = (UnknownPathAttribute) obj;
+
+    return (new CompareToBuilder())
+        .append(getTypeCode(), o.getTypeCode())
+        .append(getValue(), o.getValue())
+        .toComparison();
+  }
+
+  @Override
+  protected ToStringBuilder subclassToString()
+  {
+    return (new ToStringBuilder(this))
+        .append("typeCode", typeCode)
+        .append("value", value);
+  }
+
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitUnknownAttribute(this);
+  }
 }

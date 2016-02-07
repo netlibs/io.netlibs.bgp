@@ -131,5 +131,11 @@ public class NextHopPathAttribute extends PathAttribute
     return (new ToStringBuilder(this))
         .append("nextHop", nextHop);
   }
+  
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitNextHopPathAttribute(this);
+  }
 
 }

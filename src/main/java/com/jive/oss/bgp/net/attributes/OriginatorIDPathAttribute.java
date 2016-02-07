@@ -84,5 +84,11 @@ public class OriginatorIDPathAttribute extends PathAttribute {
 		return (new ToStringBuilder(this))
 				.append("originatorID", originatorID);
 	}
+	
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitOriginatorIDPathAttribute(this);
+  }
 
 }

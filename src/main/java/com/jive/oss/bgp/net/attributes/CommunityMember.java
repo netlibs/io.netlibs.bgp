@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString
 @EqualsAndHashCode
 public class CommunityMember implements Comparable<CommunityMember>
 {
@@ -34,10 +33,16 @@ public class CommunityMember implements Comparable<CommunityMember>
   @Override
   public int compareTo(final CommunityMember o)
   {
+    // 
     return (new CompareToBuilder())
         .append(this.getAsNumber(), o.getAsNumber())
         .append(this.getValue(), o.getValue())
         .toComparison();
+  }
+
+  public String toString()
+  {
+    return String.format("%d:%d", asNumber, value);
   }
 
 }

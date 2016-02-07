@@ -105,4 +105,10 @@ public class OriginPathAttribute extends PathAttribute
     return (new ToStringBuilder(this)).append("origin", this.origin);
   }
 
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitOriginPathAttribute(this);
+  }
+  
 }

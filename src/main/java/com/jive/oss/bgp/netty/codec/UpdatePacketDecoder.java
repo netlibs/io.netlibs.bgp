@@ -174,7 +174,12 @@ public class UpdatePacketDecoder
     {
       try
       {
-        packet.getPathAttributes().addAll(this.decodePathAttributes(pathAttributesBuffer));
+        List<PathAttribute> attrs = this.decodePathAttributes(pathAttributesBuffer);
+        packet.getPathAttributes().addAll(attrs);
+      }
+      catch (AttributeLengthException ex)
+      {
+        throw ex;
       }
       catch (final IndexOutOfBoundsException ex)
       {
@@ -445,26 +450,24 @@ public class UpdatePacketDecoder
     while (buffer.isReadable())
     {
       final CommunityMember member = new CommunityMember();
-
       member.setAsNumber(buffer.readUnsignedShort());
       member.setValue(buffer.readUnsignedShort());
-      System.err.printf("adding %d:%d to members\n", member.getAsNumber(), member.getValue());
-
       attr.getMembers().add(member);
     }
 
     return attr;
   }
 
-  private ExtendedCommunityPathAttribute decodeExtendedCommunityPathAttribute(final ByteBuf buffer){
+  private ExtendedCommunityPathAttribute decodeExtendedCommunityPathAttribute(final ByteBuf buffer)
+  {
     final ExtendedCommunityPathAttribute attr = new ExtendedCommunityPathAttribute();
-    
+
     if ((buffer.readableBytes() < 8) || ((buffer.readableBytes() % 8) != 0))
     {
       throw new OptionalAttributeErrorException();
     }
-    
-    while(buffer.isReadable())
+
+    while (buffer.isReadable())
     {
       AbstractExtendedCommunityInterface extcomm;
       // we need to check whether this is a transitive or non-transitive value
@@ -476,12 +479,13 @@ public class UpdatePacketDecoder
         // bit 7 is not set in the byte, therefore this is a transitive type
         // clear bit 8, not interested in this value
         TransitiveExtendedCommunityType transCommType = TransitiveExtendedCommunityType.fromCode((byte) (higherType & (~(3 << 6))));
-       
-        switch(transCommType)
+
+        switch (transCommType)
         {
           case TWO_OCTET_AS_SPECIFIC:
             TransitiveTwoOctetASSpecificExtCommSubTypes twoOctASNLowerType = TransitiveTwoOctetASSpecificExtCommSubTypes.fromCode(buffer.readByte());
-            switch(twoOctASNLowerType){
+            switch (twoOctASNLowerType)
+            {
               case ROUTE_TARGET:
                 extcomm = new TransitiveTwoByteASNFourByteAdministratorRT((int) buffer.readShort(), (long) buffer.readInt());
                 break;
@@ -490,42 +494,55 @@ public class UpdatePacketDecoder
                 extcomm = new UnknownTransitiveTwoByteASNSpecificExtendedCommunity(transCommType, twoOctASNLowerType, buffer.readBytes(6).array());
             }
             break;
+            
           case TWO_OCTET_IPv4_ADDRESS_SPECIFIC:
+            
             TransitiveIPv4AddressSpecificExtCommSubTypes ipv4LowerType = TransitiveIPv4AddressSpecificExtCommSubTypes.fromCode(buffer.readByte());
-            switch (ipv4LowerType){
+            
+            switch (ipv4LowerType)
+            {
               case ROUTE_TARGET:
                 try
                 {
-                  extcomm = new TransitiveIPv4AddressTwoByteAdministratorRT((Inet4Address) InetAddresses.fromLittleEndianByteArray(buffer.readBytes(4).array()), (int) buffer.readShort());
+                  extcomm = new TransitiveIPv4AddressTwoByteAdministratorRT((Inet4Address) InetAddresses.fromLittleEndianByteArray(buffer.readBytes(4).array()),
+                      (int) buffer.readShort());
                 }
                 catch (UnknownHostException e)
                 {
                   ByteBuf data = Unpooled.buffer();
                   data.getByte(ipv4LowerType.toCode());
                   data.readBytes(buffer.readBytes(6));
-                  extcomm = new UnknownTransitiveExtendedCommunity(transCommType,data.array());
+                  extcomm = new UnknownTransitiveExtendedCommunity(transCommType, data.array());
                 }
+                break;
+                
               default:
+                
                 // all non-RT types are currently unimplemented
                 extcomm = new UnknownTransitiveIPv4AddressSpecificExtendedCommunity(transCommType, ipv4LowerType, buffer.readBytes(6).array());
+                break;
+                
             }
             break;
+            
           default:
             // by default, just create an unknown type, reading the subsequent
             // 7 bytes (we have already read byte 1)
             extcomm = new UnknownTransitiveExtendedCommunity(transCommType, buffer.readBytes(7).array());
         }
-      } else {
-        // bit 7 is set, these are non-transitive        
+      }
+      else
+      {
+        // bit 7 is set, these are non-transitive
         NonTransitiveExtendedCommunityType nonTransCommType = NonTransitiveExtendedCommunityType.fromCode((byte) (higherType & (~(3 << 6))));
         // all non-transitive types are currently unimplemented
-        extcomm = new UnknownNonTransitiveExtendedCommunity(nonTransCommType, buffer.readBytes(7).array()); 
+        extcomm = new UnknownNonTransitiveExtendedCommunity(nonTransCommType, buffer.readBytes(7).array());
       }
       attr.getMembers().add(extcomm);
     }
     return attr;
   }
-  
+
   private MultiProtocolReachableNLRI decodeMpReachNlriPathAttribute(final ByteBuf buffer)
   {
     final MultiProtocolReachableNLRI attr = new MultiProtocolReachableNLRI();
@@ -618,19 +635,24 @@ public class UpdatePacketDecoder
 
   private List<PathAttribute> decodePathAttributes(final ByteBuf buffer)
   {
+
     final List<PathAttribute> attributes = new LinkedList<PathAttribute>();
 
     while (buffer.isReadable())
     {
+
       buffer.markReaderIndex();
 
       try
       {
+
         final int flagsType = buffer.readUnsignedShort();
+
         final boolean optional = ((flagsType & BGPv4Constants.BGP_PATH_ATTRIBUTE_OPTIONAL_BIT) != 0);
         final boolean transitive = ((flagsType & BGPv4Constants.BGP_PATH_ATTRIBUTE_TRANSITIVE_BIT) != 0);
         final boolean partial = ((flagsType & BGPv4Constants.BGP_PATH_ATTRIBUTE_PARTIAL_BIT) != 0);
         final int typeCode = (flagsType & BGPv4Constants.BGP_PATH_ATTRIBUTE_TYPE_MASK);
+
         int valueLength = 0;
 
         if ((flagsType & BGPv4Constants.BGP_PATH_ATTRIBUTE_EXTENDED_LENGTH_BIT) != 0)
@@ -642,9 +664,10 @@ public class UpdatePacketDecoder
           valueLength = buffer.readUnsignedByte();
         }
 
-        final ByteBuf valueBuffer = Unpooled.buffer(valueLength);
-
-        buffer.readBytes(valueBuffer);
+        // final ByteBuf valueBuffer = Unpooled.buffer(valueLength);
+        // buffer.readBytes(valueBuffer);
+        
+        final ByteBuf valueBuffer = buffer.readBytes(valueLength);
 
         PathAttribute attr = null;
 
@@ -702,16 +725,18 @@ public class UpdatePacketDecoder
             valueBuffer.readBytes(value);
             attr = new UnknownPathAttribute(typeCode, value);
           }
-          break;
+            break;
         }
         attr.setOptional(optional);
         attr.setTransitive(transitive);
         attr.setPartial(partial);
 
         attributes.add(attr);
+
       }
       catch (final AttributeException ex)
       {
+
         final int endReadIndex = buffer.readerIndex();
 
         buffer.resetReaderIndex();
@@ -723,9 +748,13 @@ public class UpdatePacketDecoder
         ex.setOffendingAttribute(packet);
 
         throw ex;
+
       }
       catch (final IndexOutOfBoundsException ex)
       {
+
+        // this is almost certinally an internal error with parsing ....
+        
         final int endReadIndex = buffer.readerIndex();
 
         buffer.resetReaderIndex();
@@ -735,7 +764,8 @@ public class UpdatePacketDecoder
 
         buffer.readBytes(packet);
 
-        throw new AttributeLengthException(packet);
+        throw new AttributeLengthException(ex, packet);
+
       }
 
     }

@@ -39,6 +39,7 @@ public class BadMessageTypeException extends ProtocolPacketException {
 	 * 
 	 */
 	public BadMessageTypeException(int type) {
+	  super("invalid type: " + Integer.toString(type));
 		this.type = type;
 	}
 
@@ -62,5 +63,7 @@ public class BadMessageTypeException extends ProtocolPacketException {
 	public NotificationPacket toNotificationPacket() {
 		return new BadMessageTypeNotificationPacket(this.type);
 	}
+	
+	
 
 }

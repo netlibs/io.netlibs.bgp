@@ -34,7 +34,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class CommunityPathAttribute extends PathAttribute
 {
 
-  private int community;
   private List<CommunityMember> members = new LinkedList<CommunityMember>();
 
   public CommunityPathAttribute()
@@ -48,7 +47,7 @@ public class CommunityPathAttribute extends PathAttribute
     super(Category.OPTIONAL_TRANSITIVE);
     this.members.addAll(members);
   }
-
+  
   /**
    * @return the members
    */
@@ -149,4 +148,11 @@ public class CommunityPathAttribute extends PathAttribute
     return builder;
   }
 
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitCommunityPathAttribute(this);
+  }
+  
 }
+

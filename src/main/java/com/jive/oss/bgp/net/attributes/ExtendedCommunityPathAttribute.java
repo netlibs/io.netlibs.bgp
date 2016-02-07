@@ -110,5 +110,10 @@ public class ExtendedCommunityPathAttribute extends PathAttribute
     return builder.toComparison();
   }
   
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitExtendedCommunityPathAttribute(this);
+  }
   
 }

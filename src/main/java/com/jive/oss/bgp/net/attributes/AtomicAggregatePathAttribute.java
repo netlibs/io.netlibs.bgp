@@ -54,4 +54,11 @@ public class AtomicAggregatePathAttribute extends PathAttribute {
 	protected ToStringBuilder subclassToString() {
 		return new ToStringBuilder(this);
 	}
+	
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitAtomicAggregatePathAttribute(this);
+  }
+  
 }

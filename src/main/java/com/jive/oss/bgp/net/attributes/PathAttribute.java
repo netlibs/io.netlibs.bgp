@@ -37,10 +37,7 @@ public abstract class PathAttribute implements Comparable<PathAttribute>
    */
   public enum Category
   {
-    WELL_KNOWN_MANDATORY,
-    WELL_KNOWN_DISCRETIONARY,
-    OPTIONAL_TRANSITIVE,
-    OPTIONAL_NON_TRANSITIVE,
+    WELL_KNOWN_MANDATORY, WELL_KNOWN_DISCRETIONARY, OPTIONAL_TRANSITIVE, OPTIONAL_NON_TRANSITIVE,
   }
 
   private boolean optional;
@@ -173,10 +170,10 @@ public abstract class PathAttribute implements Comparable<PathAttribute>
     final CompareToBuilder builder = new CompareToBuilder();
 
     builder.append(this.internalType(), o.internalType())
-    .append(this.getCategory(), o.getCategory())
-    .append(this.isOptional(), o.isOptional())
-    .append(this.isPartial(), o.isPartial())
-    .append(this.isTransitive(), o.isTransitive());
+        .append(this.getCategory(), o.getCategory())
+        .append(this.isOptional(), o.isOptional())
+        .append(this.isPartial(), o.isPartial())
+        .append(this.isTransitive(), o.isTransitive());
 
     if (this.internalType() == o.internalType())
     {
@@ -227,10 +224,10 @@ public abstract class PathAttribute implements Comparable<PathAttribute>
     final EqualsBuilder builder = new EqualsBuilder();
 
     builder.append(this.internalType(), o.internalType())
-    .append(this.getCategory(), o.getCategory())
-    .append(this.isOptional(), o.isOptional())
-    .append(this.isPartial(), o.isPartial())
-    .append(this.isTransitive(), o.isTransitive());
+        .append(this.getCategory(), o.getCategory())
+        .append(this.isOptional(), o.isOptional())
+        .append(this.isPartial(), o.isPartial())
+        .append(this.isTransitive(), o.isTransitive());
 
     if (this.internalType() == o.internalType())
     {
@@ -269,4 +266,12 @@ public abstract class PathAttribute implements Comparable<PathAttribute>
    * @return
    */
   protected abstract int subclassCompareTo(PathAttribute o);
+
+  /**
+   * 
+   */
+  
+
+  public abstract <R> R apply(PathAttributeVisitor<R> visitor);
+
 }

@@ -54,6 +54,7 @@ public class BGPv4PacketDecoder
         break;
 
       default:
+        // this seems to most commonly indicate a framing problem due to previously invalid message.
         throw new BadMessageTypeException(type);
 
     }

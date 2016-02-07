@@ -17,11 +17,14 @@
  */
 package com.jive.oss.bgp.net;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import com.jive.oss.commons.ip.IPv4Address;
 
 import lombok.ToString;
 
@@ -104,4 +107,5 @@ public class InetAddressNextHop<T extends InetAddress> implements NextHop
   {
     return new BinaryNextHop(this.getAddress().getAddress());
   }
+
 }

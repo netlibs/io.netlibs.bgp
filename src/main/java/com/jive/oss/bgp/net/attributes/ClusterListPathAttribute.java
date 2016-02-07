@@ -136,4 +136,10 @@ public class ClusterListPathAttribute extends PathAttribute {
 		return builder;
 	}
 
+  @Override
+  public <R> R apply(PathAttributeVisitor<R> visitor)
+  {
+    return visitor.visitClusterListPathAttribute(this);
+  }
+  
 }
