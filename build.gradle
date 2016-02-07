@@ -21,7 +21,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'pride'
 apply plugin: 'eclipse'
 
-group = "io.joss.graphql"
+group = "io.joss.bgp"
 version = '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
