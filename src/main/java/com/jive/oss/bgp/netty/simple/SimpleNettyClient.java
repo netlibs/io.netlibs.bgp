@@ -2,6 +2,7 @@ package com.jive.oss.bgp.netty.simple;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.concurrent.TimeUnit;
 
 import com.google.common.net.HostAndPort;
 import com.jive.oss.bgp.netty.codec.BGPv4PacketDecoder;
@@ -21,14 +22,17 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * A simple netty BGPv4 client which keeps an active BGP connection open, and services it, receiving only.
+ * A simple netty BGPv4 client which keeps an active BGP connection open, and services it; currently only supports receiving routes, not
+ * sending any.
  * 
  * @author theo
  *
  */
 
+@Slf4j
 public class SimpleNettyClient
 {
 
@@ -58,6 +62,13 @@ public class SimpleNettyClient
   public void start()
   {
 
+    connect();
+
+  }
+
+  private void connect()
+  {
+
     final Bootstrap b = new Bootstrap();
 
     b.group(workerGroup);
@@ -83,7 +94,31 @@ public class SimpleNettyClient
     // Start the client.
     ChannelFuture future = b.connect(new InetSocketAddress(target.getHostText(), target.getPortOrDefault(179)));
 
+    future.addListener(fut -> {
 
+      if (!fut.isSuccess())
+      {
+        reschedule();
+      }
+      else
+      {
+        future.channel().closeFuture().addListener(closefuture -> closed());
+      }
+
+    });
+
+  }
+
+  void reschedule()
+  {
+    log.debug("Rescheduling");
+    workerGroup.schedule(this::connect, 15, TimeUnit.SECONDS);
+  }
+
+  void closed()
+  {
+    log.debug("Connection closed after being opened");
+    reschedule();
   }
 
 }

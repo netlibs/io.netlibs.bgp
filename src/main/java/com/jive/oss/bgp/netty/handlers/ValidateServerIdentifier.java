@@ -59,6 +59,7 @@ public class ValidateServerIdentifier extends SimpleChannelInboundHandler<OpenPa
 
     if (openPacket.getBgpIdentifier() != peerConnInfo.getRemoteBgpIdentifier())
     {
+      
       log.error("expected remote BGP identifier {}, received BGP identifier {}", peerConnInfo.getRemoteBgpIdentifier(), openPacket.getBgpIdentifier());
 
       NotificationHelper.sendNotification(ctx,

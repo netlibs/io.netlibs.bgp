@@ -123,31 +123,20 @@ public class SimpleBGPv4Session extends SimpleChannelInboundHandler<Object>
     ctx.channel().write(packet);
     ctx.channel().writeAndFlush(new KeepalivePacket());
 
-    // we now need to schedule a timer to send a keepalive.
-
   }
 
-  public static final AttributeKey<PeerConnectionInformation> PEER_CONNECTION_INFO = AttributeKey.valueOf("peerConnection");
 
   @Override
   public void channelInactive(final ChannelHandlerContext ctx) throws Exception
   {
-    log.info("disconnected from client " + ctx.channel().remoteAddress());
+    log.info("disconnected from client {}", ctx.channel().remoteAddress());
     ctx.fireChannelInactive();
     listener.close();
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.jboss.netty.channel.SimpleChannelHandler#channelClosed(org.jboss.netty.channel.ChannelHandlerContext,
-   * org.jboss.netty.channel.ChannelStateEvent)
-   */
-
   @Override
   public void channelUnregistered(final ChannelHandlerContext ctx) throws Exception
   {
-    log.info("channel was closed to client {}", ctx.channel().remoteAddress());
     ctx.fireChannelUnregistered();
   }
 
