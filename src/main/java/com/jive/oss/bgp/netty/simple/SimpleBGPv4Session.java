@@ -7,6 +7,7 @@ import com.jive.oss.bgp.netty.protocol.BGPv4Packet;
 import com.jive.oss.bgp.netty.protocol.KeepalivePacket;
 import com.jive.oss.bgp.netty.protocol.open.OpenPacket;
 import com.jive.oss.bgp.netty.protocol.update.UpdatePacket;
+import com.jive.oss.commons.ip.IPv4Address;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -87,6 +88,21 @@ public class SimpleBGPv4Session extends SimpleChannelInboundHandler<Object>
 
       ctx.channel().pipeline().addBefore(SimpleBGPv4Session.HANDLER_NAME, "keepalive", new IdleStateHandler(open.getHoldTime(), 5, 0));
 
+
+      // send an OPEN packet once we see one.
+
+      final OpenPacket packet = new OpenPacket();
+
+      packet.setAutonomousSystem(open.getAutonomousSystem());
+      packet.setBgpIdentifier(IPv4Address.fromString("104.197.97.174").longValue());
+      packet.setHoldTime(30);
+      packet.setProtocolVersion(BGPv4Constants.BGP_VERSION);
+
+      // BGPv4FSM.this.capabilitiesNegotiator.insertLocalCapabilities(packet);
+
+      ctx.channel().write(packet);
+      ctx.channel().writeAndFlush(new KeepalivePacket());
+      
     }
     else
     {
@@ -105,23 +121,8 @@ public class SimpleBGPv4Session extends SimpleChannelInboundHandler<Object>
   {
 
     log.info("Connected to BGPv4 peer: {}", ctx.channel().remoteAddress());
-
     ctx.fireChannelActive();
 
-    // send an OPEN packet.
-
-    final OpenPacket packet = new OpenPacket();
-
-    //
-    packet.setAutonomousSystem(6643);
-    packet.setBgpIdentifier(1);
-    packet.setHoldTime(30);
-    packet.setProtocolVersion(BGPv4Constants.BGP_VERSION);
-
-    // BGPv4FSM.this.capabilitiesNegotiator.insertLocalCapabilities(packet);
-
-    ctx.channel().write(packet);
-    ctx.channel().writeAndFlush(new KeepalivePacket());
 
   }
 
