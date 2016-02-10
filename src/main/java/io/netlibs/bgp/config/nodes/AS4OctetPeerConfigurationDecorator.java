@@ -15,9 +15,9 @@
  * 
  * File: org.bgp4.config.nodes.AS4OctetPeerConfigurationDecorator.java 
  */
-package com.jive.oss.bgp.config.nodes;
+package io.netlibs.bgp.config.nodes;
 
-import com.jive.oss.bgp.config.nodes.impl.AS4OctetRequiredCapabiltiesDecorator;
+import io.netlibs.bgp.config.nodes.impl.AS4OctetRequiredCapabiltiesDecorator;
 
 /**
  * Decorator which assures that the Autonomous System 4 Octets capabilitiy is implictly

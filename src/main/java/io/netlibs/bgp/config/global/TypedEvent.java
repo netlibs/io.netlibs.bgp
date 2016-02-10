@@ -15,7 +15,7 @@
  *
  * File: org.bgp4.config.global.TypedEvent.java
  */
-package com.jive.oss.bgp.config.global;
+package io.netlibs.bgp.config.global;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

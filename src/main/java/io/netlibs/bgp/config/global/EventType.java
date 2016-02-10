@@ -1,4 +1,4 @@
-package com.jive.oss.bgp.config.global;
+package io.netlibs.bgp.config.global;
 
 public enum EventType
 {

@@ -15,9 +15,9 @@
  * 
  * File: org.bgp4.config.global.BgpServerConfigurationEvent.java 
  */
-package com.jive.oss.bgp.config.global;
+package io.netlibs.bgp.config.global;
 
-import com.jive.oss.bgp.config.nodes.BgpServerConfiguration;
+import io.netlibs.bgp.config.nodes.BgpServerConfiguration;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
