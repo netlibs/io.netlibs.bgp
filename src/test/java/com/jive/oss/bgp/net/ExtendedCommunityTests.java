@@ -11,6 +11,12 @@ import org.junit.Test;
 
 import com.google.common.net.InetAddresses;
 
+import io.joss.bgp.net.TransitiveExtendedCommunityType;
+import io.joss.bgp.net.TransitiveIPv4AddressSpecificExtCommSubTypes;
+import io.joss.bgp.net.TransitiveIPv4AddressTwoByteAdministratorRT;
+import io.joss.bgp.net.TransitiveTwoByteASNFourByteAdministratorRT;
+import io.joss.bgp.net.TransitiveTwoOctetASSpecificExtCommSubTypes;
+
 public class ExtendedCommunityTests
 {
 

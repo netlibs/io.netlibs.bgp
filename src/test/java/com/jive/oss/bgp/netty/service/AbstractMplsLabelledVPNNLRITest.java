@@ -11,13 +11,13 @@ import org.junit.Test;
 
 import com.google.common.net.InetAddresses;
 import com.google.common.primitives.Ints;
-import com.jive.oss.bgp.net.NetworkLayerReachabilityInformation;
-import com.jive.oss.bgp.net.RouteDistinguisherType0;
-import com.jive.oss.bgp.net.RouteDistinguisherType1;
-import com.jive.oss.bgp.net.RouteDistinguisherType2;
-import com.jive.oss.bgp.net.attributes.IPv4MPLSVPNNLRI;
-import com.jive.oss.bgp.net.attributes.IPv6MPLSVPNNLRI;
 
+import io.joss.bgp.net.NetworkLayerReachabilityInformation;
+import io.joss.bgp.net.RouteDistinguisherType0;
+import io.joss.bgp.net.RouteDistinguisherType1;
+import io.joss.bgp.net.RouteDistinguisherType2;
+import io.joss.bgp.net.attributes.IPv4MPLSVPNNLRI;
+import io.joss.bgp.net.attributes.IPv6MPLSVPNNLRI;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
