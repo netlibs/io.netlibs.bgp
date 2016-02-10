@@ -12,12 +12,12 @@ import org.junit.Test;
 import com.google.common.net.InetAddresses;
 import com.google.common.primitives.Ints;
 
-import io.joss.bgp.net.NetworkLayerReachabilityInformation;
-import io.joss.bgp.net.RouteDistinguisherType0;
-import io.joss.bgp.net.RouteDistinguisherType1;
-import io.joss.bgp.net.RouteDistinguisherType2;
-import io.joss.bgp.net.attributes.IPv4MPLSVPNNLRI;
-import io.joss.bgp.net.attributes.IPv6MPLSVPNNLRI;
+import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.net.RouteDistinguisherType0;
+import io.netlibs.bgp.net.RouteDistinguisherType1;
+import io.netlibs.bgp.net.RouteDistinguisherType2;
+import io.netlibs.bgp.net.attributes.IPv4MPLSVPNNLRI;
+import io.netlibs.bgp.net.attributes.IPv6MPLSVPNNLRI;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
