@@ -5,11 +5,11 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.google.common.base.Preconditions;
-import com.jive.oss.commons.ip.CidrV6Address;
-import com.jive.oss.commons.ip.IPv6Address;
 
 import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
 import io.netlibs.bgp.netty.service.NLRIHelper;
+import io.netlibs.ipaddr.CidrV6Address;
+import io.netlibs.ipaddr.IPv6Address;
 import lombok.Getter;
 
 public class IPv6UnicastNLRI

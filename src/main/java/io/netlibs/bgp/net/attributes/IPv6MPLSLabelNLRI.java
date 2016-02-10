@@ -3,7 +3,7 @@ package io.netlibs.bgp.net.attributes;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.jive.oss.commons.ip.CidrV6Address;
+import io.netlibs.ipaddr.CidrV6Address;
 
 public class IPv6MPLSLabelNLRI extends AbstractMPLSLabelNLRI
 {

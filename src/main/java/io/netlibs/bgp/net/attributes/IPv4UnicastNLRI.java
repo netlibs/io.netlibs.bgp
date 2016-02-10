@@ -5,11 +5,11 @@ import java.net.UnknownHostException;
 
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
-import com.jive.oss.commons.ip.CidrV4Address;
-import com.jive.oss.commons.ip.IPv4Address;
 
 import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
 import io.netlibs.bgp.netty.service.NLRIHelper;
+import io.netlibs.ipaddr.CidrV4Address;
+import io.netlibs.ipaddr.IPv4Address;
 import lombok.Getter;
 
 public class IPv4UnicastNLRI

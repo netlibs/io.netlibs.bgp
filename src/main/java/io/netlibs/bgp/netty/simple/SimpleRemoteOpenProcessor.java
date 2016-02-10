@@ -3,9 +3,8 @@ package io.netlibs.bgp.netty.simple;
 
 import java.net.InetSocketAddress;
 
-import com.jive.oss.commons.ip.IPv4Address;
-
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
+import io.netlibs.ipaddr.IPv4Address;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;

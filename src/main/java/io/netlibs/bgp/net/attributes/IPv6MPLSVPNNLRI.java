@@ -3,9 +3,8 @@ package io.netlibs.bgp.net.attributes;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.jive.oss.commons.ip.CidrV6Address;
-
 import io.netlibs.bgp.net.AbstractRouteDistinguisherType;
+import io.netlibs.ipaddr.CidrV6Address;
 
 public class IPv6MPLSVPNNLRI extends AbstractMPLSLabelledVPNNLRI
 {

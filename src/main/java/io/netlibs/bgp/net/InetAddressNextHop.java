@@ -24,8 +24,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.jive.oss.commons.ip.IPv4Address;
-
+import io.netlibs.ipaddr.IPv4Address;
 import lombok.ToString;
 
 /**

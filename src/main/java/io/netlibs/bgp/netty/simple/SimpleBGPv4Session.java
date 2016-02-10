@@ -1,7 +1,5 @@
 package io.netlibs.bgp.netty.simple;
 
-import com.jive.oss.commons.ip.IPv4Address;
-
 import io.netlibs.bgp.netty.BGPv4Constants;
 import io.netlibs.bgp.netty.PeerConnectionInformation;
 import io.netlibs.bgp.netty.handlers.BgpEvent;
@@ -9,6 +7,7 @@ import io.netlibs.bgp.netty.protocol.BGPv4Packet;
 import io.netlibs.bgp.netty.protocol.KeepalivePacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
 import io.netlibs.bgp.netty.protocol.update.UpdatePacket;
+import io.netlibs.ipaddr.IPv4Address;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;

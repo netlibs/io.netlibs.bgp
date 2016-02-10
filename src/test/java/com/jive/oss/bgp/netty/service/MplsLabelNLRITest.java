@@ -6,9 +6,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.net.InetAddresses;
-import com.jive.oss.commons.ip.CidrV4Address;
 
 import io.netlibs.bgp.net.attributes.IPv4MPLSLabelNLRI;
+import io.netlibs.ipaddr.CidrV4Address;
 
 public class MplsLabelNLRITest
 {

@@ -30,9 +30,6 @@ import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
 import com.google.common.net.InetAddresses;
-import com.jive.oss.commons.ip.CidrV4Address;
-import com.jive.oss.commons.ip.CidrV6Address;
-import com.jive.oss.commons.ip.IPv6Address;
 
 import io.netlibs.bgp.config.global.ApplicationConfiguration;
 import io.netlibs.bgp.config.nodes.impl.CapabilitiesImpl;
@@ -73,6 +70,9 @@ import io.netlibs.bgp.rib.Route;
 import io.netlibs.bgp.rib.RouteAdded;
 import io.netlibs.bgp.rib.RouteWithdrawn;
 import io.netlibs.bgp.rib.RoutingEventListener;
+import io.netlibs.ipaddr.CidrV4Address;
+import io.netlibs.ipaddr.CidrV6Address;
+import io.netlibs.ipaddr.IPv6Address;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -4,8 +4,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.google.common.primitives.Longs;
-import com.jive.oss.commons.ip.CidrV4Address;
 
+import io.netlibs.ipaddr.CidrV4Address;
 import lombok.ToString;
 
 @ToString
