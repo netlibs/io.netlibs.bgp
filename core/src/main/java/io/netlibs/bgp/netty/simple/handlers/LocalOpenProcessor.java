@@ -3,7 +3,6 @@ package io.netlibs.bgp.netty.simple.handlers;
 
 import io.netlibs.bgp.netty.protocol.KeepalivePacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
-import io.netlibs.bgp.netty.simple.BGPv4SessionHandler;
 import io.netlibs.bgp.netty.simple.BGPv4SessionListener;
 import io.netlibs.bgp.netty.simple.LocalConfig;
 import io.netlibs.bgp.protocol.BGPv4Constants;

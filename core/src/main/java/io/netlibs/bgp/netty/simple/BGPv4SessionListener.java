@@ -13,7 +13,7 @@ public interface BGPv4SessionListener
 {
 
   /**
-   * the connection is opened.
+   * the connection is opened. from here on in, messages must be read using session.read(callback).
    */
 
   void open(BGPv4Session session, OpenPacket remoteOpen);

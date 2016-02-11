@@ -16,30 +16,37 @@ import lombok.extern.slf4j.Slf4j;
 public class TestSessionHandler implements BGPv4SessionListener
 {
 
+  private BGPv4Session session;
+
   @Override
   public void open(BGPv4Session session, OpenPacket e)
   {
     log.info("Session OPENed with {}: {}", session.remoteAddress(), e);
+    this.session = session;
   }
 
   @Override
   public void update(UpdatePacket e)
+  {
+    session.input().consume(1);
+  }
+
+  @Override
+  public void notification(NotificationEvent e)
+  {
+    session.input().consume(1);
+  }
+
+  @Override
+  public void close()
   {
   }
 
   @Override
   public void keepalive(KeepalivePacket e)
   {
-  }
-
-  @Override
-  public void notification(NotificationEvent e)
-  {
-  }
-
-  @Override
-  public void close()
-  {
+    // TODO Auto-generated method stub
+    
   }
 
 }

@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 
 import io.netlibs.bgp.netty.protocol.KeepalivePacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
-import io.netlibs.bgp.netty.simple.BGPv4SessionHandler;
 import io.netlibs.bgp.netty.simple.BGPv4SessionFactory;
 import io.netlibs.bgp.netty.simple.BGPv4SessionListener;
 import io.netlibs.bgp.netty.simple.LocalConfig;

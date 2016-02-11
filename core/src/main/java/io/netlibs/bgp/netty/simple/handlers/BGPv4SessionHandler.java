@@ -1,4 +1,4 @@
-package io.netlibs.bgp.netty.simple;
+package io.netlibs.bgp.netty.simple.handlers;
 
 import java.net.InetSocketAddress;
 
@@ -9,16 +9,28 @@ import io.netlibs.bgp.netty.protocol.BGPv4Packet;
 import io.netlibs.bgp.netty.protocol.KeepalivePacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
 import io.netlibs.bgp.netty.protocol.update.UpdatePacket;
+import io.netlibs.bgp.netty.simple.BGPv4Session;
+import io.netlibs.bgp.netty.simple.BGPv4SessionListener;
+import io.netlibs.bgp.netty.simple.ReadTransferBuffer;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Netty handler which processing incoming BGP messages, ensuring flow control.
+ * 
+ * @author theo
+ *
+ */
 
 @Slf4j
 public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> implements BGPv4Session
 {
 
   public static final String HANDLER_NAME = "SimpleBGPv4Session";
+
+  private ReadTransferBuffer buffer = new ReadTransferBuffer();
 
   private final BGPv4SessionListener listener;
 
@@ -35,6 +47,7 @@ public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> imp
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final Object e) throws Exception
   {
+
     if (e instanceof BGPv4Packet)
     {
       channelRead(ctx, (BGPv4Packet) e);
@@ -47,6 +60,7 @@ public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> imp
     {
       log.error("unknown payload class " + e.getClass().getName() + " received for peer " + ctx.channel().remoteAddress());
     }
+
   }
 
   @Override
@@ -76,24 +90,8 @@ public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> imp
 
   private void channelRead(ChannelHandlerContext ctx, BGPv4Packet e)
   {
-
-    if (e instanceof UpdatePacket)
-    {
-      listener.update((UpdatePacket) e);
-    }
-    else if (e instanceof KeepalivePacket)
-    {
-      listener.keepalive((KeepalivePacket) e);
-    }
-    else if (e instanceof OpenPacket)
-    {
-      this.openPacket = (OpenPacket) e;
-    }
-    else
-    {
-      log.warn("Unhandled BGP packet: {}", e);
-    }
-
+    // data has arrived, but we don't push - instead send to the ReadTransferBuffer.    
+    buffer.enqueue(e);
   }
 
   private void channelRead(ChannelHandlerContext ctx, BgpEvent e)
@@ -109,6 +107,15 @@ public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> imp
     }
     this.ctx = ctx;
     this.listener.open(this, openPacket());
+    ctx.channel().config().setAutoRead(false);
+    buffer.init(() -> ctx.read(), listener);
+    buffer.channelReadable();
+  }
+
+  @Override
+  public void channelReadComplete(ChannelHandlerContext ctx) throws Exception
+  {
+    buffer.channelReadable();
   }
 
   @Override
@@ -178,6 +185,12 @@ public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> imp
   public OpenPacket openPacket()
   {
     return this.openPacket;
+  }
+
+  @Override
+  public ReadTransferBuffer input()
+  {
+    return this.buffer;
   }
 
 }
