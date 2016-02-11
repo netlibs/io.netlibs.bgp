@@ -4,10 +4,8 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.google.common.base.Preconditions;
-
+import io.netlibs.bgp.net.NLRIHelper;
 import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
-import io.netlibs.bgp.netty.service.NLRIHelper;
 import io.netlibs.ipaddr.CidrV6Address;
 import io.netlibs.ipaddr.IPv6Address;
 import lombok.Getter;

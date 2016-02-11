@@ -1,18 +1,13 @@
 package io.netlibs.bgp.netty.simple;
 
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.net.HostAndPort;
 
-import io.netlibs.bgp.netty.codec.BGPv4PacketDecoder;
-import io.netlibs.bgp.netty.handlers.BGPv4ClientEndpoint;
 import io.netlibs.bgp.netty.handlers.BGPv4Codec;
 import io.netlibs.bgp.netty.handlers.BGPv4Reframer;
 import io.netlibs.bgp.netty.handlers.InboundOpenCapabilitiesProcessor;
-import io.netlibs.bgp.netty.handlers.ValidateServerIdentifier;
-import io.netlibs.bgp.netty.service.BGPv4Client;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -21,7 +16,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
 /**

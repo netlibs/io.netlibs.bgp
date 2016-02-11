@@ -2,19 +2,16 @@ package io.netlibs.bgp.net.attributes;
 
 import java.net.UnknownHostException;
 
-import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
 
 import io.netlibs.bgp.net.AbstractRouteDistinguisherType;
+import io.netlibs.bgp.net.NLRIHelper;
 import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
 import io.netlibs.bgp.net.RouteDistinguisherType0;
 import io.netlibs.bgp.net.RouteDistinguisherType1;
 import io.netlibs.bgp.net.RouteDistinguisherType2;
 import io.netlibs.bgp.net.RouteDistinguisherUnknownType;
-import io.netlibs.bgp.netty.service.NLRIHelper;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @ToString

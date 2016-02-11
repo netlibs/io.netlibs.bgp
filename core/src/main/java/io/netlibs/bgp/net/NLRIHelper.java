@@ -1,6 +1,4 @@
-package io.netlibs.bgp.netty.service;
-
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+package io.netlibs.bgp.net;
 
 public class NLRIHelper {
   public static byte[] trimNLRI(int pfxlen, byte[] NLRI){

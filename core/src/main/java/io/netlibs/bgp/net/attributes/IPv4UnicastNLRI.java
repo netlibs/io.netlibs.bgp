@@ -3,11 +3,10 @@ package io.netlibs.bgp.net.attributes;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 
+import io.netlibs.bgp.net.NLRIHelper;
 import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
-import io.netlibs.bgp.netty.service.NLRIHelper;
 import io.netlibs.ipaddr.CidrV4Address;
 import io.netlibs.ipaddr.IPv4Address;
 import lombok.Getter;

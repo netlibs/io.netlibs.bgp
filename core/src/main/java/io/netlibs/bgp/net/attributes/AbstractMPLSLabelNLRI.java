@@ -2,8 +2,8 @@ package io.netlibs.bgp.net.attributes;
 
 import com.google.common.primitives.Ints;
 
+import io.netlibs.bgp.net.NLRIHelper;
 import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
-import io.netlibs.bgp.netty.service.NLRIHelper;
 import lombok.Getter;
 
 public class AbstractMPLSLabelNLRI
