@@ -1,4 +1,4 @@
-package com.jive.oss.bgp.netty.service;
+package io.netlibs.bgp.netty.service;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package com.jive.oss.bgp.net;
+package io.netlibs.bgp.net;
 
 
 import java.net.Inet4Address;
