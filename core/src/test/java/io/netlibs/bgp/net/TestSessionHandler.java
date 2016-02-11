@@ -15,14 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestSessionHandler implements BGPv4SessionListener
 {
-  
+
   @Override
   public void open(BGPv4Session session, OpenPacket e)
   {
     log.info("Session OPENed with {}: {}", session.remoteAddress(), e);
-    
-    // we start streaming the UPDATEs that we want to send.
-    
   }
 
   @Override

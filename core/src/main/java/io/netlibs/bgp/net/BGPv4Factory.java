@@ -10,7 +10,7 @@ import io.netlibs.bgp.netty.simple.BGPv4Server;
 import io.netlibs.bgp.netty.simple.BGPv4SessionFactory;
 import io.netlibs.bgp.netty.simple.BGPv4SessionListener;
 import io.netlibs.bgp.netty.simple.LocalConfig;
-import io.netlibs.ipaddr.IPv4Address;
+import io.netlibs.bgp.protocol.BGPv4Constants;
 import io.netty.channel.nio.NioEventLoopGroup;
 
 /**
@@ -27,7 +27,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
  * <code>
  * 
  * BGPv4Factory factory = new BGPv4Factory();
- * BGPv4Factory.listen();
+ * BGPv4Factory.listen(sessionFactory);
  * 
  * </code>
  * 
@@ -81,19 +81,22 @@ public class BGPv4Factory
   /**
    * Tries to connect to the given {@link InetSocketAddress}.
    * 
-   * If the connection fails, then the client will be unusable. create a new one.
+   * If the connection fails, then the client will be unusable. instead, create a new one to perform retries (they're lightweight).
    * 
    */
 
   public BGPv4Client connect(InetSocketAddress target, BGPv4SessionListener listener, LocalConfig config)
   {
-    BGPv4Client client = new BGPv4Client(
-        workerGroup,
-        HostAndPort.fromParts(target.getAddress().getHostAddress(), target.getPort()).withDefaultPort(179),
-        config);
+
+    HostAndPort remoteTarget = HostAndPort.fromParts(target.getAddress().getHostAddress(), target.getPort()).withDefaultPort(BGPv4Constants.BGP_PORT);
+
+    BGPv4Client client = new BGPv4Client(workerGroup, remoteTarget, config);
+
     client.setListener(listener);
     client.connect();
+
     return client;
+
   }
 
 }
