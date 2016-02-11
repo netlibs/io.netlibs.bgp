@@ -4,12 +4,8 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.google.common.base.Preconditions;
-import com.google.common.net.InetAddresses;
 import com.google.common.primitives.Ints;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import lombok.Value;
 
 @Value

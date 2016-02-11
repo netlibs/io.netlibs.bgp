@@ -44,6 +44,8 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 
+import io.netlibs.bgp.BGPv4Constants;
+import io.netlibs.bgp.NLRICodec;
 import io.netlibs.bgp.net.AddressFamily;
 import io.netlibs.bgp.net.AddressFamilyKey;
 import io.netlibs.bgp.net.BinaryNextHop;
@@ -55,8 +57,6 @@ import io.netlibs.bgp.net.attributes.MultiProtocolReachableNLRI;
 import io.netlibs.bgp.net.attributes.MultiProtocolUnreachableNLRI;
 import io.netlibs.bgp.net.attributes.NextHopPathAttribute;
 import io.netlibs.bgp.net.attributes.PathAttribute;
-import io.netlibs.bgp.netty.BGPv4Constants;
-import io.netlibs.bgp.netty.NLRICodec;
 import io.netlibs.bgp.netty.protocol.update.UpdatePacket;
 import io.netlibs.bgp.rib.Route;
 import io.netlibs.bgp.rib.RouteAdded;

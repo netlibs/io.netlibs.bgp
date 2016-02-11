@@ -18,16 +18,10 @@ package io.netlibs.bgp.net;
 
 import java.io.Serializable;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import javax.sound.midi.SysexMessage;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import com.google.common.net.InetAddresses;
-import com.google.common.primitives.Ints;
 
 /**
  * This class models the generic network layer reachabibility information as defined in RFC 4271 and RFC 2858.

@@ -1,11 +1,7 @@
 package io.netlibs.bgp.net;
 
-import com.google.common.base.Preconditions;
 import com.google.common.primitives.Ints;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import lombok.Getter;
 import lombok.Value;
 
 @Value

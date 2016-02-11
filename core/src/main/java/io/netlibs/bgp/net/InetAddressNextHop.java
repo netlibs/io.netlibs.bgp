@@ -17,14 +17,12 @@
  */
 package io.netlibs.bgp.net;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import io.netlibs.ipaddr.IPv4Address;
 import lombok.ToString;
 
 /**

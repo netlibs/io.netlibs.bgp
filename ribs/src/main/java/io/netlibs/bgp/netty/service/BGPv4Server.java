@@ -17,12 +17,12 @@
 package io.netlibs.bgp.netty.service;
 
 import io.netlibs.bgp.config.global.ApplicationConfiguration;
+import io.netlibs.bgp.handlers.BGPv4Codec;
+import io.netlibs.bgp.handlers.BGPv4Reframer;
+import io.netlibs.bgp.handlers.InboundOpenCapabilitiesProcessor;
 import io.netlibs.bgp.netty.codec.BGPv4PacketDecoder;
 import io.netlibs.bgp.netty.fsm.FSMRegistry;
-import io.netlibs.bgp.netty.handlers.BGPv4Codec;
-import io.netlibs.bgp.netty.handlers.BGPv4Reframer;
 import io.netlibs.bgp.netty.handlers.BGPv4ServerEndpoint;
-import io.netlibs.bgp.netty.handlers.InboundOpenCapabilitiesProcessor;
 import io.netlibs.bgp.netty.handlers.ValidateServerIdentifier;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

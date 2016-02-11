@@ -16,10 +16,12 @@
  */
 package io.netlibs.bgp.netty.handlers;
 
+import io.netlibs.bgp.BGPv4Constants;
+import io.netlibs.bgp.handlers.BgpEventFireChannelFutureListener;
+import io.netlibs.bgp.handlers.NotificationHelper;
+import io.netlibs.bgp.handlers.PeerConnectionInformation;
+import io.netlibs.bgp.handlers.PeerConnectionInformationAware;
 import io.netlibs.bgp.net.capabilities.AutonomousSystem4Capability;
-import io.netlibs.bgp.netty.BGPv4Constants;
-import io.netlibs.bgp.netty.PeerConnectionInformation;
-import io.netlibs.bgp.netty.PeerConnectionInformationAware;
 import io.netlibs.bgp.netty.protocol.open.BadBgpIdentifierNotificationPacket;
 import io.netlibs.bgp.netty.protocol.open.BadPeerASNotificationPacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;

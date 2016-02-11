@@ -3,8 +3,6 @@ package io.netlibs.bgp.net;
 import com.google.common.primitives.Ints;
 
 import io.netlibs.bgp.net.attributes.AbstractExtendedCommunityWithSubTypeInterface;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 public class TransitiveTwoByteASNFourByteAdministratorRT extends AbstractTwoByteASNFourByteAdministratorRDCommunityType implements AbstractExtendedCommunityWithSubTypeInterface
 {

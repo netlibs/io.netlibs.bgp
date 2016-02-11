@@ -18,8 +18,9 @@ package io.netlibs.bgp.netty.handlers;
 
 import java.net.InetSocketAddress;
 
-import io.netlibs.bgp.netty.PeerConnectionInformation;
-import io.netlibs.bgp.netty.PeerConnectionInformationAware;
+import io.netlibs.bgp.handlers.BgpEvent;
+import io.netlibs.bgp.handlers.PeerConnectionInformation;
+import io.netlibs.bgp.handlers.PeerConnectionInformationAware;
 import io.netlibs.bgp.netty.fsm.BGPv4FSM;
 import io.netlibs.bgp.netty.fsm.FSMRegistry;
 import io.netlibs.bgp.netty.protocol.BGPv4Packet;

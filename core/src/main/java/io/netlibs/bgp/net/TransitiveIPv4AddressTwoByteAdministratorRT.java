@@ -4,10 +4,8 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.google.common.net.InetAddresses;
 import com.google.common.primitives.Ints;
 
-import io.netlibs.bgp.net.attributes.AbstractExtendedCommunityInterface;
 import io.netlibs.bgp.net.attributes.AbstractExtendedCommunityWithSubTypeInterface;
 
 public class TransitiveIPv4AddressTwoByteAdministratorRT extends AbstractIPv4AddressTwoByteAdministratorRDCommunityType implements AbstractExtendedCommunityWithSubTypeInterface
