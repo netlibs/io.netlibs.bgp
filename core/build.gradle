@@ -46,7 +46,7 @@ dependencies {
     compile 'org.projectlombok:lombok:1.16.6'
 	compile 'com.google.guava:guava:19.0'
 	compile 'org.slf4j:slf4j-api:1.7.12'
-	compile 'io.joss.ip:commons-ip:1.0-SNAPSHOT'
+	compile 'io.netlibs.ipaddr:ipaddr:1.0-SNAPSHOT'
 	compile 'io.netty:netty-all:4.1.0.CR2'
 	compile 'org.apache.commons:commons-lang3:3.4'
 		
