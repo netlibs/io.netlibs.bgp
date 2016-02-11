@@ -21,7 +21,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'pride'
 apply plugin: 'eclipse'
 
-group = "io.joss.bgp"
+group = "io.netlibs.bgp"
 version = '1.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
@@ -44,6 +44,9 @@ dependencies {
     testCompile 'org.assertj:assertj-core:3.2.0'
 
 	compile 'io.joss.bgp:core:1.0-SNAPSHOT'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+	compile 'org.quartz-scheduler:quartz:2.2.2'
+	compile 'ch.qos.logback:logback-classic:1.1.3'
 
 }
 
