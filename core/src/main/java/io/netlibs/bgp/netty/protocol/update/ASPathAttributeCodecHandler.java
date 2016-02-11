@@ -17,10 +17,10 @@
  */
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.ASType;
-import io.netlibs.bgp.net.PathSegment;
-import io.netlibs.bgp.net.attributes.ASPathAttribute;
+import io.netlibs.bgp.protocol.ASType;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.PathSegment;
+import io.netlibs.bgp.protocol.attributes.ASPathAttribute;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import io.netlibs.bgp.config.nodes.AddressFamilyRoutingPeerConfiguration;
 import io.netlibs.bgp.config.nodes.PathAttributeConfiguration;
 import io.netlibs.bgp.config.nodes.RoutingFilterConfiguration;
-import io.netlibs.bgp.net.AddressFamilyKey;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
 
 /**
  * @author rainer

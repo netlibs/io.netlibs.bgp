@@ -23,11 +23,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import io.netlibs.bgp.net.AddressFamilyKey;
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
-import io.netlibs.bgp.net.NextHop;
-import io.netlibs.bgp.net.RIBSide;
-import io.netlibs.bgp.net.attributes.PathAttribute;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.NextHop;
+import io.netlibs.bgp.protocol.RIBSide;
+import io.netlibs.bgp.protocol.attributes.PathAttribute;
 import lombok.extern.slf4j.Slf4j;
 
 /**

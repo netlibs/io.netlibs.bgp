@@ -21,13 +21,15 @@ package io.netlibs.bgp.netty.protocol;
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)
  *
  */
-public class AdministrativeResetNotificationPacket extends CeaseNotificationPacket {
+public class AdministrativeResetNotificationPacket extends CeaseNotificationPacket
+{
 
-	/**
-	 * @param subcode
-	 */
-	public AdministrativeResetNotificationPacket() {
-		super(CeaseNotificationPacket.SUBCODE_ADMINSTRATIVE_RESET);
-	}
+  /**
+   * @param subcode
+   */
+  public AdministrativeResetNotificationPacket()
+  {
+    super(CeaseNotificationPacket.SUBCODE_ADMINSTRATIVE_RESET);
+  }
 
 }

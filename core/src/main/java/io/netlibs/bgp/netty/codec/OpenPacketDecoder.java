@@ -17,7 +17,6 @@
  */
 package io.netlibs.bgp.netty.codec;
 
-import io.netlibs.bgp.BGPv4Constants;
 import io.netlibs.bgp.netty.protocol.NotificationPacket;
 import io.netlibs.bgp.netty.protocol.open.BadBgpIdentifierException;
 import io.netlibs.bgp.netty.protocol.open.BadBgpIdentifierNotificationPacket;
@@ -27,6 +26,7 @@ import io.netlibs.bgp.netty.protocol.open.CapabilityListUnsupportedCapabilityNot
 import io.netlibs.bgp.netty.protocol.open.OpenNotificationPacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket.OpenPacketBuilder;
+import io.netlibs.bgp.protocol.BGPv4Constants;
 import io.netlibs.bgp.netty.protocol.open.UnacceptableHoldTimerNotificationPacket;
 import io.netlibs.bgp.netty.protocol.open.UnspecificOpenNotificationPacket;
 import io.netlibs.bgp.netty.protocol.open.UnsupportedOptionalParameterException;

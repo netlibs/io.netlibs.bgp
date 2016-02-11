@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import io.netlibs.bgp.net.capabilities.Capability;
+import io.netlibs.bgp.protocol.capabilities.Capability;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

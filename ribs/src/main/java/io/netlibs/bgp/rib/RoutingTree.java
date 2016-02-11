@@ -20,7 +20,7 @@ package io.netlibs.bgp.rib;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
 
 /**
  * This class builds and manages a tree of (NLRI, Path attributes) tuples. The tree is build top-down whereas the parent node always

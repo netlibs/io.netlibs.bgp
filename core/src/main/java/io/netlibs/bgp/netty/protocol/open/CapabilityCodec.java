@@ -23,17 +23,17 @@ import java.util.List;
 
 import com.google.common.primitives.Ints;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.AddressFamily;
-import io.netlibs.bgp.net.ORFSendReceive;
-import io.netlibs.bgp.net.ORFType;
-import io.netlibs.bgp.net.SubsequentAddressFamily;
-import io.netlibs.bgp.net.capabilities.AutonomousSystem4Capability;
-import io.netlibs.bgp.net.capabilities.Capability;
-import io.netlibs.bgp.net.capabilities.MultiProtocolCapability;
-import io.netlibs.bgp.net.capabilities.OutboundRouteFilteringCapability;
-import io.netlibs.bgp.net.capabilities.RouteRefreshCapability;
-import io.netlibs.bgp.net.capabilities.UnknownCapability;
+import io.netlibs.bgp.protocol.AddressFamily;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.ORFSendReceive;
+import io.netlibs.bgp.protocol.ORFType;
+import io.netlibs.bgp.protocol.SubsequentAddressFamily;
+import io.netlibs.bgp.protocol.capabilities.AutonomousSystem4Capability;
+import io.netlibs.bgp.protocol.capabilities.Capability;
+import io.netlibs.bgp.protocol.capabilities.MultiProtocolCapability;
+import io.netlibs.bgp.protocol.capabilities.OutboundRouteFilteringCapability;
+import io.netlibs.bgp.protocol.capabilities.RouteRefreshCapability;
+import io.netlibs.bgp.protocol.capabilities.UnknownCapability;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

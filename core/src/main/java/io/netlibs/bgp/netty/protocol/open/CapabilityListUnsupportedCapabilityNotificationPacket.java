@@ -19,7 +19,7 @@ package io.netlibs.bgp.netty.protocol.open;
 
 import java.util.List;
 
-import io.netlibs.bgp.net.capabilities.Capability;
+import io.netlibs.bgp.protocol.capabilities.Capability;
 import io.netty.buffer.ByteBuf;
 
 /**

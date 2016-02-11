@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import io.netlibs.bgp.config.nodes.PathAttributeConfiguration;
 import io.netlibs.bgp.config.nodes.RouteConfiguration;
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
 
 /**
  * @author rainer

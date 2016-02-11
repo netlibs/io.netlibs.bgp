@@ -6,8 +6,8 @@ package io.netlibs.bgp.rib.processor;
 import org.slf4j.Logger;
 
 import io.netlibs.bgp.config.nodes.AddressFamilyRoutingPeerConfiguration;
-import io.netlibs.bgp.net.AddressFamilyKey;
-import io.netlibs.bgp.net.RIBSide;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
+import io.netlibs.bgp.protocol.RIBSide;
 import io.netlibs.bgp.rib.PeerRoutingInformationBase;
 import io.netlibs.bgp.rib.RoutingInformationBase;
 import lombok.RequiredArgsConstructor;

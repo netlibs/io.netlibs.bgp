@@ -5,7 +5,7 @@ package io.netlibs.bgp.config.nodes;
 
 import java.util.Set;
 
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
 
 /**
  * @author rainer

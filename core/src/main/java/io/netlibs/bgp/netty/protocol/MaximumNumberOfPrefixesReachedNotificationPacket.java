@@ -17,8 +17,8 @@
  */
 package io.netlibs.bgp.netty.protocol;
 
-import io.netlibs.bgp.net.AddressFamily;
-import io.netlibs.bgp.net.SubsequentAddressFamily;
+import io.netlibs.bgp.protocol.AddressFamily;
+import io.netlibs.bgp.protocol.SubsequentAddressFamily;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

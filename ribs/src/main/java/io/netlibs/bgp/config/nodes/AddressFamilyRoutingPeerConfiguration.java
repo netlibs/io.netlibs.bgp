@@ -5,7 +5,7 @@ package io.netlibs.bgp.config.nodes;
 
 import java.util.Set;
 
-import io.netlibs.bgp.net.AddressFamilyKey;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
 
 /**
  * @author rainer

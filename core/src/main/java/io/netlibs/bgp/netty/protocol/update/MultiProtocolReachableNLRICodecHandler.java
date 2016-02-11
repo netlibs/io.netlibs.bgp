@@ -17,10 +17,10 @@
  */
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.NLRICodec;
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
-import io.netlibs.bgp.net.attributes.MultiProtocolReachableNLRI;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.NLRICodec;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.attributes.MultiProtocolReachableNLRI;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

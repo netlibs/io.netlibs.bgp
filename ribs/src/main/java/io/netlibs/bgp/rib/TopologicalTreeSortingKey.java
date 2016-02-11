@@ -27,10 +27,10 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import io.netlibs.bgp.net.AddressFamily;
-import io.netlibs.bgp.net.AddressFamilyKey;
-import io.netlibs.bgp.net.SubsequentAddressFamily;
-import io.netlibs.bgp.net.attributes.PathAttribute;
+import io.netlibs.bgp.protocol.AddressFamily;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
+import io.netlibs.bgp.protocol.SubsequentAddressFamily;
+import io.netlibs.bgp.protocol.attributes.PathAttribute;
 import lombok.ToString;
 
 /**

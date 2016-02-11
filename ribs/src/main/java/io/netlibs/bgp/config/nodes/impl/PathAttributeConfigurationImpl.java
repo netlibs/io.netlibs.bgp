@@ -12,7 +12,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import io.netlibs.bgp.config.nodes.PathAttributeConfiguration;
-import io.netlibs.bgp.net.attributes.PathAttribute;
+import io.netlibs.bgp.protocol.attributes.PathAttribute;
 
 /**
  * @author rainer

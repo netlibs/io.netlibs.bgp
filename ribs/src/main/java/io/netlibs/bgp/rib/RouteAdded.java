@@ -20,7 +20,7 @@ package io.netlibs.bgp.rib;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import io.netlibs.bgp.net.RIBSide;
+import io.netlibs.bgp.protocol.RIBSide;
 import lombok.ToString;
 
 /**

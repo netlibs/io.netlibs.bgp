@@ -2,8 +2,8 @@ package io.netlibs.bgp.netty.service;
 
 import java.util.Set;
 
-import io.netlibs.bgp.net.NextHop;
-import io.netlibs.bgp.net.attributes.PathAttribute;
+import io.netlibs.bgp.protocol.NextHop;
+import io.netlibs.bgp.protocol.attributes.PathAttribute;
 
 public interface RouteHandle
 {

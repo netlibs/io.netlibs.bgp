@@ -22,10 +22,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.capabilities.Capability;
 import io.netlibs.bgp.netty.protocol.BGPv4Packet;
 import io.netlibs.bgp.netty.protocol.BGPv4PacketVisitor;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.capabilities.Capability;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.AllArgsConstructor;

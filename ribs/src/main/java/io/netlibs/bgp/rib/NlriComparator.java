@@ -2,8 +2,8 @@ package io.netlibs.bgp.rib;
 
 import java.util.Arrays;
 
-import io.netlibs.bgp.net.AddressFamilyKey;
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
 
 public class NlriComparator
 {

@@ -18,9 +18,9 @@ package io.netlibs.bgp.handlers;
 
 import java.util.List;
 
-import io.netlibs.bgp.BGPv4Constants;
 import io.netlibs.bgp.netty.protocol.BadMessageLengthNotificationPacket;
 import io.netlibs.bgp.netty.protocol.ConnectionNotSynchronizedNotificationPacket;
+import io.netlibs.bgp.protocol.BGPv4Constants;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;

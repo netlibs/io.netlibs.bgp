@@ -22,8 +22,8 @@ import java.util.TreeSet;
 
 import io.netlibs.bgp.config.nodes.Capabilities;
 import io.netlibs.bgp.config.nodes.CapabilitiesDecorator;
-import io.netlibs.bgp.net.capabilities.AutonomousSystem4Capability;
-import io.netlibs.bgp.net.capabilities.Capability;
+import io.netlibs.bgp.protocol.capabilities.AutonomousSystem4Capability;
+import io.netlibs.bgp.protocol.capabilities.Capability;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

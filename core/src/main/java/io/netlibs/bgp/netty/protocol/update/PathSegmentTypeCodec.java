@@ -17,7 +17,7 @@
  */
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.net.PathSegmentType;
+import io.netlibs.bgp.protocol.PathSegmentType;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

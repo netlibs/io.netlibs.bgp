@@ -19,7 +19,7 @@ package io.netlibs.bgp.config.nodes;
 
 import java.util.Set;
 
-import io.netlibs.bgp.net.capabilities.Capability;
+import io.netlibs.bgp.protocol.capabilities.Capability;
 
 /**
  * @author Rainer Bieniek (rainer@bgp4j.org)

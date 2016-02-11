@@ -1,8 +1,5 @@
 package io.netlibs.bgp.netty.codec;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.AddressFamily;
-import io.netlibs.bgp.net.SubsequentAddressFamily;
 import io.netlibs.bgp.netty.protocol.AdministrativeResetNotificationPacket;
 import io.netlibs.bgp.netty.protocol.AdministrativeShutdownNotificationPacket;
 import io.netlibs.bgp.netty.protocol.BGPv4Packet;
@@ -21,6 +18,9 @@ import io.netlibs.bgp.netty.protocol.OtherConfigurationChangeNotificationPacket;
 import io.netlibs.bgp.netty.protocol.OutOfResourcesNotificationPacket;
 import io.netlibs.bgp.netty.protocol.PeerDeconfiguredNotificationPacket;
 import io.netlibs.bgp.netty.protocol.UnspecifiedCeaseNotificationPacket;
+import io.netlibs.bgp.protocol.AddressFamily;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.SubsequentAddressFamily;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;
 

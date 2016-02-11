@@ -23,10 +23,10 @@ import java.util.TreeSet;
 
 import io.netlibs.bgp.config.nodes.Capabilities;
 import io.netlibs.bgp.config.nodes.CapabilitiesDecorator;
-import io.netlibs.bgp.net.AddressFamily;
-import io.netlibs.bgp.net.SubsequentAddressFamily;
-import io.netlibs.bgp.net.capabilities.Capability;
-import io.netlibs.bgp.net.capabilities.MultiProtocolCapability;
+import io.netlibs.bgp.protocol.AddressFamily;
+import io.netlibs.bgp.protocol.SubsequentAddressFamily;
+import io.netlibs.bgp.protocol.capabilities.Capability;
+import io.netlibs.bgp.protocol.capabilities.MultiProtocolCapability;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

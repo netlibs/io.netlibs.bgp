@@ -19,14 +19,14 @@ package io.netlibs.bgp.netty.protocol.refresh;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.AddressFamily;
-import io.netlibs.bgp.net.ORFEntry;
-import io.netlibs.bgp.net.ORFType;
-import io.netlibs.bgp.net.OutboundRouteFilter;
-import io.netlibs.bgp.net.SubsequentAddressFamily;
 import io.netlibs.bgp.netty.protocol.BGPv4Packet;
 import io.netlibs.bgp.netty.protocol.BGPv4PacketVisitor;
+import io.netlibs.bgp.protocol.AddressFamily;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.ORFEntry;
+import io.netlibs.bgp.protocol.ORFType;
+import io.netlibs.bgp.protocol.OutboundRouteFilter;
+import io.netlibs.bgp.protocol.SubsequentAddressFamily;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

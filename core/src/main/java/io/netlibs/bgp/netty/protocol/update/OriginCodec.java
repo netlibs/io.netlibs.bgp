@@ -17,7 +17,7 @@
  */
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.net.Origin;
+import io.netlibs.bgp.protocol.Origin;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

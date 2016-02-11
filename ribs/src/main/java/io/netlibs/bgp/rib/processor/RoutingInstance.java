@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 
 import io.netlibs.bgp.config.nodes.AddressFamilyRoutingPeerConfiguration;
 import io.netlibs.bgp.config.nodes.RoutingInstanceConfiguration;
-import io.netlibs.bgp.net.AddressFamilyKey;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
 import io.netlibs.bgp.rib.PeerRoutingInformationBaseManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

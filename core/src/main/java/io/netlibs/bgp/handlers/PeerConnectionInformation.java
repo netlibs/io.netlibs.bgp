@@ -15,7 +15,7 @@
  */
 package io.netlibs.bgp.handlers;
 
-import io.netlibs.bgp.net.ASType;
+import io.netlibs.bgp.protocol.ASType;
 
 
 /**

@@ -1,8 +1,8 @@
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.attributes.AbstractExtendedCommunityInterface;
-import io.netlibs.bgp.net.attributes.ExtendedCommunityPathAttribute;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.attributes.AbstractExtendedCommunityInterface;
+import io.netlibs.bgp.protocol.attributes.ExtendedCommunityPathAttribute;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

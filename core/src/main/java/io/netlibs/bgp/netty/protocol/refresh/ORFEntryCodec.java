@@ -17,10 +17,10 @@
  */
 package io.netlibs.bgp.netty.protocol.refresh;
 
-import io.netlibs.bgp.NLRICodec;
-import io.netlibs.bgp.net.AddressPrefixBasedORFEntry;
-import io.netlibs.bgp.net.ORFAction;
-import io.netlibs.bgp.net.ORFEntry;
+import io.netlibs.bgp.protocol.AddressPrefixBasedORFEntry;
+import io.netlibs.bgp.protocol.NLRICodec;
+import io.netlibs.bgp.protocol.ORFAction;
+import io.netlibs.bgp.protocol.ORFEntry;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

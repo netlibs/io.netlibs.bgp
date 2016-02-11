@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import io.netlibs.bgp.net.AddressFamilyKey;
-import io.netlibs.bgp.net.RIBSide;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
+import io.netlibs.bgp.protocol.RIBSide;
 
 import java.util.Set;
 

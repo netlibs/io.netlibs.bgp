@@ -5,7 +5,7 @@ package io.netlibs.bgp.config.nodes;
 
 import java.util.Set;
 
-import io.netlibs.bgp.net.attributes.PathAttribute;
+import io.netlibs.bgp.protocol.attributes.PathAttribute;
 
 /**
  * @author rainer

@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import io.netlibs.bgp.config.nodes.PathAttributeConfiguration;
-import io.netlibs.bgp.net.attributes.PathAttribute;
+import io.netlibs.bgp.protocol.attributes.PathAttribute;
 import io.netlibs.bgp.rib.Route;
 
 /**

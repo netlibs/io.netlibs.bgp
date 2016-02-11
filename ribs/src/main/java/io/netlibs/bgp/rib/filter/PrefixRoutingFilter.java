@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import io.netlibs.bgp.config.nodes.PrefixRoutingFilterConfiguration;
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
 import io.netlibs.bgp.rib.NlriComparator;
 import io.netlibs.bgp.rib.Route;
 

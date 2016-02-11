@@ -17,8 +17,8 @@
  */
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.attributes.ClusterListPathAttribute;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.attributes.ClusterListPathAttribute;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

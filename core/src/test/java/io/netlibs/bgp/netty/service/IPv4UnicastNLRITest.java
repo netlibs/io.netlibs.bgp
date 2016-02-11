@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.google.common.net.InetAddresses;
 
-import io.netlibs.bgp.net.attributes.IPv4UnicastNLRI;
+import io.netlibs.bgp.protocol.attributes.IPv4UnicastNLRI;
 
 public class IPv4UnicastNLRITest
 {

@@ -17,8 +17,8 @@
  */
 package io.netlibs.bgp.rib;
 
-import io.netlibs.bgp.net.AddressFamilyKey;
-import io.netlibs.bgp.net.RIBSide;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
+import io.netlibs.bgp.protocol.RIBSide;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

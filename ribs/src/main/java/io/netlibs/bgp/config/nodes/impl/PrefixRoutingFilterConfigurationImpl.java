@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import io.netlibs.bgp.config.nodes.PrefixRoutingFilterConfiguration;
 import io.netlibs.bgp.config.nodes.RoutingFilterConfiguration;
-import io.netlibs.bgp.net.NetworkLayerReachabilityInformation;
+import io.netlibs.bgp.protocol.NetworkLayerReachabilityInformation;
 
 /**
  * @author rainer

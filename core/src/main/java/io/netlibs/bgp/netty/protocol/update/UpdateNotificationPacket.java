@@ -16,8 +16,8 @@
  */
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.BGPv4Constants;
 import io.netlibs.bgp.netty.protocol.NotificationPacket;
+import io.netlibs.bgp.protocol.BGPv4Constants;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.google.common.net.InetAddresses;
 
-import io.netlibs.bgp.net.attributes.IPv4MPLSLabelNLRI;
+import io.netlibs.bgp.protocol.attributes.IPv4MPLSLabelNLRI;
 import io.netlibs.ipaddr.CidrV4Address;
 
 public class MplsLabelNLRITest

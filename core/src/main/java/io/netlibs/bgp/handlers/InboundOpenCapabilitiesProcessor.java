@@ -17,13 +17,13 @@
  */
 package io.netlibs.bgp.handlers;
 
-import io.netlibs.bgp.BGPv4Constants;
-import io.netlibs.bgp.net.AddressFamily;
-import io.netlibs.bgp.net.SubsequentAddressFamily;
-import io.netlibs.bgp.net.capabilities.AutonomousSystem4Capability;
-import io.netlibs.bgp.net.capabilities.MultiProtocolCapability;
 import io.netlibs.bgp.netty.protocol.open.BadPeerASNotificationPacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
+import io.netlibs.bgp.protocol.AddressFamily;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.SubsequentAddressFamily;
+import io.netlibs.bgp.protocol.capabilities.AutonomousSystem4Capability;
+import io.netlibs.bgp.protocol.capabilities.MultiProtocolCapability;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;

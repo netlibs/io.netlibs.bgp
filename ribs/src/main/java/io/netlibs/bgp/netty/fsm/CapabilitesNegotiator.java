@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import io.netlibs.bgp.BGPv4Constants;
 import io.netlibs.bgp.config.nodes.PeerConfiguration;
-import io.netlibs.bgp.net.capabilities.AutonomousSystem4Capability;
-import io.netlibs.bgp.net.capabilities.Capability;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
+import io.netlibs.bgp.protocol.BGPv4Constants;
+import io.netlibs.bgp.protocol.capabilities.AutonomousSystem4Capability;
+import io.netlibs.bgp.protocol.capabilities.Capability;
 
 /**
  * This class negotiates the supported capabilities with a peer. According to RFC 5492 an intersection

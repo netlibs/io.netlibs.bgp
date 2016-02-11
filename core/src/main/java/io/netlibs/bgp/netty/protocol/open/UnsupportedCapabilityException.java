@@ -19,8 +19,8 @@ package io.netlibs.bgp.netty.protocol.open;
 
 import java.util.Collection;
 
-import io.netlibs.bgp.net.capabilities.Capability;
 import io.netlibs.bgp.netty.protocol.NotificationPacket;
+import io.netlibs.bgp.protocol.capabilities.Capability;
 
 /**
  * @author Rainer Bieniek (Rainer.Bieniek@web.de)

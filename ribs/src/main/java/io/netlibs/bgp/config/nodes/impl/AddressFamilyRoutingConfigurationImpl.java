@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import io.netlibs.bgp.config.nodes.AddressFamilyRoutingConfiguration;
 import io.netlibs.bgp.config.nodes.RouteConfiguration;
-import io.netlibs.bgp.net.AddressFamilyKey;
+import io.netlibs.bgp.protocol.AddressFamilyKey;
 
 /**
  * @author rainer

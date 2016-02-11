@@ -17,7 +17,7 @@
  */
 package io.netlibs.bgp.netty.protocol.update;
 
-import io.netlibs.bgp.net.attributes.PathAttribute;
+import io.netlibs.bgp.protocol.attributes.PathAttribute;
 import io.netty.buffer.ByteBuf;
 
 /**
