@@ -25,12 +25,6 @@ public interface BGPv4SessionListener
   void update(UpdatePacket e);
 
   /**
-   * the keepalive was received.
-   */
-
-  void keepalive(KeepalivePacket e);
-
-  /**
    * a notification event was received.
    */
 

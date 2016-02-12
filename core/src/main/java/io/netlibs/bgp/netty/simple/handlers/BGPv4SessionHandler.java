@@ -1,6 +1,7 @@
 package io.netlibs.bgp.netty.simple.handlers;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.base.Preconditions;
 
@@ -13,7 +14,10 @@ import io.netlibs.bgp.netty.simple.BGPv4Session;
 import io.netlibs.bgp.netty.simple.BGPv4SessionListener;
 import io.netlibs.bgp.netty.simple.ReadTransferBuffer;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.ChannelPromiseAggregator;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroupFuture;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,7 +94,7 @@ public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> imp
 
   private void channelRead(ChannelHandlerContext ctx, BGPv4Packet e)
   {
-    // data has arrived, but we don't push - instead send to the ReadTransferBuffer.    
+    // data has arrived, but we don't push - instead send to the ReadTransferBuffer.
     buffer.enqueue(e);
   }
 
@@ -191,6 +195,26 @@ public class BGPv4SessionHandler extends SimpleChannelInboundHandler<Object> imp
   public ReadTransferBuffer input()
   {
     return this.buffer;
+  }
+
+  @Override
+  public void send(Runnable done, UpdatePacket... updates)
+  {
+
+    for (int i = 0; i < updates.length; ++i)
+    {
+      if (i == updates.length - 1)
+      {
+        ChannelPromise promise = ctx.channel().newPromise();
+        this.ctx.writeAndFlush(updates[i], promise);
+        promise.addListener(listener -> done.run());
+      }
+      else
+      {
+        ctx.write(updates[i]);
+      }
+    }
+
   }
 
 }

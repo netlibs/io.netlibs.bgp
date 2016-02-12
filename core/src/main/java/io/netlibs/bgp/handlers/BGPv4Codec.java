@@ -110,7 +110,7 @@ public class BGPv4Codec extends ByteToMessageCodec<BGPv4Packet>
     {
       final ByteBuf buffer = msg.apply(new BGPv4PacketEncoder());
       log.debug("Sending: {}", msg);
-      ctx.writeAndFlush(buffer);
+      out.writeBytes(buffer);
     }
     catch (Exception ex)
     {

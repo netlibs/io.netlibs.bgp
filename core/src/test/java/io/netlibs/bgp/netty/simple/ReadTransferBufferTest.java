@@ -42,11 +42,6 @@ public class ReadTransferBufferTest
       }
 
       @Override
-      public void keepalive(KeepalivePacket e)
-      {
-      }
-
-      @Override
       public void close()
       {
       }

@@ -1,7 +1,6 @@
 package io.netlibs.bgp.net;
 
 import io.netlibs.bgp.handlers.NotificationEvent;
-import io.netlibs.bgp.netty.protocol.KeepalivePacket;
 import io.netlibs.bgp.netty.protocol.open.OpenPacket;
 import io.netlibs.bgp.netty.protocol.update.UpdatePacket;
 import io.netlibs.bgp.netty.simple.BGPv4Session;
@@ -23,11 +22,13 @@ public class TestSessionHandler implements BGPv4SessionListener
   {
     log.info("Session OPENed with {}: {}", session.remoteAddress(), e);
     this.session = session;
+    session.send(() -> log.info("UPDATE sent"), new UpdatePacket(), new UpdatePacket());
   }
 
   @Override
   public void update(UpdatePacket e)
   {
+    log.info("Got UPDATE");
     session.input().consume(1);
   }
 
@@ -40,13 +41,6 @@ public class TestSessionHandler implements BGPv4SessionListener
   @Override
   public void close()
   {
-  }
-
-  @Override
-  public void keepalive(KeepalivePacket e)
-  {
-    // TODO Auto-generated method stub
-    
   }
 
 }
